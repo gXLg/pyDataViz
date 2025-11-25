@@ -75,7 +75,7 @@ book:
     - index.qmd
     - topic00_Introduction/script/script_00.qmd
     - part: "I Get"
-      chapters: 
+      chapters:
        - topic01_Python_Basics/script/script_01.qmd
        - topic02_Data_Wrangling/script/script_02.qmd
        - topic03_Tidy_Data/script/script_03.qmd
@@ -84,6 +84,10 @@ book:
        - topic04_Plotting-I/script/script_04.qmd
        - topic05_Plotting-II/script/script_05.qmd
        - topic06_Plotting-III/script/script_06.qmd
+       
+    - part: "III Conclude"
+      chapters:
+        - topic07_Statistical-Testing-I/script/script_07.qmd
      
   appendices:
     - appendix03_Plotting/script/appendix_03.qmd

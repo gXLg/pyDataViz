@@ -1,0 +1,2119 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{getwd}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "/Users/johann/Documents/labstuff/dataviz/pydataviz/dataviz"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{path }\OtherTok{\textless{}{-}} \StringTok{"assets/img/RStudio.png"}
+\FunctionTok{file.exists}\NormalTok{(path)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\section*{(PART) Get}\label{part-get}
+\addcontentsline{toc}{section}{(PART) Get}
+
+\section{R basics}\label{r-basics}
+
+This chapter provides a quick introduction to the programming language R
+and to using the software RStudio.
+
+\subsection{Rstudio}\label{rstudio}
+
+Rstudio is a software that allows to program in R and interactively
+analyse data with R. It succinctly organizes your session into 4 panels
+each set up for you to do certain tasks: Edit and write code (source
+panel), run and execute code (console panel), list objects that you have
+in your environment and have a history of your past commands
+(environment/history panel), and a panel to show your folders'
+structure, see plots, install/load packages, and read the documentation
+of functions (files/plots/packages/help panel).
+
+\includegraphics[width=900px]{assets/img/RStudio}
+
+\begin{itemize}
+\tightlist
+\item
+  the main script section, for writing scripts {[}top left section{]}
+\item
+  the console tab, for typing R commands directly {[}bottom left section
+  as tab{]}
+\item
+  the terminal tab, for direct access to your system shell {[}bottom
+  left section{]}
+\item
+  the plot tab, where you see the last plot generated {[}bottom right
+  section as tab{]}
+\item
+  the help tab, with useful documentation of R functions {[}bottom right
+  section as tab{]}
+\item
+  the history tab, with the list of the R commands used {[}top right
+  section as tab{]}
+\item
+  the environment tab, with the created variables and functions loaded
+  {[}top right section as tab{]}
+\item
+  and the packages tab, with the available/loaded R packages {[}bottom
+  right section as tab{]}
+\end{itemize}
+
+\subsection{First steps with R}\label{first-steps-with-r}
+
+This section is largely borrowed from the book Introduction to Data
+Science by Rafael Irizarry (\url{https://rafalab.github.io/dsbook}).
+
+\subsubsection{Objects}\label{objects}
+
+Suppose a high school student asks us for help to solve several
+quadratic equations of the form \(ax^2+bx+c = 0\). The quadratic formula
+gives us the solutions:
+
+\[
+\frac{-b - \sqrt{b^2 - 4ac}}{2a}\,\, \mbox{ and } \frac{-b + \sqrt{b^2 - 4ac}}{2a}
+\] which of course change depending on the values of \(a\), \(b\), and
+\(c\). One advantage of programming languages is that we can define
+variables and write expressions with these variables, similar to how we
+do so in math, but obtain a numeric solution. We will write out general
+code for the quadratic equation below, but if we are asked to solve
+\(x^2 + x -1 = 0\), then we define:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{b }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{c }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+which stores the values for later use. We use \texttt{\textless{}-} to
+assign values to the variables.
+
+We can also assign values using \texttt{=} instead of
+\texttt{\textless{}-}, but we recommend against using \texttt{=} to
+avoid confusion.
+
+Copy and paste the code above into your console to define the three
+variables. Note that R does not print anything when we make this
+assignment. This means the objects were defined successfully. Had you
+made a mistake, you would have received an error message.
+
+To see the value stored in a variable, we simply ask R to evaluate
+\texttt{a} and it shows the stored value:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1
+\end{verbatim}
+
+A more explicit way to ask R to show us the value stored in \texttt{a}
+is using \texttt{print} like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(a)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1
+\end{verbatim}
+
+We use the term \emph{object} to describe stuff that is stored in R.
+
+\subsubsection{The workspace}\label{the-workspace}
+
+As we define objects in the console, we are actually changing the
+\emph{workspace}. You can see all the variables saved in your workspace
+by typing:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ls}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "a"    "b"    "c"    "path"
+\end{verbatim}
+
+In RStudio, the variables of the environment are displayed in the
+\emph{Environment} tab.
+
+We should see \texttt{a}, \texttt{b}, and \texttt{c}. If you try to
+recover the value of a variable that is not in your workspace, you
+receive an error. For example, if you type \texttt{x} you will receive
+the following message:
+\texttt{Error:\ object\ \textquotesingle{}x\textquotesingle{}\ not\ found}.
+
+Now since these values are saved in variables, to obtain a solution to
+our equation, we use the quadratic formula:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{+} \FunctionTok{sqrt}\NormalTok{(b}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{c) ) }\SpecialCharTok{/}\NormalTok{ ( }\DecValTok{2}\SpecialCharTok{*}\NormalTok{a )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.618034
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{{-}} \FunctionTok{sqrt}\NormalTok{(b}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{c) ) }\SpecialCharTok{/}\NormalTok{ ( }\DecValTok{2}\SpecialCharTok{*}\NormalTok{a )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -1.618034
+\end{verbatim}
+
+\subsubsection{Functions}\label{functions}
+
+Once you define variables, the data analysis process can usually be
+described as a series of \emph{functions} applied to the data. R
+includes several predefined functions and most of the analysis pipelines
+we construct make extensive use of these.
+
+We already used the \texttt{print}, and \texttt{ls} functions. We also
+used the function \texttt{sqrt} to solve the quadratic equation above.
+There are many more prebuilt functions and even more can be added
+through packages. These functions do not appear in the workspace because
+you did not define them, but they are available for immediate use.
+
+In general, we need to use parentheses to evaluate a function. If you
+type \texttt{ls}, the function is not evaluated and instead R shows you
+the code that defines the function. If you type \texttt{ls()} the
+function is evaluated and, as seen above, we see objects in the
+workspace.
+
+Unlike \texttt{ls}, most functions require one or more \emph{arguments}.
+Below is an example of how we assign an object to the argument of the
+function \texttt{log}. Remember that we earlier defined \texttt{a} to be
+1:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{log}\NormalTok{(}\DecValTok{8}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.079442
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{log}\NormalTok{(a) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+You can find out what the function expects and what it does by reviewing
+the very useful manuals included in R. You can get help by using the
+\texttt{help} function like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{help}\NormalTok{(}\StringTok{"log"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+For most functions, we can also use this shorthand:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{?log}
+\end{Highlighting}
+\end{Shaded}
+
+The help page will show you what arguments the function is expecting.
+For example, \texttt{log} needs \texttt{x} and \texttt{base} to run.
+Some arguments are required and others are optional. You can determine
+which arguments are optional by noting in the help document that a
+default value is assigned with \texttt{=}. Defining these is optional.
+For example, the base of the function \texttt{log} defaults to
+\texttt{base\ =\ exp(1)} making \texttt{log} the natural log by default.
+
+If you want a quick look at the arguments without opening the help
+system, you can type:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{args}\NormalTok{(log)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## function (x, base = exp(1)) 
+## NULL
+\end{verbatim}
+
+You can change the default values:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{log}\NormalTok{(}\DecValTok{8}\NormalTok{, }\AttributeTok{base =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3
+\end{verbatim}
+
+Note that we have not been specifying the argument \texttt{x} as such:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{log}\NormalTok{(}\AttributeTok{x =} \DecValTok{8}\NormalTok{, }\AttributeTok{base =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3
+\end{verbatim}
+
+The above code works, but we can save ourselves some typing: if no
+argument name is used, R assumes you are entering arguments in the order
+shown in the help file or by \texttt{args}. So by not using the names,
+it assumes the arguments are \texttt{x} followed by \texttt{base}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{log}\NormalTok{(}\DecValTok{8}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3
+\end{verbatim}
+
+If we use the arguments' names, then we can include them in whatever
+order we want:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{log}\NormalTok{(}\AttributeTok{base =} \DecValTok{2}\NormalTok{, }\AttributeTok{x =} \DecValTok{8}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3
+\end{verbatim}
+
+To specify arguments, we must use \texttt{=}, and cannot use
+\texttt{\textless{}-}.
+
+There are some exceptions to the rule that functions need the
+parentheses to be evaluated. Among these, the most commonly used are the
+arithmetic and relational operators. For example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{2} \SpecialCharTok{\^{}} \DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 8
+\end{verbatim}
+
+You can see the arithmetic operators by typing:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{help}\NormalTok{(}\StringTok{"+"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+or
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{?}\StringTok{"+"}
+\end{Highlighting}
+\end{Shaded}
+
+and the relational operators by typing:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{help}\NormalTok{(}\StringTok{"\textgreater{}"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+or
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{?}\StringTok{"\textgreater{}"}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Other prebuilt objects}\label{other-prebuilt-objects}
+
+There are several datasets that are included for users to practice and
+test out functions. You can see all the available datasets by typing:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{data}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+This shows you the object name for these datasets. These datasets are
+objects that can be used by simply typing the name. For example, if you
+type:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{co2}
+\end{Highlighting}
+\end{Shaded}
+
+R will show you Mauna Loa atmospheric CO2 concentration data.
+
+Other prebuilt objects are mathematical quantities, such as the constant
+\(\pi\) and \(\infty\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pi}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.141593
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ConstantTok{Inf}\SpecialCharTok{+}\DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] Inf
+\end{verbatim}
+
+\subsubsection{Variable names}\label{variable-names}
+
+We have used the letters \texttt{a}, \texttt{b}, and \texttt{c} as
+variable names, but variable names can be almost anything. Some basic
+rules in R are that variable names have to start with a letter, can't
+contain spaces, and should not be variables that are predefined in R.
+For example, don't name one of your variables \texttt{install.packages}
+by typing something like \texttt{install.packages\ \textless{}-\ 2}.
+
+A nice convention to follow is to use meaningful words that describe
+what is stored, use only lower case, and use underscores as a substitute
+for spaces. For the quadratic equations, we could use something like
+this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{solution\_1 }\OtherTok{\textless{}{-}}\NormalTok{ (}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{+} \FunctionTok{sqrt}\NormalTok{(b}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{c)) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{2}\SpecialCharTok{*}\NormalTok{a)}
+\NormalTok{solution\_2 }\OtherTok{\textless{}{-}}\NormalTok{ (}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{{-}} \FunctionTok{sqrt}\NormalTok{(b}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{c)) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{2}\SpecialCharTok{*}\NormalTok{a)}
+\end{Highlighting}
+\end{Shaded}
+
+For more advice, we highly recommend studying Hadley Wickham's style
+guide\footnote{\url{http://adv-r.had.co.nz/Style.html}}.
+
+\subsubsection{Reusing scripts}\label{reusing-scripts}
+
+To solve another equation such as \(3x^2 + 2x -1\), we can copy and
+paste the code above and then redefine the variables and recompute the
+solution:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{3}
+\NormalTok{b }\OtherTok{\textless{}{-}} \DecValTok{2}
+\NormalTok{c }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{1}
+\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{+} \FunctionTok{sqrt}\NormalTok{(b}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{c)) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{2}\SpecialCharTok{*}\NormalTok{a)}
+\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{{-}} \FunctionTok{sqrt}\NormalTok{(b}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{c)) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{2}\SpecialCharTok{*}\NormalTok{a)}
+\end{Highlighting}
+\end{Shaded}
+
+By creating and saving a script with the code above, we would not need
+to retype everything each time and, instead, simply change the variable
+names. Try writing the script above into an editor and notice how easy
+it is to change the variables and receive an answer.
+
+\subsubsection{Commenting your code}\label{commenting-your-code}
+
+If a line of R code starts with the symbol \texttt{\#}, it is not
+evaluated. We can use this to write reminders of why we wrote particular
+code. For example, in the script above we could add:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# Code to compute solution to quadratic equation of the form ax\^{}2 + bx + c}
+\DocumentationTok{\#\# define the variables}
+\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{3} 
+\NormalTok{b }\OtherTok{\textless{}{-}} \DecValTok{2}
+\NormalTok{c }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{1}
+\DocumentationTok{\#\# now compute the solution}
+\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{+} \FunctionTok{sqrt}\NormalTok{(b}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{c)) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{2}\SpecialCharTok{*}\NormalTok{a)}
+\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{{-}} \FunctionTok{sqrt}\NormalTok{(b}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{a}\SpecialCharTok{*}\NormalTok{c)) }\SpecialCharTok{/}\NormalTok{ (}\DecValTok{2}\SpecialCharTok{*}\NormalTok{a)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Data types}\label{data-types}
+
+Variables in R can be of different types. For example, we need to
+distinguish numbers from character strings and tables from simple lists
+of numbers. The function \texttt{class} helps us determine what type of
+object we have:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OtherTok{\textless{}{-}} \DecValTok{2}
+\FunctionTok{class}\NormalTok{(a)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+To work efficiently in R, it is important to learn the different types
+of variables and what we can do with these.
+
+\subsubsection{Data frames}\label{data-frames}
+
+Up to now, the variables we have defined are just one number. We might
+be interested in storing more complex data. The most common way of
+storing a dataset in R is in a \emph{data frame}. Conceptually, we can
+think of a data frame as a table with rows representing observations and
+the different variables reported for each observation defining the
+columns. Data frames are particularly useful for datasets because we can
+combine different data types into one object.
+
+A large proportion of data analysis challenges start with data stored in
+a data frame.You can access this dataset by loading the \textbf{dslabs}
+library and loading the \texttt{murders} dataset using the \texttt{data}
+function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dslabs)}
+\FunctionTok{data}\NormalTok{(murders)}
+\end{Highlighting}
+\end{Shaded}
+
+To see that this is in fact a data frame, we type:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(murders)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "data.frame"
+\end{verbatim}
+
+\subsubsection{Examining an object}\label{examining-an-object}
+
+The function \texttt{str} is useful for finding out more about the
+structure of an object:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(murders)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    51 obs. of  5 variables:
+## $ state : chr "Alabama" "Alaska" "Arizona" "Arkansas" ...
+## $ abb : chr "AL" "AK" "AZ" "AR" ...
+## $ region : Factor w/ 4 levels "Northeast","South",..: 2 4 4 2 4 4 1 2 2 2 ...
+## $ population: num 4779736 710231 6392017 2915918 37253956 ...
+## $ total : num 135 19 232 93 1257 ...
+\end{verbatim}
+
+This tells us much more about the object. We see that the table has 51
+rows (50 states plus DC) and five variables (stored as columns). We can
+show the first six lines using the function \texttt{head}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(murders)  }\CommentTok{\# same as murders[1:6,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        state abb region population total
+## 1    Alabama  AL  South    4779736   135
+## 2     Alaska  AK   West     710231    19
+## 3    Arizona  AZ   West    6392017   232
+## 4   Arkansas  AR  South    2915918    93
+## 5 California  CA   West   37253956  1257
+## 6   Colorado  CO   West    5029196    65
+\end{verbatim}
+
+In this dataset, each state is considered an observation and five
+variables are reported for each state.
+
+Before we go any further in answering our original question about
+different states, let's learn more about the components of this object.
+
+\subsubsection{\texorpdfstring{The accessor:
+\texttt{\$}}{The accessor: \$}}\label{the-accessor}
+
+For our analysis, we will need to access the different variables
+represented by columns included in this data frame. To do this, we use
+the accessor operator \texttt{\$} in the following way:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{population}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  4779736   710231  6392017  2915918 37253956  5029196  3574097   897934
+##  [9]   601723 19687653  9920000  1360301  1567582 12830632  6483802  3046355
+## [17]  2853118  4339367  4533372  1328361  5773552  6547629  9883640  5303925
+## [25]  2967297  5988927   989415  1826341  2700551  1316470  8791894  2059179
+## [33] 19378102  9535483   672591 11536504  3751351  3831074 12702379  1052567
+## [41]  4625364   814180  6346105 25145561  2763885   625741  8001024  6724540
+## [49]  1852994  5686986   563626
+\end{verbatim}
+
+But how did we know to use \texttt{population}? Previously, by applying
+the function \texttt{str} to the object \texttt{murders}, we revealed
+the names for each of the five variables stored in this table. We can
+quickly access the variable names using:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(murders)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "state"      "abb"        "region"     "population" "total"
+\end{verbatim}
+
+It is important to know that the order of the entries in
+\texttt{murders\$population} preserves the order of the rows in our data
+table.
+
+\textbf{Tip}: R comes with a very nice auto-complete functionality that
+saves us the trouble of typing out all the names. Try typing
+\texttt{murders\$p} then hitting the \emph{tab} key on your keyboard.
+This functionality and many other useful auto-complete features are
+available when working in RStudio.
+
+\subsubsection{Vectors: numerics, characters, and
+logical}\label{vectors-numerics-characters-and-logical}
+
+The object \texttt{murders\$population} is not one number but several.
+We call these types of objects \emph{vectors}. A single number is
+technically a vector of length 1, but in general we use the term vectors
+to refer to objects with several entries. The function \texttt{length}
+tells you how many entries are in the vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pop }\OtherTok{\textless{}{-}}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{population}
+\FunctionTok{length}\NormalTok{(pop)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 51
+\end{verbatim}
+
+This particular vector is \emph{numeric} since population sizes are
+numbers:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(pop)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+In a numeric vector, every entry must be a number.
+
+To store character strings, vectors can also be of class
+\emph{character}. For example, the state names are characters:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{state)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "character"
+\end{verbatim}
+
+As with numeric vectors, all entries in a character vector need to be a
+character.
+
+Another important type of vectors are \emph{logical vectors}. These must
+be either \texttt{TRUE} or \texttt{FALSE}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{z }\OtherTok{\textless{}{-}} \DecValTok{3} \SpecialCharTok{==} \DecValTok{2}
+\NormalTok{z}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(z)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "logical"
+\end{verbatim}
+
+Here the \texttt{==} is a relational operator asking if 3 is equal to 2.
+In R, if you just use one \texttt{=}, you actually assign a variable,
+but if you use two \texttt{==} you test for equality.
+
+You can see the other \emph{relational operators} by typing:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{?Comparison}
+\end{Highlighting}
+\end{Shaded}
+
+In future sections, you will see how useful relational operators can be.
+
+\textbf{Advanced}: Mathematically, the values in \texttt{pop} are
+integers and there is an integer class in R. However, by default,
+numbers are assigned class numeric even when they are round integers.
+For example, \texttt{class(1)} returns numeric. You can turn them into
+class integer with the \texttt{as.integer()} function or by adding an
+\texttt{L} like this: \texttt{1L}. Note the class by typing:
+\texttt{class(1L)}
+
+\subsubsection{Factors}\label{factors}
+
+In the \texttt{murders} dataset, we might expect the region to also be a
+character vector. However, it is not:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "factor"
+\end{verbatim}
+
+It is a \emph{factor}. Factors are useful for storing categorical data.
+We can see that there are only 4 regions by using the \texttt{levels}
+function:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{levels}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Northeast"     "South"         "North Central" "West"
+\end{verbatim}
+
+In the background, R stores these \emph{levels} as integers and keeps a
+map to keep track of the labels. This is more memory efficient than
+storing all the characters.
+
+Note that the levels have an order that is different from the order of
+appearance in the factor object. The default in R is for the levels to
+follow alphabetical order. However, often we want the levels to follow a
+different order. You can specify an order through the \texttt{levels}
+argument when creating the factor with the \texttt{factor} function. For
+example, in the murders dataset regions are ordered from east to west.
+The function \texttt{reorder} lets us change the order of the levels of
+a factor variable based on a summary computed on a numeric vector. We
+will demonstrate this with a simple example, and will see more advanced
+ones in the Data Visualization part of the book.
+
+Suppose we want the levels of the region by the total number of murders
+rather than alphabetical order. If there are values associated with each
+level, we can use the \texttt{reorder} and specify a data summary to
+determine the order. The following code takes the sum of the total
+murders in each region, and reorders the factor following these sums.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{region }\OtherTok{\textless{}{-}}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{region}
+\NormalTok{value }\OtherTok{\textless{}{-}}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{total}
+\NormalTok{region }\OtherTok{\textless{}{-}} \FunctionTok{reorder}\NormalTok{(region, value, }\AttributeTok{FUN =}\NormalTok{ sum)}
+\FunctionTok{levels}\NormalTok{(region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Northeast"     "North Central" "West"          "South"
+\end{verbatim}
+
+The new order is in agreement with the fact that the Northeast has the
+least murders and the South has the most.
+
+\textbf{Warning}: Factors can be a source of confusion since sometimes
+they behave like characters and sometimes they do not. As a result,
+confusing factors and characters are a common source of bugs.
+
+\subsubsection{Lists}\label{lists}
+
+Data frames are a special case of \emph{lists}. Lists are useful because
+they can store any combination of different types. You can create a list
+using the \texttt{list} function like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{record }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\AttributeTok{name =} \StringTok{"John Doe"}\NormalTok{,}
+             \AttributeTok{student\_id =} \DecValTok{1234}\NormalTok{,}
+             \AttributeTok{grades =} \FunctionTok{c}\NormalTok{(}\DecValTok{95}\NormalTok{, }\DecValTok{82}\NormalTok{, }\DecValTok{91}\NormalTok{, }\DecValTok{97}\NormalTok{, }\DecValTok{93}\NormalTok{),}
+             \AttributeTok{final\_grade =} \StringTok{"A"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The function \texttt{c} is described in Section @ref(vectors).
+
+This list includes a character, a number, a vector with five numbers,
+and another character.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{record}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $name
+## [1] "John Doe"
+## 
+## $student_id
+## [1] 1234
+## 
+## $grades
+## [1] 95 82 91 97 93
+## 
+## $final_grade
+## [1] "A"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(record)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "list"
+\end{verbatim}
+
+As with data frames, you can extract the components of a list with the
+accessor \texttt{\$}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{record}\SpecialCharTok{$}\NormalTok{student\_id}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1234
+\end{verbatim}
+
+We can also use double square brackets (\texttt{{[}{[}}) like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{record[[}\StringTok{"student\_id"}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1234
+\end{verbatim}
+
+You should get used to the fact that in R, there are often several ways
+to do the same thing, such as accessing entries.
+
+You might also encounter lists without variable names.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{record2 }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\StringTok{"John Doe"}\NormalTok{, }\DecValTok{1234}\NormalTok{)}
+\NormalTok{record2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+## [1] "John Doe"
+## 
+## [[2]]
+## [1] 1234
+\end{verbatim}
+
+If a list does not have names, you cannot extract the elements with
+\texttt{\$}, but you can still use the brackets method and instead of
+providing the variable name, you provide the list index, like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{record2[[}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "John Doe"
+\end{verbatim}
+
+\subsubsection{Matrices}\label{matrices}
+
+Matrices are another very common object type in R. Matrices are similar
+to data frames in that they are two-dimensional: they have rows and
+columns. However, like numeric, character and logical vectors, entries
+in matrices have to be all the same type. For this reason data frames
+are much more useful for storing data, since we can have characters,
+factors, and numbers in them.
+
+Yet matrices have a major advantage over data frames: we can perform
+matrix algebra operations, a powerful type of mathematical technique. We
+do not describe these operations in this book, but much of what happens
+in the background when you perform a data analysis involves matrices.
+
+We can define a matrix using the \texttt{matrix} function. We need to
+specify the number of rows and columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{, }\AttributeTok{nrow =} \DecValTok{4}\NormalTok{, }\AttributeTok{ncol =} \DecValTok{3}\NormalTok{)}
+\NormalTok{mat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2] [,3]
+## [1,]    1    5    9
+## [2,]    2    6   10
+## [3,]    3    7   11
+## [4,]    4    8   12
+\end{verbatim}
+
+You can access specific entries in a matrix using square brackets
+(\texttt{{[}}). If you want the second row, third column, you use:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mat[}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 10
+\end{verbatim}
+
+If you want the entire second row, you leave the column spot empty:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mat[}\DecValTok{2}\NormalTok{, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  2  6 10
+\end{verbatim}
+
+Notice that this returns a vector, not a matrix.
+
+Similarly, if you want the entire third column, you leave the row spot
+empty:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mat[, }\DecValTok{3}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  9 10 11 12
+\end{verbatim}
+
+This is also a vector, not a matrix.
+
+You can access more than one column or more than one row if you like.
+This will give you a new matrix.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mat[, }\DecValTok{2}\SpecialCharTok{:}\DecValTok{3}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2]
+## [1,]    5    9
+## [2,]    6   10
+## [3,]    7   11
+## [4,]    8   12
+\end{verbatim}
+
+You can subset both rows and columns:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mat[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{2}\SpecialCharTok{:}\DecValTok{3}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2]
+## [1,]    5    9
+## [2,]    6   10
+\end{verbatim}
+
+We can convert matrices into data frames using the function
+\texttt{as.data.frame}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{as.data.frame}\NormalTok{(mat)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   V1 V2 V3
+## 1  1  5  9
+## 2  2  6 10
+## 3  3  7 11
+## 4  4  8 12
+\end{verbatim}
+
+You can also use single square brackets (\texttt{{[}}) to access rows
+and columns of a data frame:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{data}\NormalTok{(}\StringTok{"murders"}\NormalTok{)}
+\NormalTok{murders[}\DecValTok{25}\NormalTok{, }\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Mississippi"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murders[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{3}\NormalTok{, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     state abb region population total
+## 2  Alaska  AK   West     710231    19
+## 3 Arizona  AZ   West    6392017   232
+\end{verbatim}
+
+\subsection{Vectors}\label{vectors}
+
+In R, the most basic objects available to store data are \emph{vectors}.
+As we have seen, complex datasets can usually be broken down into
+components that are vectors. For example, in a data frame, each column
+is a vector. Here we learn more about this important class.
+
+\subsubsection{Creating vectors}\label{creating-vectors}
+
+We can create vectors using the function \texttt{c}, which stands for
+\emph{concatenate}. We use \texttt{c} to concatenate entries in the
+following way:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{380}\NormalTok{, }\DecValTok{124}\NormalTok{, }\DecValTok{818}\NormalTok{)}
+\NormalTok{codes}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 380 124 818
+\end{verbatim}
+
+We can also create character vectors. We use the quotes to denote that
+the entries are characters rather than variable names.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{country }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"italy"}\NormalTok{, }\StringTok{"canada"}\NormalTok{, }\StringTok{"egypt"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+In R you can also use single quotes:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{country }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}italy\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}canada\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}egypt\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+But be careful not to confuse the single quote ' with the \emph{back
+quote} `. By now you should know that if you type:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{country }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(italy, canada, egypt)}
+\end{Highlighting}
+\end{Shaded}
+
+you receive an error because the variables \texttt{italy},
+\texttt{canada}, and \texttt{egypt} are not defined. If we do not use
+the quotes, R looks for variables with those names and returns an error.
+
+\subsubsection{Names}\label{names}
+
+Sometimes it is useful to name the entries of a vector. For example,
+when defining a vector of country codes, we can use the names to connect
+the two:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{italy =} \DecValTok{380}\NormalTok{, }\AttributeTok{canada =} \DecValTok{124}\NormalTok{, }\AttributeTok{egypt =} \DecValTok{818}\NormalTok{)}
+\NormalTok{codes}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  italy canada  egypt 
+##    380    124    818
+\end{verbatim}
+
+The object \texttt{codes} continues to be a numeric vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(codes)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+but with names:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(codes)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "italy"  "canada" "egypt"
+\end{verbatim}
+
+If the use of strings without quotes looks confusing, know that you can
+use the quotes as well:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"italy"} \OtherTok{=} \DecValTok{380}\NormalTok{, }\StringTok{"canada"} \OtherTok{=} \DecValTok{124}\NormalTok{, }\StringTok{"egypt"} \OtherTok{=} \DecValTok{818}\NormalTok{)}
+\NormalTok{codes}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  italy canada  egypt 
+##    380    124    818
+\end{verbatim}
+
+There is no difference between this function call and the previous one.
+This is one of the many ways in which R is quirky compared to other
+languages.
+
+We can also assign names using the \texttt{names} functions:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{380}\NormalTok{, }\DecValTok{124}\NormalTok{, }\DecValTok{818}\NormalTok{)}
+\NormalTok{country }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"italy"}\NormalTok{,}\StringTok{"canada"}\NormalTok{,}\StringTok{"egypt"}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(codes) }\OtherTok{\textless{}{-}}\NormalTok{ country}
+\NormalTok{codes}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  italy canada  egypt 
+##    380    124    818
+\end{verbatim}
+
+\subsubsection{Sequences}\label{sequences}
+
+Another useful function for creating vectors in sequences is
+\texttt{seq}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  1  2  3  4  5  6  7  8  9 10
+\end{verbatim}
+
+The first argument defines the start, and the second defines the end
+which is included. The default is to go up in increments of 1, but a
+third argument lets us tell it how much to jump by:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1 3 5 7 9
+\end{verbatim}
+
+If we want consecutive integers, we can use the following shorthand:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  1  2  3  4  5  6  7  8  9 10
+\end{verbatim}
+
+When we use these functions, R produces integers, not numerics, because
+they are typically used to index something:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "integer"
+\end{verbatim}
+
+However, if we create a sequence including non-integers, the class
+changes:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\FloatTok{0.5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\subsubsection{Subsetting}\label{subsetting}
+
+We use square brackets to access specific elements of a vector. For the
+vector \texttt{codes} we defined above, we can access the second element
+using:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes[}\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## canada 
+##    124
+\end{verbatim}
+
+You can get more than one entry by using a multi-entry vector as an
+index:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes[}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## italy egypt 
+##   380   818
+\end{verbatim}
+
+The sequences defined above are particularly useful if we want to
+access, say, the first two elements:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  italy canada 
+##    380    124
+\end{verbatim}
+
+If the elements have names, we can also access the entries using these
+names. Below are two examples.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes[}\StringTok{"canada"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## canada 
+##    124
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{codes[}\FunctionTok{c}\NormalTok{(}\StringTok{"egypt"}\NormalTok{,}\StringTok{"italy"}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## egypt italy 
+##   818   380
+\end{verbatim}
+
+\subsection{Coercion}\label{coercion}
+
+In general, \emph{coercion} is an attempt by R to be flexible with data
+types. When an entry does not match the expected, some of the prebuilt R
+functions try to guess what was meant before throwing an error. This can
+also lead to confusion. Failing to understand \emph{coercion} can drive
+programmers crazy when attempting to code in R since it behaves quite
+differently from most other languages in this regard. Let's learn about
+it with some examples.
+
+We said that vectors must be all of the same type. So if we try to
+combine, say, numbers and characters, you might expect an error:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\StringTok{"canada"}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+But we don't get one, not even a warning! What happened? Look at
+\texttt{x} and its class:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "1"      "canada" "3"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "character"
+\end{verbatim}
+
+R \emph{coerced} the data into characters. It guessed that because you
+put a character string in the vector, you meant the 1 and 3 to actually
+be character strings \texttt{"1"} and ``\texttt{3}''. The fact that not
+even a warning is issued is an example of how coercion can cause many
+unnoticed errors in R.
+
+R also offers functions to change from one type to another. For example,
+you can turn numbers into characters with:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\DecValTok{5}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{as.character}\NormalTok{(x)}
+\NormalTok{y}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "1" "2" "3" "4" "5"
+\end{verbatim}
+
+You can turn it back with \texttt{as.numeric}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{as.numeric}\NormalTok{(y)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1 2 3 4 5
+\end{verbatim}
+
+This function is actually quite useful since datasets that include
+numbers as character strings are common.
+
+\subsubsection{Not availables (NA)}\label{not-availables-na}
+
+When a function tries to coerce one type to another and encounters an
+impossible case, it usually gives us a warning and turns the entry into
+a special value called an \texttt{NA} for ``not available''. For
+example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"b"}\NormalTok{, }\StringTok{"3"}\NormalTok{)}
+\FunctionTok{as.numeric}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: NAs introduced by coercion
+\end{verbatim}
+
+\begin{verbatim}
+## [1]  1 NA  3
+\end{verbatim}
+
+R does not have any guesses for what number you want when you type
+\texttt{b}, so it returns \texttt{NA}.
+
+As a data scientist you will encounter the \texttt{NA}s often as they
+are generally used for missing data, a common problem in real-world
+datasets.
+
+\subsection{Sorting}\label{sorting}
+
+Now that we have mastered some basic R knowledge, let's try to gain some
+insights into the safety of different states in the context of gun
+murders.
+
+\subsubsection{\texorpdfstring{\texttt{sort}}{sort}}\label{sort}
+
+Say we want to rank the states from least to most gun murders. The
+function \texttt{sort} sorts a vector in increasing order. We can
+therefore see the largest number of gun murders by typing:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dslabs)}
+\FunctionTok{data}\NormalTok{(murders)}
+\FunctionTok{sort}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{total)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]    2    4    5    5    7    8   11   12   12   16   19   21   22   27   32
+## [16]   36   38   53   63   65   67   84   93   93   97   97   99  111  116  118
+## [31]  120  135  142  207  219  232  246  250  286  293  310  321  351  364  376
+## [46]  413  457  517  669  805 1257
+\end{verbatim}
+
+However, this does not give us information about which states have which
+murder totals. For example, we don't know which state had 1257.
+
+\subsubsection{\texorpdfstring{\texttt{order}}{order}}\label{order}
+
+The function \texttt{order} is closer to what we want. It takes a vector
+as input and returns the vector of indexes that sorts the input vector.
+This may sound confusing so let's look at a simple example. We can
+create a vector and sort it:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{31}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{92}\NormalTok{, }\DecValTok{65}\NormalTok{)}
+\FunctionTok{sort}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  4 15 31 65 92
+\end{verbatim}
+
+Rather than sorting the input vector, the function \texttt{order}
+returns the indexes that sort the input vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{index }\OtherTok{\textless{}{-}} \FunctionTok{order}\NormalTok{(x)}
+\NormalTok{x[index]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  4 15 31 65 92
+\end{verbatim}
+
+This is the same output as that returned by \texttt{sort(x)}. If we look
+at this index, we see why it works:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 31  4 15 92 65
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{order}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2 3 1 5 4
+\end{verbatim}
+
+The second entry of \texttt{x} is the smallest, so \texttt{order(x)}
+starts with \texttt{2}. The next smallest is the third entry, so the
+second entry is \texttt{3} and so on.
+
+How does this help us order the states by murders? First, remember that
+the entries of vectors you access with \texttt{\$} follow the same order
+as the rows in the table. For example, these two vectors containing
+state names and abbreviations, respectively, are matched by their order:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{state[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{6}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Alabama"    "Alaska"     "Arizona"    "Arkansas"   "California"
+## [6] "Colorado"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{abb[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{6}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "AL" "AK" "AZ" "AR" "CA" "CO"
+\end{verbatim}
+
+This means we can order the state names by their total murders. We first
+obtain the index that orders the vectors according to murder totals and
+then index the state names vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ind }\OtherTok{\textless{}{-}} \FunctionTok{order}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{total)}
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{abb[ind] }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "VT" "ND" "NH" "WY" "HI" "SD" "ME" "ID" "MT" "RI" "AK" "IA" "UT" "WV" "NE"
+## [16] "OR" "DE" "MN" "KS" "CO" "NM" "NV" "AR" "WA" "CT" "WI" "DC" "OK" "KY" "MA"
+## [31] "MS" "AL" "IN" "SC" "TN" "AZ" "NJ" "VA" "NC" "MD" "OH" "MO" "LA" "IL" "GA"
+## [46] "MI" "PA" "NY" "FL" "TX" "CA"
+\end{verbatim}
+
+According to the above, California (CA) had the most murders.
+
+\subsubsection{\texorpdfstring{\texttt{max} and
+\texttt{which.max}}{max and which.max}}\label{max-and-which.max}
+
+If we are only interested in the entry with the largest value, we can
+use \texttt{max} for the value:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{max}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{total)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1257
+\end{verbatim}
+
+and \texttt{which.max} for the index of the largest value:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{i\_max }\OtherTok{\textless{}{-}} \FunctionTok{which.max}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{total)}
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{state[i\_max]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "California"
+\end{verbatim}
+
+For the minimum, we can use \texttt{min} and \texttt{which.min} in the
+same way.
+
+Does this mean California is the most dangerous state? In an upcoming
+section, we argue that we should be considering rates instead of totals.
+Before doing that, we introduce one last order-related function:
+\texttt{rank}.
+
+\subsubsection{\texorpdfstring{\texttt{rank}}{rank}}\label{rank}
+
+Although not as frequently used as \texttt{order} and \texttt{sort}, the
+function \texttt{rank} is also related to order and can be useful. For
+any given vector it returns a vector with the rank of the first entry,
+second entry, etc., of the input vector. Here is a simple example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{31}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{92}\NormalTok{, }\DecValTok{65}\NormalTok{)}
+\FunctionTok{rank}\NormalTok{(x)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3 1 2 5 4
+\end{verbatim}
+
+\subsubsection{Beware of recycling}\label{beware-of-recycling}
+
+Another common source of unnoticed errors in R is the use of
+\emph{recycling}. We saw that vectors are added element-wise. So if the
+vectors don't match in length, it is natural to assume that we should
+get an error. But we don't. Notice what happens:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{)}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{40}\NormalTok{, }\DecValTok{50}\NormalTok{, }\DecValTok{60}\NormalTok{, }\DecValTok{70}\NormalTok{)}
+\NormalTok{x}\SpecialCharTok{+}\NormalTok{y}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in x + y: longer object length is not a multiple of shorter object
+## length
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 11 22 33 41 52 63 71
+\end{verbatim}
+
+We do get a warning, but no error. For the output, R has recycled the
+numbers in \texttt{x}. Notice the last digit of numbers in the output.
+
+\subsection{Vector arithmetics}\label{vector-arithmetics}
+
+California had the most murders, but does this mean it is the most
+dangerous state? What if it just has many more people than any other
+state? We can quickly confirm that California indeed has the largest
+population:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dslabs)}
+\FunctionTok{data}\NormalTok{(}\StringTok{"murders"}\NormalTok{)}
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{state[}\FunctionTok{which.max}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{population)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "California"
+\end{verbatim}
+
+with over 37 million inhabitants. It is therefore unfair to compare the
+totals if we are interested in learning how safe the state is. What we
+really should be computing is the murders per capita (murders per
+100,000 as the unit). To compute this quantity, the powerful vector
+arithmetic capabilities of R come in handy.
+
+\subsubsection{Rescaling a vector}\label{rescaling-a-vector}
+
+In R, arithmetic operations on vectors occur \emph{element-wise}. For a
+quick example, suppose we have height in inches:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{inches }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{69}\NormalTok{, }\DecValTok{62}\NormalTok{, }\DecValTok{66}\NormalTok{, }\DecValTok{70}\NormalTok{, }\DecValTok{70}\NormalTok{, }\DecValTok{73}\NormalTok{, }\DecValTok{67}\NormalTok{, }\DecValTok{73}\NormalTok{, }\DecValTok{67}\NormalTok{, }\DecValTok{70}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+and want to convert to centimeters. Notice what happens when we multiply
+\texttt{inches} by 2.54:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{inches }\SpecialCharTok{*} \FloatTok{2.54}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 175.26 157.48 167.64 177.80 177.80 185.42 170.18 185.42 170.18 177.80
+\end{verbatim}
+
+In the line above, we multiplied each element by 2.54. Similarly, if for
+each entry we want to compute how many inches taller or shorter than 69
+inches, the average height for males, we can subtract it from every
+entry like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{inches }\SpecialCharTok{{-}} \DecValTok{69}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  0 -7 -3  1  1  4 -2  4 -2  1
+\end{verbatim}
+
+\subsubsection{Two vectors}\label{two-vectors}
+
+If we have two vectors of the same length, and we sum them in R, they
+will be added entry by entry as follows:
+
+\[
+\begin{pmatrix}
+a\\
+b\\
+c\\
+d
+\end{pmatrix}
++
+\begin{pmatrix}
+e\\
+f\\
+g\\
+h
+\end{pmatrix}
+=
+\begin{pmatrix}
+a +e\\
+b + f\\
+c + g\\
+d + h
+\end{pmatrix}
+\]
+
+The same holds for other mathematical operations, such as \texttt{-},
+\texttt{*} and \texttt{/}.
+
+This implies that to compute the murder rates we can simply type:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murder\_rate }\OtherTok{\textless{}{-}}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{total }\SpecialCharTok{/}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{population }\SpecialCharTok{*} \DecValTok{100000}
+\end{Highlighting}
+\end{Shaded}
+
+Once we do this, we notice that California is no longer near the top of
+the list. In fact, we can use what we have learned to order the states
+by murder rate:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{abb[}\FunctionTok{order}\NormalTok{(murder\_rate)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "VT" "NH" "HI" "ND" "IA" "ID" "UT" "ME" "WY" "OR" "SD" "MN" "MT" "CO" "WA"
+## [16] "WV" "RI" "WI" "NE" "MA" "IN" "KS" "NY" "KY" "AK" "OH" "CT" "NJ" "AL" "IL"
+## [31] "OK" "NC" "NV" "VA" "AR" "TX" "NM" "CA" "FL" "TN" "PA" "AZ" "GA" "MS" "MI"
+## [46] "DE" "SC" "MD" "MO" "LA" "DC"
+\end{verbatim}
+
+\subsection{Indexing}\label{indexing}
+
+R provides a powerful and convenient way of indexing vectors. We can,
+for example, subset a vector based on properties of another vector. In
+this section, we continue working with our US murders example, which we
+can load like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dslabs)}
+\FunctionTok{data}\NormalTok{(}\StringTok{"murders"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Subsetting with logicals}\label{subsetting-with-logicals}
+
+We have now calculated the murder rate using:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murder\_rate }\OtherTok{\textless{}{-}}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{total }\SpecialCharTok{/}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{population }\SpecialCharTok{*} \DecValTok{100000} 
+\end{Highlighting}
+\end{Shaded}
+
+Imagine you are moving from Italy where, according to an ABC news
+report, the murder rate is only 0.71 per 100,000. You would prefer to
+move to a state with a similar murder rate. Another powerful feature of
+R is that we can use logicals to index vectors. If we compare a vector
+to a single number, it actually performs the test for each entry. The
+following is an example related to the question above:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ind }\OtherTok{\textless{}{-}}\NormalTok{ murder\_rate }\SpecialCharTok{\textless{}} \FloatTok{0.71}
+\end{Highlighting}
+\end{Shaded}
+
+If we instead want to know if a value is less or equal, we can use:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ind }\OtherTok{\textless{}{-}}\NormalTok{ murder\_rate }\SpecialCharTok{\textless{}=} \FloatTok{0.71}
+\end{Highlighting}
+\end{Shaded}
+
+Note that we get back a logical vector with \texttt{TRUE} for each entry
+smaller than or equal to 0.71. To see which states these are, we can
+leverage the fact that vectors can be indexed with logicals.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{state[ind]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Hawaii"        "Iowa"          "New Hampshire" "North Dakota" 
+## [5] "Vermont"
+\end{verbatim}
+
+In order to count how many are TRUE, the function \texttt{sum} returns
+the sum of the entries of a vector and logical vectors get
+\emph{coerced} to numeric with \texttt{TRUE} coded as 1 and
+\texttt{FALSE} as 0. Thus we can count the states using:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(ind)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5
+\end{verbatim}
+
+\subsubsection{Logical operators}\label{logical-operators}
+
+Suppose we like the mountains and we want to move to a safe state in the
+western region of the country. We want the murder rate to be at most 1.
+In this case, we want two different things to be true. Here we can use
+the logical operator \emph{and}, which in R is represented with
+\texttt{\&}. This operation results in \texttt{TRUE} only when both
+logicals are \texttt{TRUE}. To see this, consider this example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ConstantTok{TRUE} \SpecialCharTok{\&} \ConstantTok{TRUE}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ConstantTok{TRUE} \SpecialCharTok{\&} \ConstantTok{FALSE}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ConstantTok{FALSE} \SpecialCharTok{\&} \ConstantTok{FALSE}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
+For our example, we can form two logicals:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{west }\OtherTok{\textless{}{-}}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{region }\SpecialCharTok{==} \StringTok{"West"}
+\NormalTok{safe }\OtherTok{\textless{}{-}}\NormalTok{ murder\_rate }\SpecialCharTok{\textless{}=} \DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+and we can use the \texttt{\&} to get a vector of logicals that tells us
+which states satisfy both conditions:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ind }\OtherTok{\textless{}{-}}\NormalTok{ safe }\SpecialCharTok{\&}\NormalTok{ west}
+\NormalTok{murders}\SpecialCharTok{$}\NormalTok{state[ind]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Hawaii"  "Idaho"   "Oregon"  "Utah"    "Wyoming"
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{which}}{which}}\label{which}
+
+Suppose we want to look up California's murder rate. For this type of
+operation, it is convenient to convert vectors of logicals into indexes
+instead of keeping long vectors of logicals. The function \texttt{which}
+tells us which entries of a logical vector are TRUE. So we can type:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ind }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{state }\SpecialCharTok{==} \StringTok{"California"}\NormalTok{)}
+\NormalTok{murder\_rate[ind]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.374138
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{match}}{match}}\label{match}
+
+If instead of just one state we want to find out the murder rates for
+several states, say New York, Florida, and Texas, we can use the
+function \texttt{match}. This function tells us which indexes of a
+second vector match each of the entries of a first vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ind }\OtherTok{\textless{}{-}} \FunctionTok{match}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"New York"}\NormalTok{, }\StringTok{"Florida"}\NormalTok{, }\StringTok{"Texas"}\NormalTok{), murders}\SpecialCharTok{$}\NormalTok{state)}
+\NormalTok{ind}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 33 10 44
+\end{verbatim}
+
+Now we can look at the murder rates:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{murder\_rate[ind]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.667960 3.398069 3.201360
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{\texttt{\%in\%}}{\%in\%}}\label{in}
+
+If rather than an index we want a logical that tells us whether or not
+each element of a first vector is in a second, we can use the function
+\texttt{\%in\%}. Let's imagine you are not sure if Boston, Dakota, and
+Washington are states. You can find out like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{c}\NormalTok{(}\StringTok{"Boston"}\NormalTok{, }\StringTok{"Dakota"}\NormalTok{, }\StringTok{"Washington"}\NormalTok{) }\SpecialCharTok{\%in\%}\NormalTok{ murders}\SpecialCharTok{$}\NormalTok{state}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE FALSE  TRUE
+\end{verbatim}
+
+Note that we will be using \texttt{\%in\%} often throughout the book.
+
+\textbf{Advanced}: There is a connection between \texttt{match} and
+\texttt{\%in\%} through \texttt{which}. To see this, notice that the
+following two lines produce the same index (although in different
+order):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{match}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"New York"}\NormalTok{, }\StringTok{"Florida"}\NormalTok{, }\StringTok{"Texas"}\NormalTok{), murders}\SpecialCharTok{$}\NormalTok{state)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 33 10 44
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{which}\NormalTok{(murders}\SpecialCharTok{$}\NormalTok{state}\SpecialCharTok{\%in\%}\FunctionTok{c}\NormalTok{(}\StringTok{"New York"}\NormalTok{, }\StringTok{"Florida"}\NormalTok{, }\StringTok{"Texas"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 10 33 44
+\end{verbatim}
+
+\subsection{R programming}\label{r-programming}
+
+We teach R because it greatly facilitates data analysis. By coding in R,
+we can efficiently perform exploratory data analysis, build data
+analysis pipelines, and prepare data visualization to communicate
+results. However, R is not just a data analysis environment but a
+programming language. Advanced R programmers can develop complex
+packages and even improve R itself, but we do not cover advanced
+programming. Nonetheless, in Appendix @ref(appendix-r-programming), we
+introduce three key programming concepts: conditional expressions,
+for-loops, and functions. These are not just key building blocks for
+advanced programming, but are sometimes useful during data analysis.
+
+\pagebreak
+
+\end{document}
