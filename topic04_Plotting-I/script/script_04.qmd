@@ -17,6 +17,7 @@ execute:
 #| include: false
 import pandas as pd
 import numpy as np
+import scipy
 from plotnine import *
 import matplotlib.pyplot as plt
 from IPython.display import display, Image
@@ -413,13 +414,17 @@ Boxplots are also not suited for categorical data and discrete data with very fe
 
 As we will see in upcoming chapters, several tests assume that the data follows a particular distribution. We will now explore a plot which we can use to check whether such an assumption is reasonable.
 
+#### Distributions in Python
+
+The package `scipy` (Scientific Python) provides statistical methods in Python. It uses `numpy` underneath. For every implemented distribution, `scipy.stats` offers the random draw (`rvs`), the density (`pdf`), the cumulative distribution function (`cdf`), and its inverse (`ppf`) which allows you get quantiles (e.g.: `norm.rvs()`, `uniform.rvs()`, etc). In general, these are not unbiased estimators.
+
 #### Limitations of Histograms
 
 We already know a plot which can be used to visualize distributions, namely the histogram. We might think that it could be used to check distributional assumptions. However, this is somewhat complicated by the difficulty of choosing the right bin size. Consider, for example, the following histogram, visualizing a sample taken from a uniform distribution on the interval 0 to 1.:
 
 ```{python}
 #| fig-align: "center"
-x = np.random.rand(50)
+x = scipy.stats.uniform.rvs(size=50)
 (ggplot(pd.DataFrame({'x': x}), aes(x='x'))
   + geom_histogram(bins=20)
   + mytheme)
@@ -441,8 +446,6 @@ dec
 
 Here we implicitly chose to always make jumps of $10\%$. These quantiles are therefore called deciles.
 
-The package `scipy` (Scientific Python) provides statistical methods in Python. It uses `numpy` underneath. For every implemented distribution, `scipy.stats` offers the random draw (`rvs`), the density (`pdf`), the cumulative disibtuion function (`cdf`), and its inverse (`ppf`) which allows you get quantiles e.g.: `norm.rvs()`, `uniform.rvs()`, etc... In general, these are not unbiased estimators.
-
 We can make a scatter plot which compares the expected and the theoretical deciles:
 
 ```{python}
@@ -463,8 +466,8 @@ For a finite sample we can estimate the quantile for every data point. One way i
 
 ```{python}
 #| fig-align: "center"
-(ggplot(pd.DataFrame({'x': np.sort(x),
-                      'y': (np.arange(1, len(x)+1) - 0.5) / len(x)}), aes(x='y', y='x'))
+(ggplot(pd.DataFrame({'x': (np.arange(1, len(x)+1) - 0.5) / len(x),
+                      'y': np.sort(x)}), aes(x='y', y='x'))
   + geom_point()
   + xlim(0, 1)
   + ylim(0, 1)
