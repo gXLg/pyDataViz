@@ -73,7 +73,7 @@ book:
   title: "Data Analysis and Visualization in Python"
   chapters:
     - index.qmd
-    #- topic00_Introduction/script/script_00.qmd
+    - topic00_Introduction/script/script_00.qmd
     - part: "I Get"
       chapters: 
        - topic01_Python_Basics/script/script_01.qmd
@@ -85,7 +85,7 @@ book:
        - topic05_Plotting-II/script/script_05.qmd
        - topic06_Plotting-III/script/script_06.qmd
      
-  # appendices:
-  #   - appendix03_Plotting/script/appendix_03.qmd
-  #   - appendix04_Probabilities/script/appendix_04.qmd
+  appendices:
+    - appendix03_Plotting/script/appendix_03.qmd
+    - appendix04_Probabilities/script/appendix_04.qmd
 
