@@ -20,6 +20,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from plotnine import *
 
+
 # Set theme similar to original
 mysize = 9
 mytheme = (theme_bw() +
@@ -28,7 +29,7 @@ mytheme = (theme_bw() +
                  legend_title=element_text(size=mysize),
                  legend_text=element_text(size=mysize)))
 
-np.random.seed(0)
+np.random.seed(42)
 ```
 
 
@@ -191,19 +192,19 @@ In Python this can done with the following code:
 ## common cause
 ## x <- z -> y
 ###############
-np.random.seed(42)
+from scipy.stats import norm, binom
 
 n = 1000 # number of draws
 
 # z: n draws of the binomial
 # with 2 trials and prob=0.5 
-z = np.random.binomial(n=2, p=0.5, size=n)
+z = binom.rvs(n=2, p=0.5, size=n)
 
 # x: Gaussian with mean z
-x = np.random.normal(loc=z, scale=1, size=n)
+x = norm.rvs(loc=z, scale=1, size=n)
 
 # y: Gaussian with mean 2*z
-y = np.random.normal(loc=2 * z, scale=1, size=n)
+y = norm.rvs(loc=2 * z, scale=1, size=n)
 
 # gather into a DataFrame
 # we make z a Categorical variable for convenience with plotting functions
@@ -281,15 +282,15 @@ The following Python code simulates such data:
 ```{python}
 # first step:  tossing a coin once
 # record x=1 if head, x=0 if tail.
-x_indirect = np.random.binomial(n=1, p=0.5, size=n)
+x_indirect = binom.rvs(n=1, p=0.5, size=n)
 
 # second step
 # if x=0, toss the coin once, if x=1, toss the coins twice
 # record z the number of heads of this second step. 
-z_indirect = np.random.binomial(n=x_indirect + 1, p=0.5, size=n)
+z_indirect = binom.rvs(n=x_indirect + 1, p=0.5, size=n)
 
 ## y: Gaussian with mean=z
-y_indirect = np.random.normal(loc=z_indirect, scale=0.5, size=n)
+y_indirect = norm.rvs(loc=z_indirect, scale=0.5, size=n)
 
 df_indirect = pd.DataFrame({
     'x': pd.Categorical(["x=" + str(val) for val in x_indirect]),
@@ -431,8 +432,8 @@ The following code simulates such data:
 #############
 ## common consequence x->z<-y
 #############
-x_conseq = np.random.normal(0, 1, n)
-y_conseq = np.random.normal(0, 1, n)
+x_conseq = norm.rvs(0, 1, n)
+y_conseq = norm.rvs(0, 1, n)
 z_conseq = (x_conseq + y_conseq) > 1
 
 df_conseq = pd.DataFrame({
@@ -594,25 +595,86 @@ There are several options for color coding with `plotnine` and `seaborn` in Pyth
 
 #### Color palettes 
 
-The package `seaborn` provides a comprehensive set of nice color palettes:
 
-![](../../assets/img/lec06_palettes_seaborn.png){fig-align="center" width=70%}
+A set of color palettes you can use with `plotnine`:
+
+![](../../assets/img/palettes.png){fig-align="center" width=70%}
 
 
-Generally, we use sequential palettes for continuous variables to show quantitative differences: 
-
+We use qualitative palettes for categorical variables to separate items into distinct groups. In plotnine you can use `scale_fill_brewer` to create qualitative palettes:
 ```{python}
-#| echo: false
-#| eval: true
-sns.light_palette("seagreen", as_cmap=True)
+#| echo: true
+#| eval: false
++ p9.scale_fill_brewer(type = 'qual', palette = {palette of choice}) 
 ```
 
-We use qualitative palettes for categorical variables to separate items into distinct groups and we use diverging palettes for numeric variables that have a meaningful central value or breakout point (e.g. 0).
 
 ```{python}
 #| echo: false
 #| eval: true
-sns.color_palette("vlag", as_cmap=True)
+num_colors = 9 
+df_swatch_cat = pd.DataFrame({
+    'category': [f'Cat {i}' for i in range(num_colors)],
+    'x': np.arange(num_colors),
+})
+(
+    ggplot(df_swatch_cat, aes(x='x', y=0, fill='category')) 
+    + geom_tile(color='gray', size=0.5) 
+    # Use scale_fill_brewer, specifying type='qual' and a qualitative palette name
+    + scale_fill_brewer(type='qual', palette='Set1') 
+    + theme_void()
+    + theme(legend_position='none', figure_size = (9, 1))
+)
+```
+
+
+Generally, we use sequential palettes for continuous variables to show quantitative differences. In plotnine you can use `scale_fill_distiller` to create sequential palettes :
+
+```{python}
+#| echo: true
+#| eval: false
++ p9.scale_fill_distiller(type = 'sequential', palette = {palette of choice})
+```
+
+
+```{python}
+#| echo: false
+#| eval: true
+df_swatch = pd.DataFrame({
+    'x': np.arange(num_colors),
+    'value': np.arange(num_colors),
+    'value_centered': np.arange(- (num_colors // 2), (num_colors // 2) + 1) 
+})
+
+(
+    ggplot(df_swatch, aes(x='x', y=0, fill='value')) 
+    + geom_tile(color='gray', size=0.5)
+    + scale_fill_distiller(type='sequential', palette='Greens')
+    + theme_void()
+    + theme(legend_position='none', figure_size = (9, 1))
+)
+```
+
+
+
+We use diverging palettes for numeric variables that have a meaningful central value or breakout point (e.g. 0). In plotnine you can use `scale_fill_distiller` to create diverging palettes 
+
+```{python}
+#| echo: true
+#| eval: false
++ p9.scale_fill_distiller(type = 'diverging', palette = {palette of choice})
+```
+
+```{python}
+#| echo: false
+#| eval: true
+(
+    ggplot(df_swatch, aes(x='x', y=0, fill='value_centered'))
+    + geom_tile(color='gray', size=0.5)
+    + scale_fill_distiller(type='diverging', palette='RdBu')
+    + theme_void()
+    + theme(legend_position='none', figure_size = (9, 1))
+)
 ```
 
 
@@ -631,6 +693,22 @@ In the following example, the squares seem to have a different color but they ac
 **Rule #2: sufficient contrast for visibility**
 
 If we want objects in a table or graph to be easily seen, we need to use a background color that contrasts sufficiently with the object that we want to visualize.
+```{python}
+#| eval: true
+#| echo: false
+#| fig-align: center
+
+import seaborn as sns
+df = sns.load_dataset('anscombe')
+df = df[df.dataset == 'I']
+
+(
+    ggplot(df, aes(x='x', y='y', color='dataset'))
+    + geom_point(size=3, color = '#FFFFCC')
+    + geom_smooth(method = 'lm', se=False, color = 'black', size = 0.5)
+    + mytheme + theme(figure_size=(3, 2))
+)
+```
 
 **Rule #3: meaningful color usage**
 
