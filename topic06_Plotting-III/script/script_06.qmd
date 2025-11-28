@@ -1,5 +1,4 @@
 ---
-title: "Graphically Supported Hypotheses"
 format:
   html:
     number-sections: true
@@ -10,6 +9,7 @@ execute:
   fig-height: 3
   fig-width: 4
   warning: false
+# bibliography: book.bib
 ---
 
 ```{python}
@@ -20,8 +20,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from plotnine import *
 
-
-# Set theme similar to original
 mysize = 9
 mytheme = (theme_bw() +
            theme(axis_title=element_text(size=mysize),
@@ -32,6 +30,7 @@ mytheme = (theme_bw() +
 np.random.seed(42)
 ```
 
+# Graphically Supported Hypotheses {#sec-graph-supp-hyp}
 
 In the last 2 chapters we presented the different types of plots. We now consider the task of structuring and presenting an entire analysis. We want to be able to provide novel insights from a dataset. Guided by the scientific method, a major aspect will be to give strong support for testable hypotheses. This is important in basic research to suggest experimental validations (does this gene affect growth?), but also for decision makers in public health (does smoking cause cancer?), public governance (would investing in education benefit economy?) or in the industry (would modifying a process increase productivity, modifying a product increases sales, etc.?).  
 
@@ -43,7 +42,7 @@ This chapter covers:
 
 * good practices to organize reports and presentations and to have visuals to convey one's main message 
 
-## Descriptive vs. associative plots
+## Descriptive vs. associative plots 
 
 A typical data analysis starts with an exploration of the data. These are illustrated with descriptive plots showing how the data is distributed. This allows the audience and oneself to get familiar with the dataset in an unbiased fashion (e.g. number of participants in study, age and sex distributions). Afterwards, one typically highlights some interesting relationships between variables, often in order to suggest a testable, causal relationship. We call the latter types of plots associative plots. 
 
@@ -242,7 +241,7 @@ As a consequence, $x$ and $y$ correlate with each other:
 ```{python}
 (
     ggplot(df_common_cause, aes(x='x', y='y')) +
-    geom_point(alpha=0.5) + labs(title="Pooled X vs Y") +
+    geom_point(alpha=0.5) +
     theme(figure_size = (4, 4))
 )
 ```

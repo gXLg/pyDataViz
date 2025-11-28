@@ -1,5 +1,4 @@
 ---
-title: "Resampling-based Statistical Assessment"
 format:
   html:
     number-sections: true
@@ -38,6 +37,7 @@ mytheme = (
 
 ```
 
+# Resampling-based Statistical Assessment {#sec-resampling-chp}
 
 Suppose a friend says she can correctly predict the winning team in any football game, due to her deep knowledge of the sport. To test this, we ask for her predictions for two Champions League games. She turns out to be right both times. On a first glance, this seems very impressive: she has a $100\%$ success rate! Should we hence bet a lot of money on her next prediction? What if she is just guessing and got lucky?
 
@@ -45,7 +45,7 @@ Someone who just flips a coin to decide the winner has a $25\%$ chance to get lu
 
 This chapter introduces concepts and methods to answer these types of questions. We cover the concept of hypothesis testing and of statistical significance, which is another way of saying that a trend is unlikely to have arisen purely by chance. We also introduce the concept of confidence interval which models our uncertainty when estimating parameters such as the mean of a variable. To this end, this chapter describes two largely applicable computational methods: permutation testing and case resampling. These methods are based on resampling the data at hand, thereby making little modeling assumptions.
 
-## The yeast dataset {#yeast-dataset}
+## The yeast dataset {#sec-yeast-dataset}
 
 ### The experiment
 

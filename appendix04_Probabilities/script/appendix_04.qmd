@@ -32,7 +32,7 @@ $$
 :::
 
 
-# Probabilities {#appendix-probabilities}
+# Probabilities {#sec-appendix-probabilities}
 
 This Appendix covers basic definitions and results of probabilities. It does not aim to replace a lecture on probabilities.
 
