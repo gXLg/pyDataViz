@@ -254,6 +254,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Resampling-based Statistical Assessment</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic08_Statistical-Testing-II/script/script_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Analytical Statistical Assessment</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -362,13 +368,13 @@ div.csl-indent {
 <section id="datasets-used-in-this-chapter" class="level3" data-number="3.1.2">
 <h3 data-number="3.1.2" class="anchored" data-anchor-id="datasets-used-in-this-chapter"><span class="header-section-number">3.1.2</span> Datasets used in this chapter</h3>
 <p>The following code chunks load libraries and tables used throughout this chapter.</p>
-<div id="3ee6ba01" class="cell" data-execution_count="2">
+<div id="7d087878" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="1815cf50" class="cell" data-execution_count="3">
+<div id="0fa1805e" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>DATADIR <span class="op">=</span> Path(<span class="st">'../../extdata'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>election_results <span class="op">=</span> pd.read_csv(DATADIR <span class="op">/</span> <span class="st">'US-pres16results.csv'</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>election_results <span class="op">=</span> (</span>
@@ -407,7 +413,7 @@ div.csl-indent {
 <li>Each <strong>value</strong> has its own <strong>cell</strong>.</li>
 </ol>
 <p>The following dataset from the 2016 US presidential vote<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is an example of a tidy dataset:</p>
-<div id="d567ce8b" class="cell" data-execution_count="4">
+<div id="d025a04c" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
@@ -520,7 +526,7 @@ div.csl-indent {
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="melting-wide-to-long"><span class="header-section-number">3.3.1</span> Melting (wide to long)</h3>
 <p>One of the most used operations to obtain tidy data is to transform a wide table into a long table. This operation is called melting, by analogy with melting a piece of metal. It is useful in particular when data is untidy because column headers are values, and not variable names.</p>
 <p>As an example, consider the table below which reports vote counts for two US states, California and Florida. In this table, the column names CA and FL are values of the variable <em>state</em>. Therefore, we can say that this table is in an untidy format:</p>
-<div id="c148fc0b" class="cell" data-execution_count="5">
+<div id="14d53995" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>table4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
@@ -568,7 +574,7 @@ div.csl-indent {
 </div>
 </div>
 <p><img src="../../assets/img/lec05_tidy-gather_alternate.png" class="img-fluid" alt="Melting the election dataset"> Melting the previous table can be achieved by using the <strong>pandas</strong> method <code>melt()</code>:</p>
-<div id="aec0a0f3" class="cell" data-execution_count="6">
+<div id="c794c656" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pd.melt(table4, </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        id_vars <span class="op">=</span> <span class="st">"candidate"</span>, </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        value_vars <span class="op">=</span> [<span class="st">'CA'</span>, <span class="st">'FL'</span>],</span>
@@ -652,7 +658,7 @@ div.csl-indent {
 <section id="pivoting-long-to-wide" class="level3" data-number="3.3.2">
 <h3 data-number="3.3.2" class="anchored" data-anchor-id="pivoting-long-to-wide"><span class="header-section-number">3.3.2</span> Pivoting (long to wide)</h3>
 <p>The other way around also happens frequently. It is helpful when multiple variables are stored in one column. In the table below, multiple values, namely the number of votes for a candidate and the total number of votes, are reported in one column. It is not easy to compute the percentage of votes given to a candidate in this format. To tidy up this table we have to separate those values into two columns:</p>
-<div id="87aab25c" class="cell" data-execution_count="7">
+<div id="c030e6ce" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>table2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
@@ -726,7 +732,7 @@ div.csl-indent {
 </div>
 <p>This operation, which transforms a long table into a wide table is called casting, following up with the metal forging analogy employed with the term “melting”.</p>
 <p>Pandas <strong>pivot</strong> transforms a long table into a wide table and is achieved with the <code>pivot</code> method whose most frequent usage is:</p>
-<div id="ba29add7" class="cell" data-execution_count="8">
+<div id="0ffe8957" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wide <span class="op">=</span> data.pivot(index<span class="op">=</span><span class="st">'&lt;id&gt;'</span>, columns<span class="op">=</span><span class="st">'&lt;pivot_variable&gt;'</span>, </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>values<span class="op">=</span><span class="st">'&lt;value&gt;'</span>).reset_index()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -737,7 +743,7 @@ div.csl-indent {
 <li><p><code>index</code>: Specifies the column(s) that should form the new row indices (keys) of the wide table. (Note: Using <code>reset_index()</code> is necessary after the pivot to turn these indices back into regular columns.)</p></li>
 </ul>
 <p>The call then is:</p>
-<div id="36722851" class="cell" data-execution_count="9">
+<div id="1bd8e880" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>table2.pivot(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>[<span class="st">"candidate"</span>, <span class="st">"state"</span>],   </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span><span class="st">"type"</span>,              </span>
@@ -791,7 +797,7 @@ div.csl-indent {
 <section id="splitting-columns" class="level3" data-number="3.3.3">
 <h3 data-number="3.3.3" class="anchored" data-anchor-id="splitting-columns"><span class="header-section-number">3.3.3</span> Splitting columns</h3>
 <p>Sometimes single variables can be spread across multiple columns as in the following table.</p>
-<div id="4d122ee2" class="cell" data-execution_count="10">
+<div id="c15c940d" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">## One column contains multiple variables</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>table3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
@@ -835,7 +841,7 @@ div.csl-indent {
 </div>
 <p>The number of votes per candidate is displayed in the numerator of the <code>proportion</code> column and the total number in the denominator.</p>
 <p>We split up the <code>proportion</code> column into two columns, one containing the votes and the other one containing the total votes with the method <code>str.split</code>: Since the resulting split columns inherit the initial <code>object</code> dtype (string), we explicitly cast them to integer type to enable downstream computations.</p>
-<div id="36c83c04" class="cell" data-execution_count="11">
+<div id="ea5d4700" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>table3[[<span class="st">"votes"</span>, <span class="st">"total_votes"</span>]] <span class="op">=</span> table3[<span class="st">"proportion"</span>] <span class="op">\</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  .<span class="bu">str</span>.split(<span class="st">"/"</span>, expand<span class="op">=</span><span class="va">True</span>).astype(<span class="bu">int</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>table3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -891,7 +897,7 @@ div.csl-indent {
 <section id="combining-columns" class="level3" data-number="3.3.4">
 <h3 data-number="3.3.4" class="anchored" data-anchor-id="combining-columns"><span class="header-section-number">3.3.4</span> Combining columns</h3>
 <p>In this example the first and last names are separated columns without a real need for it (we will not be interested in computing any statistics over all Hillary’s):</p>
-<div id="6c1b71c2" class="cell" data-execution_count="12">
+<div id="79088a9e" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>table5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <div>
@@ -957,7 +963,7 @@ div.csl-indent {
 </div>
 </div>
 <p>We combine the contents of the name and surname columns into a single candidate column using the string addition operation <code>+</code></p>
-<div id="a316ba32" class="cell" data-execution_count="13">
+<div id="f9ca249a" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>table5[<span class="st">"candidate"</span>] <span class="op">=</span> table5[<span class="st">"name"</span>] <span class="op">+</span> <span class="st">" "</span> <span class="op">+</span> table5[<span class="st">"surname"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="quarto-figure quarto-figure-center">
@@ -970,7 +976,7 @@ div.csl-indent {
 <section id="advanced-columns-containing-sets-of-values" class="level3" data-number="3.3.5">
 <h3 data-number="3.3.5" class="anchored" data-anchor-id="advanced-columns-containing-sets-of-values"><span class="header-section-number">3.3.5</span> Advanced: Columns containing sets of values</h3>
 <p>Kaggle, a machine learning platform, conducts a yearly survey among its users. Below are a few columns of the answers from the 2017 survey. In those columns, we observe another type of untidy data. In this survey, multiple choice questions were asked from which multiple answers could be selected. For each individual the selected answers are concatenated into a string.</p>
-<div id="a4175440" class="cell" data-execution_count="14">
+<div id="42bf95fc" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>survey <span class="op">=</span> pd.read_csv(DATADIR <span class="op">/</span> <span class="st">'kaggle-survey-2017/multipleChoiceResponses.csv'</span>, encoding<span class="op">=</span><span class="st">'latin-1'</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>survey[[<span class="st">'LanguageRecommendationSelect'</span>, <span class="st">'LearningPlatformSelect'</span>, <span class="st">'PastJobTitlesSelect'</span>]].head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
@@ -1025,7 +1031,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Below is one solution of how the <code>LearningPlatformSelect</code> column could be transformed into a tidy format.</p>
-<div id="ec9d0a44" class="cell" data-execution_count="15">
+<div id="4ab568fe" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>platform_splits <span class="op">=</span> survey[<span class="st">'LearningPlatformSelect'</span>].<span class="bu">str</span>.split(<span class="st">','</span>, expand<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>platform_splits[<span class="st">'individual'</span>] <span class="op">=</span> survey.index</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>LearningPlatformMelt <span class="op">=</span> platform_splits.melt(</span>
@@ -1092,7 +1098,7 @@ div.csl-indent {
 <p>One frequently has to concatenate (i.e.&nbsp;append) tables with a same format. Such tables may already be loaded into a list or shall be read from multiple files.</p>
 <p>For instance, assume a service generates a new file of data per day in a given directory. One is interested in analyzing the files of multiple days jointly. This requires to list all files of the directory, to read each file and to concatenate them into one.</p>
 <p>Here is an example with daily COVID-19 data. We first get all file names of the directory into a character vector called <code>files</code>:</p>
-<div id="81354d6a" class="cell" data-show="false" data-execution_count="16">
+<div id="83fc8eca" class="cell" data-show="false" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>files <span class="op">=</span> glob.glob(<span class="ss">f"</span><span class="sc">{</span>DATADIR<span class="sc">}</span><span class="ss">/cov_concatenate/*"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>files[:<span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
@@ -1104,7 +1110,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Let us now look at the first table:</p>
-<div id="a27829e2" class="cell" data-execution_count="17">
+<div id="ff91f93b" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(files[<span class="dv">0</span>])</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
@@ -1153,7 +1159,7 @@ div.csl-indent {
 </div>
 </div>
 <p>To combine the different tables into one, we first read each CSV file and store its contents in a list of DataFrames. For each file, we extract the filename using <code>Path(f).name</code> and add it as a new column called filename using <code>.assign</code>. After all the individual DataFrames are collected in the list dfs, we use <code>pd.concat</code> to concatenate them into a single DataFrame. <code>ignore_index=True</code> ensures the concatenated DataFrame gets a new continuous index instead of keeping the original indices from each file.</p>
-<div id="21c1b383" class="cell" data-execution_count="18">
+<div id="ed79faf8" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="op">=</span> []</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> files:</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    name <span class="op">=</span> Path(f).name</span>
@@ -1238,7 +1244,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Alternatively, we can achieve the same result in a single line using a Python list comprehension.</p>
-<div id="5f1c0ebd" class="cell" data-execution_count="19">
+<div id="00724283" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df_concat <span class="op">=</span> (pd.concat([pd.read_csv(f).assign(filename<span class="op">=</span>Path(f).name) </span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>              <span class="cf">for</span> f <span class="kw">in</span> files], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            )</span>
@@ -1322,7 +1328,7 @@ div.csl-indent {
 <section id="merging-tables" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="merging-tables"><span class="header-section-number">3.5</span> Merging tables</h2>
 <p>Merging two data tables into one by common column(s) is frequently needed. This can be achieved using the <code>merge</code> method whose core signature is:</p>
-<div id="56ffd84c" class="cell" data-execution_count="20">
+<div id="9715870c" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df.merge(y, <span class="co"># tables to merge</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>        how <span class="op">=</span> <span class="st">'left'</span>, <span class="co"># type of merge</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        on<span class="op">=</span><span class="va">None</span>, left_on<span class="op">=</span><span class="va">None</span>, right_on<span class="op">=</span><span class="va">None</span> <span class="co"># by which columns</span></span>
@@ -1336,7 +1342,7 @@ div.csl-indent {
 <li><p><strong>Right (all.y)</strong>: consider all rows from <code>y</code>, even if they have no matching row in <code>x</code>.</p></li>
 </ul>
 <p>We now provide examples of each type using the following made up tables:</p>
-<div id="d69a1b23" class="cell" data-execution_count="21">
+<div id="df9e63e9" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'p_id'</span>: [<span class="st">'G008'</span>, <span class="st">'F027'</span>, <span class="st">'L051'</span>],</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'value'</span>: np.random.normal(size<span class="op">=</span><span class="dv">3</span>)</span>
@@ -1363,17 +1369,17 @@ div.csl-indent {
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>G008</td>
-<td>-1.295417</td>
+<td>0.103966</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>F027</td>
-<td>2.056285</td>
+<td>-0.549459</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
 <td>L051</td>
-<td>-0.447623</td>
+<td>2.333826</td>
 </tr>
 </tbody>
 </table>
@@ -1419,7 +1425,7 @@ div.csl-indent {
 <section id="inner-merge" class="level3" data-number="3.5.1">
 <h3 data-number="3.5.1" class="anchored" data-anchor-id="inner-merge"><span class="header-section-number">3.5.1</span> Inner merge</h3>
 <p>An inner merge returns only rows with matching values in the <code>on</code> columns and discards all other rows:</p>
-<div id="eae95f68" class="cell" data-execution_count="22">
+<div id="478babe7" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inner merge, default one</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> df1.merge(df2, on<span class="op">=</span><span class="st">'p_id'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1440,13 +1446,13 @@ div.csl-indent {
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>G008</td>
-<td>-1.295417</td>
+<td>0.103966</td>
 <td>Germany</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>F027</td>
-<td>2.056285</td>
+<td>-0.549459</td>
 <td>France</td>
 </tr>
 </tbody>
@@ -1460,7 +1466,7 @@ div.csl-indent {
 <section id="outer-full-merge" class="level3" data-number="3.5.2">
 <h3 data-number="3.5.2" class="anchored" data-anchor-id="outer-full-merge"><span class="header-section-number">3.5.2</span> Outer (full) merge</h3>
 <p>An outer merge returns all rows and columns from <code>x</code> and <code>y</code>. If there are no matching values in <code>p_id</code>, it yields missing values (<code>NaN</code>):</p>
-<div id="498f950b" class="cell" data-execution_count="23">
+<div id="241a5674" class="cell" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Outer (full) merge</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> df1.merge(df2, on<span class="op">=</span><span class="st">'p_id'</span>, how<span class="op">=</span><span class="st">'outer'</span>)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1481,19 +1487,19 @@ div.csl-indent {
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>F027</td>
-<td>2.056285</td>
+<td>-0.549459</td>
 <td>France</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>G008</td>
-<td>-1.295417</td>
+<td>0.103966</td>
 <td>Germany</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
 <td>L051</td>
-<td>-0.447623</td>
+<td>2.333826</td>
 <td>NaN</td>
 </tr>
 <tr class="even">
@@ -1514,7 +1520,7 @@ div.csl-indent {
 <section id="left-merge" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="left-merge"><span class="header-section-number">3.6</span> Left merge</h2>
 <p>Returns all rows from <code>x</code>, even if they have no matching row in <code>y</code>. Rows from <code>x</code> with no matching <code>p_id</code> in <code>y</code> lead to missing values (<code>NaN</code>).</p>
-<div id="ee085ec5" class="cell" data-execution_count="24">
+<div id="57ee4394" class="cell" data-execution_count="24">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Left merge </span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> df1.merge(df2, on<span class="op">=</span><span class="st">'p_id'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1535,19 +1541,19 @@ div.csl-indent {
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>G008</td>
-<td>-1.295417</td>
+<td>0.103966</td>
 <td>Germany</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>F027</td>
-<td>2.056285</td>
+<td>-0.549459</td>
 <td>France</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
 <td>L051</td>
-<td>-0.447623</td>
+<td>2.333826</td>
 <td>NaN</td>
 </tr>
 </tbody>
@@ -1561,7 +1567,7 @@ div.csl-indent {
 <section id="right-merge" class="level2" data-number="3.7">
 <h2 data-number="3.7" class="anchored" data-anchor-id="right-merge"><span class="header-section-number">3.7</span> Right merge</h2>
 <p>Returns all rows from <code>y</code>, even if they have no matching row in <code>x</code>. Rows from <code>y</code> with no matching <code>p_id</code> in <code>x</code> lead to missing values (<code>NaN</code>).</p>
-<div id="0569051c" class="cell" data-execution_count="25">
+<div id="f4b87fa2" class="cell" data-execution_count="25">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Right merge</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> df1.merge(df2, on<span class="op">=</span><span class="st">'p_id'</span>, how<span class="op">=</span><span class="st">'right'</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1582,13 +1588,13 @@ div.csl-indent {
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>G008</td>
-<td>-1.295417</td>
+<td>0.103966</td>
 <td>Germany</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>F027</td>
-<td>2.056285</td>
+<td>-0.549459</td>
 <td>France</td>
 </tr>
 <tr class="odd">
@@ -1607,7 +1613,7 @@ div.csl-indent {
 <section id="merging-by-several-columns" class="level3" data-number="3.7.1">
 <h3 data-number="3.7.1" class="anchored" data-anchor-id="merging-by-several-columns"><span class="header-section-number">3.7.1</span> Merging by several columns</h3>
 <p>Merging can also be done using more than two columns. Here are two made up tables to illustrate this use case:</p>
-<div id="95cec720" class="cell" data-execution_count="26">
+<div id="2f8b5b84" class="cell" data-execution_count="26">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'firstname'</span>: [<span class="st">'Alice'</span>, <span class="st">'Alice'</span>, <span class="st">'Bob'</span>],</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'lastname'</span>:  [<span class="st">'Coop'</span>,  <span class="st">'Smith'</span>, <span class="st">'Smith'</span>],</span>
@@ -1699,7 +1705,7 @@ div.csl-indent {
 </div>
 </div>
 <p>We now merge <code>df1</code> and <code>df2</code> by first name and last name:</p>
-<div id="c0be0478" class="cell" data-execution_count="27">
+<div id="8cf429f1" class="cell" data-execution_count="27">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df1.merge(df2, on<span class="op">=</span>[<span class="st">'firstname'</span>, <span class="st">'lastname'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
 <div>
@@ -1738,7 +1744,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Note that merging by first name only gives a different result (as expected):</p>
-<div id="5368470d" class="cell" data-execution_count="28">
+<div id="17161e5b" class="cell" data-execution_count="28">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df1.merge(df2, on<span class="op">=</span><span class="st">'firstname'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
 <div>
@@ -1813,7 +1819,7 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 <figcaption>Iris</figcaption>
 </figure>
 </div>
-<div id="63ff4ab3" class="cell" data-execution_count="29">
+<div id="fa43b4a2" class="cell" data-execution_count="29">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn <span class="im">import</span> datasets</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>iris <span class="op">=</span> datasets.load_iris(as_frame<span class="op">=</span><span class="va">True</span>)</span>
@@ -1829,7 +1835,7 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 <span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here is one tidy representation where each row represents one flower:</p>
-<div id="4cafbd07" class="cell" data-execution_count="30">
+<div id="a0d06513" class="cell" data-execution_count="30">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Iris dataset, usual representation</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>iris_df.head(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="28">
@@ -1884,7 +1890,7 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 </div>
 </div>
 <p>Here is another tidy representation where each row represents one measurement:</p>
-<div id="4996ff15" class="cell" data-execution_count="31">
+<div id="896a7590" class="cell" data-execution_count="31">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Another tidy representation</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>iris_melt.head(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="29">
@@ -1936,7 +1942,7 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 <h3 data-number="3.8.2" class="anchored" data-anchor-id="on-multiple-types-of-observational-units-in-the-same-table"><span class="header-section-number">3.8.2</span> On multiple types of observational units in the same table</h3>
 <p>Another important remark for handling tidy data in practice relates to the last common sign of messy datasets according to <span class="citation" data-cites="Wickham2014">Wickham (<a href="#ref-Wickham2014" role="doc-biblioref">2014</a>)</span>, i.e.&nbsp;“Multiple types of observational units are stored in the same table”. Applying this criteria actually depends on the context.</p>
 <p>Consider the following table which combines product and customer data:</p>
-<div id="6f657c62" class="cell" data-execution_count="32">
+<div id="030834a8" class="cell" data-execution_count="32">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>prod_df <span class="op">=</span> pd.DataFrame({</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"productCode"</span>: [<span class="st">"p018"</span>, <span class="st">"p030"</span>, <span class="st">"p018"</span>],</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"productName"</span>: [<span class="st">"dryer"</span>, <span class="st">"phone"</span>, <span class="st">"dryer"</span>],</span>
@@ -2004,7 +2010,7 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 <ul>
 <li>a consumer table:</li>
 </ul>
-<div id="e2854c76" class="cell" data-execution_count="33">
+<div id="8232e620" class="cell" data-execution_count="33">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>prod_df[[<span class="st">'customerNumber'</span>, <span class="st">'customerName'</span>, <span class="st">'state'</span>]].drop_duplicates()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="31">
 <div>
@@ -2042,7 +2048,7 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 <ul>
 <li>a product table:</li>
 </ul>
-<div id="ced47dc3" class="cell" data-execution_count="34">
+<div id="a48e0dbc" class="cell" data-execution_count="34">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>prod_df[[<span class="st">'productCode'</span>, <span class="st">'priceEach'</span>]].drop_duplicates()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="32">
 <div>
@@ -2077,7 +2083,7 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 <ul>
 <li>an order table:</li>
 </ul>
-<div id="7febbf9f" class="cell" data-execution_count="35">
+<div id="31f30128" class="cell" data-execution_count="35">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>prod_df[[<span class="st">'productCode'</span>, <span class="st">'customerNumber'</span>, <span class="st">'quantOrdered'</span>]].drop_duplicates()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="33">
 <div>
@@ -2120,7 +2126,7 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 </div>
 <p>The three-table representation, where each table has unique entries is called a normalized representation. Normalized representations ensure that no multiple types of observational units are stored in the same table. It is a good habit to have normalized representations for database back-ends because it facilitates maintenance of the data consistency by reducing redundancy. One should not enter all customer details at each order but do it one central place and link the information with a customer number.</p>
 <p>However, on the data analysis side (front-end), we are not interested in maintaining a database (back-end), rather in having the desired data in a ready-to-use format which depends on our needs. To this end, the merge table is very handy and can be the common denominator of multiple analyses like:</p>
-<div id="f6168103" class="cell" data-execution_count="36">
+<div id="83a5ad76" class="cell" data-execution_count="36">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># vectorized operations e.g. total price of each order</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>prod_df[<span class="st">"totalPrice"</span>] <span class="op">=</span> prod_df[<span class="st">"quantOrdered"</span>] <span class="op">*</span> prod_df[<span class="st">"priceEach"</span>]</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
