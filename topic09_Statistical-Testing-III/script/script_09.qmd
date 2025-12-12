@@ -147,7 +147,7 @@ dt_res = pd.DataFrame({'n': ns, 'p_value': pvs})
 (
   ggplot(dt_res, aes(x='n', y='p_value')) 
   + geom_point() 
-  + scale_x_log10()
+  # + scale_x_log10()
   + mytheme
   + theme(figure_size=(4,4))
 )
@@ -163,13 +163,11 @@ Once we have a million observations, we can easily reject the null hypothesis th
 
 mu_x = 0
 mu_y = 0.01
-n = 10
+n = 1_000_000
 
-# Generate data
 x = np.random.normal(mu_x, 1, n)
 y = np.random.normal(mu_y, 1, n)
 
-# Create DataFrame
 dt = pd.DataFrame({
     'value': np.concatenate([x, y]),
     'group': np.repeat(['x', 'y'], n)
