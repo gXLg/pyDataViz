@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>10&nbsp; Linear Regression – Data Analysis and Visualization in Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../appendix03_Plotting/script/appendix_03.html" rel="next">
+<link href="../../topic09_Statistical-Testing-III/script/script_09.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-87f2a376d176e4e5e755e23f537f413f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../style.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../topic07_Statistical-Testing-I/script/script_07.html">III Conclude</a></li><li class="breadcrumb-item"><a href="../../topic10_LinearRegression/script/script_10.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Data Analysis and Visualization in Python</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Analysis and Visualization in Python (IN2339)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic00_Introduction/script/script_00.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">I Get</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic01_Python_Basics/script/script_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Python Basics for Data Science</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic02_Data_Wrangling/script/script_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Wrangling</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic03_Tidy_Data/script/script_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Tidy data and combining tables</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">II Look</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic04_Plotting-I/script/script_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Low dimensional visualizations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic05_Plotting-II/script/script_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">High dimensional visualizations</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic06_Plotting-III/script/script_06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Graphically Supported Hypotheses</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">III Conclude</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic07_Statistical-Testing-I/script/script_07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Resampling-based Statistical Assessment</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic08_Statistical-Testing-II/script/script_08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Analytical Statistical Assessment</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic09_Statistical-Testing-III/script/script_09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Statistical Assessments for Big Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic10_LinearRegression/script/script_10.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendix03_Plotting/script/appendix_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Additional plotting tools</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendix04_Probabilities/script/appendix_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Probabilities</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#motivation-and-overview" id="toc-motivation-and-overview" class="nav-link active" data-scroll-target="#motivation-and-overview"><span class="header-section-number">1</span> Motivation and overview</a>
+  <ul>
+  <li><a href="#testing-conditional-dependence" id="toc-testing-conditional-dependence" class="nav-link" data-scroll-target="#testing-conditional-dependence"><span class="header-section-number">1.1</span> Testing conditional dependence</a></li>
+  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression"><span class="header-section-number">1.2</span> Linear regression</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations"><span class="header-section-number">1.3</span> Limitations</a></li>
+  <li><a href="#applications" id="toc-applications" class="nav-link" data-scroll-target="#applications"><span class="header-section-number">1.4</span> Applications</a></li>
+  </ul></li>
+  <li><a href="#univariate-regression" id="toc-univariate-regression" class="nav-link" data-scroll-target="#univariate-regression"><span class="header-section-number">2</span> Univariate regression</a>
+  <ul>
+  <li><a href="#galtons-height-dataset" id="toc-galtons-height-dataset" class="nav-link" data-scroll-target="#galtons-height-dataset"><span class="header-section-number">2.1</span> Galton’s height dataset</a></li>
+  <li><a href="#ML-LSE" id="toc-ML-LSE" class="nav-link" data-scroll-target="#ML-LSE"><span class="header-section-number">2.2</span> Maximum likelihood and least squares estimates</a></li>
+  <li><a href="#interpretation-of-the-fitted-coefficients" id="toc-interpretation-of-the-fitted-coefficients" class="nav-link" data-scroll-target="#interpretation-of-the-fitted-coefficients"><span class="header-section-number">2.3</span> Interpretation of the fitted coefficients</a></li>
+  <li><a href="#predicted-values-are-random-variables" id="toc-predicted-values-are-random-variables" class="nav-link" data-scroll-target="#predicted-values-are-random-variables"><span class="header-section-number">2.4</span> Predicted values are random variables</a></li>
+  <li><a href="#explained-variance" id="toc-explained-variance" class="nav-link" data-scroll-target="#explained-variance"><span class="header-section-number">2.5</span> Explained variance</a></li>
+  <li><a href="#testing-the-relationship-between-y-and-x" id="toc-testing-the-relationship-between-y-and-x" class="nav-link" data-scroll-target="#testing-the-relationship-between-y-and-x"><span class="header-section-number">2.6</span> Testing the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span></a></li>
+  </ul></li>
+  <li><a href="#sec-lin-reg-diagnostic" id="toc-sec-lin-reg-diagnostic" class="nav-link" data-scroll-target="#sec-lin-reg-diagnostic"><span class="header-section-number">3</span> Diagnostic plots</a>
+  <ul>
+  <li><a href="#assessing-non-linearity-with-residual-plot" id="toc-assessing-non-linearity-with-residual-plot" class="nav-link" data-scroll-target="#assessing-non-linearity-with-residual-plot"><span class="header-section-number">3.1</span> Assessing non-linearity with residual plot</a></li>
+  <li><a href="#when-error-variance-is-not-constant-heteroscedasticity" id="toc-when-error-variance-is-not-constant-heteroscedasticity" class="nav-link" data-scroll-target="#when-error-variance-is-not-constant-heteroscedasticity"><span class="header-section-number">3.2</span> When error variance is not constant: Heteroscedasticity</a></li>
+  <li><a href="#gaussianity-q-q-plot-of-the-residuals" id="toc-gaussianity-q-q-plot-of-the-residuals" class="nav-link" data-scroll-target="#gaussianity-q-q-plot-of-the-residuals"><span class="header-section-number">3.3</span> Gaussianity: Q-Q-plot of the residuals</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions"><span class="header-section-number">4</span> Conclusions</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../topic07_Statistical-Testing-I/script/script_07.html">III Conclude</a></li><li class="breadcrumb-item"><a href="../../topic10_LinearRegression/script/script_10.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="motivation-and-overview" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="motivation-and-overview"><span class="header-section-number">1</span> Motivation and overview</h2>
+<section id="testing-conditional-dependence" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="testing-conditional-dependence"><span class="header-section-number">1.1</span> Testing conditional dependence</h3>
+<p>Up to this point, we have focused on testing associations between pairs of variables. However, in data science applications, it is very common to study three or more variables jointly.</p>
+<p>For pairs of variables, say <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, one variable may be considered as the explanatory variable (let us take <span class="math inline">\(x\)</span>) and the other the response variable (<span class="math inline">\(y\)</span>). Asking whether <span class="math inline">\(y\)</span> depends on <span class="math inline">\(x\)</span> amounts to ask whether the conditional distribution of <span class="math inline">\(y\)</span> given <span class="math inline">\(x\)</span> varies when <span class="math inline">\(x\)</span> varies. For instance, one may state that body height depends on sex by showing that the distribution of body heights is not same among males than among females. In general statistical terms, testing for independence can be expressed as the null hypothesis:</p>
+<p><span id="eq-H0-uni-cond-indep"><span class="math display">\[
+H_0: p(y \mid x) = p(y)
+\tag{1}\]</span></span></p>
+<p>Let us assume now we are considering multiple explanatory variables <span class="math inline">\(x_1, ...,x_p\)</span> and a response variable <span class="math inline">\(y\)</span>. We are still interested in the association of one particular explanatory variable, say <span class="math inline">\(x_j\)</span> with the response variable <span class="math inline">\(y\)</span> but shall take into consideration all the other explanatory variables. In other words, we would like to know whether <span class="math inline">\(y\)</span> depends on <span class="math inline">\(x_j\)</span> <em>everything else being the same</em>. For instance, we may observe that drinking coffee positively correlates with lung cancer, but, neither among smokers, nor among non-smokers, drinking coffee associates with lung cancer. In this example, everything else being same (i.e.&nbsp;for same smoking status), there is no association between lung cancer and drinking coffee. In this thought experiment, the association found in the overall population probably comes from the fact that smokers tend to be coffee drinkers. Generally, we ask whether the conditional distribution of <span class="math inline">\(y\)</span> given all explanatory variables varies when <span class="math inline">\(x_j\)</span> alone varies. Hence, to move beyond pairs of variables, we need a strategy to assess null hypotheses such as:</p>
+<p><span id="eq-H0-cond-indep"><span class="math display">\[
+H_0:  p(y|x_1,...,x_j,...x_p) = p(y|x_1,...,x_{j-1}, x_{j+1},...x_p)
+\tag{2}\]</span></span></p>
+<p>Considered so generally, i.e.&nbsp;for any type of variable <span class="math inline">\(y\)</span> and for any number and types of explanatory variables <span class="math inline">\(x_1,...,x_p\)</span>, the null hypothesis in <a href="#eq-H0-cond-indep" class="quarto-xref">Eq.&nbsp;<span>10.2</span></a> is impractical because:</p>
+<ol type="1">
+<li><p>We need to be able to deal with any type of distribution: Gaussian, Binomial, Poisson, but also mixtures, or even distributions that are not functionally parameterized.</p></li>
+<li><p>We need to be able to condition on continuous variables. Conditioning on categorical variables leads to obvious stratification of the data. However, how shall we deal with continuous ones? Shall we do some binning? Based on what criteria? Could the binning strategy affect the results?</p></li>
+<li><p>Even when all variables are categorical, there is a combinatorial explosion of strata, as each stratum gets further split by every new added variables (say by smoking status, and further by sex, and further by diabetes,…). For instance, there are <span class="math inline">\(2^p\)</span> different strata for <span class="math inline">\(p\)</span> binary variables. This combinatorial explosion makes the analysis difficult. Moreover the statistical power, which is driven by the number of samples in each stratum, gets drastically reduced.</p></li>
+</ol>
+</section>
+<section id="linear-regression" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="linear-regression"><span class="header-section-number">1.2</span> Linear regression</h3>
+<p>This Chapter introduces linear regression as an effective way to deal with these three issues. Linear regression addresses these three issues by making the following assumptions:</p>
+<ul>
+<li><p>The conditional distribution <span class="math inline">\(p(y | x_1,...,x_p)\)</span> is a Gaussian distribution whose variance is independent of <span class="math inline">\(x_1,...x_p\)</span>, simplifying greatly issue number 1.</p></li>
+<li><p>The conditional expectation of <span class="math inline">\(y\)</span> is a simple linear combinations of the explanatory variables, that is:</p></li>
+</ul>
+<p><span id="eq-E-linreg"><span class="math display">\[
+\mathbb{E}[y|x_1,...,x_p] = \beta_0 + \beta_1 x_1+...\beta_p x_p
+\tag{3}\]</span></span></p>
+<p>We can think of <a href="#eq-E-linreg" class="quarto-xref">Eq.&nbsp;<span>10.3</span></a> as a simple score for which explanatory variables contribute in a weighted fashion and independently of each other to variations in the expected value of the response. For instance, one could model the expected body height of an adult as <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbb{E}[\text{height} \mid \text{sex}, \text{mother}, \text{father}]
+&amp;= 165 + 15 \times \text{sex}
++ 0.5 \times (\text{mother} - 165) \\
+&amp;\quad + 0.5 \times (\text{father} - 180)
+\end{aligned}
+\]</span></p>
+<p>where sex is 1 for male and 0 for female, and mother and father designate each parent’s body height.</p>
+<p>The linear model in <a href="#eq-E-linreg" class="quarto-xref">Eq.&nbsp;<span>10.3</span></a>, can deal with continuous as well as discrete explanatory variables, solving the issue number 2. Moreover, because <a href="#eq-E-linreg" class="quarto-xref">Eq.&nbsp;<span>10.3</span></a> models independent additive contributions of the explanatory variables, it has just one parameter per explanatory variable. The effects of the explanatory variables do not depend on the value of the other variables. These effects do not change between strata. Hence, linear regression does not suffer from a combinatorial explosion of strata (issue number 3).</p>
+</section>
+<section id="limitations" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="limitations"><span class="header-section-number">1.3</span> Limitations</h3>
+<p>These assumptions of linear regression make the task easier, but how limiting are they?</p>
+<p>The Gaussian assumption is limiting. We cannot deal with binary response variables for instance. The next chapter will address such cases.</p>
+<p>The assumption that variance is independent of the strata, if violated, can be a problem for fitting this model as well as for statistical testing. We show how to diagnose such issue in <a href="#sec-lin-reg-diagnostic" class="quarto-xref"><span>Section 10.3</span></a>.</p>
+<p>The assumption of additivity in <a href="#eq-E-linreg" class="quarto-xref">Eq.&nbsp;<span>10.3</span></a> seems more limiting than it actually is. First, there are many real-life situations where additivity of the effects of the explanatory variables turns out to be reasonable. Moreover, there is always the possibility to pre-compute non-linear transformations of explanatory variables and include them to the model. For instance this model of expected body weight is a valid linear model with respect to body height cubed – it just needs the cube to be pre-computed<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<p><span class="math display">\[\mathbb{E}[\text{weight}| \text{height}] = \beta_0 + \beta_1\text{height} ^3\]</span> All in all, linear regression turns out to be in practice often reasonable.</p>
+</section>
+<section id="applications" class="level3" data-number="1.4">
+<h3 data-number="1.4" class="anchored" data-anchor-id="applications"><span class="header-section-number">1.4</span> Applications</h3>
+<p>Linear regression can be used for various purposes:</p>
+<ul>
+<li><p>To <strong>test conditional dependence</strong>. This is done by testing the null hypothesis: <span class="math display">\[H_0: \beta_j=0.\]</span></p></li>
+<li><p>To <strong>estimate the effects of one variable on the response variable</strong>. This is done by providing an estimate of the coefficient <span class="math inline">\(\beta_j\)</span>.</p></li>
+<li><p>To <strong>predict</strong> the value of the response variable given values of the explanatory variables. The predicted value is then an estimate of the conditional expectation <span class="math inline">\(\mathbb{E}[y|x]\)</span>.</p></li>
+<li><p>To <strong>quantify how much variation</strong> of a response variable can be explained by a set of explanatory variables.</p></li>
+</ul>
+<p>This Chapter explains first univariate linear regression using a historical dataset of body height. We will then go to the multivariate case using an example from baseball. Finally we will assess what is the practical impact of violations of the modeling assumptions, and how to diagnose them. A substantial part of the Chapter is based on an adaptation of Rafael Irizzary’s book.</p>
+</section>
+</section>
+<section id="univariate-regression" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="univariate-regression"><span class="header-section-number">2</span> Univariate regression</h2>
+<section id="galtons-height-dataset" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="galtons-height-dataset"><span class="header-section-number">2.1</span> Galton’s height dataset</h3>
+<p>We start with linear regression against a single variable, or univariate regression. We use the dataset from which regression was born. The is an example from genetics. Francis Galton<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> studied the variation and heredity of human traits. Among many other traits, Galton collected and studied height data from families to try to understand heredity<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. While doing this, he developed the concepts of correlation and regression, as well as a connection to pairs of data that follow a normal distribution. A very specific question Galton tried to answer was: how well can we predict a child’s height based on the parents’ height?</p>
+<p>We have access to Galton’s family height data through the <strong>HistData</strong> R <a href="https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/csv/HistData/GaltonFamilies.csv">dataset</a>, that can be downloaded and imported to python. This data records height in inches from several dozen families: mothers, fathers, daughters, and sons. To imitate Galton’s analysis, we will create a dataset with the heights of fathers and a randomly selected son of each family:</p>
+<div id="0ecc52b1" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">1983</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>galton <span class="op">=</span> pd.read_csv(<span class="st">'assets/GaltonFamilies.csv'</span>, index_col<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>galton_male <span class="op">=</span> galton[galton[<span class="st">'gender'</span>] <span class="op">==</span> <span class="st">'male'</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Randomly select one son per family</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>galton_heights <span class="op">=</span> (</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    galton_male</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">"family"</span>, group_keys<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    .sample(n<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    [[<span class="st">"father"</span>, <span class="st">"childHeight"</span>]]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    .rename(columns<span class="op">=</span>{<span class="st">"childHeight"</span>: <span class="st">"son"</span>})</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Plotting clearly shows that the taller the father, the taller the son.</p>
+<div id="64cbfcde" class="cell" data-fig-height="4" data-fig-width="4" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  ggplot(galton_heights, aes(<span class="st">'father'</span>, <span class="st">'son'</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_point(alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="script_10_files/figure-html/cell-3-output-1.png" width="384" height="384" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>One can visualize more concretely the conditional distributions of the son heights given the father heights by stratifying the father heights (i.e.&nbsp;<span class="math inline">\(p(\text{son} | \text{father})\)</span>):</p>
+<div id="7e087cd4" class="cell" data-fig-height="4" data-fig-width="4" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>galton_heights[<span class="st">"father_strata"</span>] <span class="op">=</span> (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    galton_heights[<span class="st">"father"</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">round</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    .astype(<span class="bu">int</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  ggplot(galton_heights, aes(<span class="st">'factor(father_strata)'</span>, <span class="st">'son'</span>))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_boxplot()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_jitter(color<span class="op">=</span><span class="st">'black'</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, width<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="script_10_files/figure-html/cell-4-output-1.png" width="384" height="384" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The centers of the groups are increasing with the father height, giving a first glimpse as how hereditary body height is.</p>
+<p>By strata, we can estimate the conditional expectations. In our example, we end up with the following prediction for the son of a father who is 72 inches tall:</p>
+<div id="be943a9b" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>conditional_avg <span class="op">=</span> (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    galton_heights[</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        galton_heights[<span class="st">"father"</span>].<span class="bu">round</span>() <span class="op">==</span> <span class="dv">72</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    ][<span class="st">"son"</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    .mean()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    .item()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>conditional_avg</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>71.49285714285715</code></pre>
+</div>
+</div>
+<p>Furthermore, these centers appear to follow a linear relationship. Below we plot the averages of each group. If we take into account that these averages are random variables, the data is consistent with these points following a straight line:</p>
+<div id="cell-fig-mean-son-vs-father" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>means <span class="op">=</span> galton_heights.copy()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>means[<span class="st">'father'</span>] <span class="op">=</span> means[<span class="st">'father'</span>].<span class="bu">round</span>()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>son_conditional_avg <span class="op">=</span> means.groupby(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'father'</span>, as_index<span class="op">=</span><span class="va">False</span>)[<span class="st">'son'</span>].mean()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  ggplot(son_conditional_avg, aes(<span class="st">'father'</span>, <span class="st">'son'</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_point()</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'father'</span>, y<span class="op">=</span><span class="st">'son_conditional_avg'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-mean-son-vs-father" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mean-son-vs-father-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="script_10_files/figure-html/fig-mean-son-vs-father-output-1.png" width="288" height="288" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mean-son-vs-father-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Average son heights by strata of the father heights
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Hence this plot suggests that the linear model:</p>
+<p><span class="math display">\[ \mathbb{E}[\text{son} | \text{father}] =\beta_0 + \beta_1 \text{father}\]</span></p>
+<p>is reasonable. Fitting such a model would allow us to avoid doing stratifications, as we could continuously estimate the expected value of son’s height. How do we estimate these coefficients? To this end, we need a bit more theory.</p>
+</section>
+<section id="ML-LSE" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="ML-LSE"><span class="header-section-number">2.2</span> Maximum likelihood and least squares estimates</h3>
+<p>Fitting a linear regression, i.e.&nbsp;estimating the parameters, is based on a widely used principle called <strong>maximum likelihood</strong>. The maximum likelihood principle consists in choosing as parameter values those for which the data is most probable. What is the probability of our data?</p>
+<p>Here we model the probability of the heights of the sons given the heights of their fathers. Generally, we will always consider the values of the explanatory variables to be given. Furthermore we will assume that, conditioned on the values of the explanatory variable, the observations are independent. Here, this means that the height of the sons are independent given the heights of the fathers. Hence the likelihood is: <span class="math display">\[
+p(\text{Data}|\beta_0,\beta_1) = \prod_i p(y_i|x_i, \beta_0, \beta_1)
+\]</span></p>
+<p>Hence, we look for the values of the coefficients <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> to maximimize <span class="math inline">\(\prod_i p(y_i|x_i, \beta_0, \beta_1)\)</span>.</p>
+<p>Taking the logarithm of the likelihood, which is a monotonically increasing function, does not change the value of the optimal parameters. Plugging in furthermore the density of the Gaussian <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> and discarding terms not affected by the values of <span class="math inline">\(\beta_0\)</span> <span class="math inline">\(\beta_1\)</span>, we obtain that:</p>
+<p><span class="math display">\[
+\begin{align}
+\arg \max_{\beta_0, \beta_1}\prod_i p(y_i|x_i, \beta_0, \beta_1) &amp;= \arg \max_{\beta_0, \beta_1}\sum_i \log(N(y_i|x_i, \beta_0, \beta_1))\\
+&amp;= \arg \min_{\beta_0, \beta_1}\sum_i (y_i - (\beta_0 + \beta_1x_i))^2
+\end{align}
+\]</span></p>
+<p>The differences between the observed values and their expected values denoted <span class="math inline">\(\epsilon_i = y_i - (\beta_0 + \beta_1x_i)\)</span> are called the errors. Hence, maximizing the likelihood of this model is equivalent to minimizing the sum of the squared errors. One talks about <strong>least squares estimates</strong> (LSE).</p>
+<div id="cell-fig-lse" class="cell" data-fig-height="4" data-fig-width="8" data-message="false" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<div id="fig-lse" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-lse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="script_10_files/figure-html/fig-lse-output-1.png" width="558" height="373" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-lse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Model (left) and least squares fit (right). The data points (black) are the same on both panels and simulated according to the linear regression assumptions.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interpretation-of-the-fitted-coefficients" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="interpretation-of-the-fitted-coefficients"><span class="header-section-number">2.3</span> Interpretation of the fitted coefficients</h3>
+<p>Minimizing the squared errors for a linear model can be solved analytically, see <a href="../../appendix04_Probabilities/script/appendix_04.html#sec-appendix-lin-reg" class="quarto-xref"><span>Section B.4</span></a>. We obtain that our estimated conditional expected value, denoted <span class="math inline">\(\hat y\)</span> is:</p>
+<!-- TODO: Appendix
+ (see Appendix \@ref(appendix-lin-reg)) -->
+<p><span id="eq-coef-univariate"><span class="math display">\[
+\hat y= \hat \beta_0 + \hat \beta_1x \mbox{ with slope } \hat \beta_1 = \rho \frac{\sigma_y}{\sigma_x} \mbox{ and intercept } \hat \beta_0=\mu_y - \hat \beta_1 \mu_x
+\tag{4}\]</span></span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\mu_x,\mu_y\)</span> are the means of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span></li>
+<li><span class="math inline">\(\sigma_x,\sigma_y\)</span> are the standard deviations of <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span></li>
+<li><span class="math inline">\(\rho = \frac{1}{n} \sum_{i=1}^n \left( \frac{x_i-\mu_x}{\sigma_x} \right)\left( \frac{y_i-\mu_y}{\sigma_y} \right)\)</span> is the Pearson correlation coefficient between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</li>
+</ul>
+<p>We can rewrite this result as:</p>
+<p><span class="math display">\[
+\hat y = \mu_y + \rho \left( \frac{x-\mu_x}{\sigma_x} \right) \sigma_y
+\]</span> If there is perfect correlation, the regression line predicts an increase in the response by the same number of standard deviations. If there is 0 correlation, then we don’t use <span class="math inline">\(x\)</span> at all for the prediction and simply predict the population average <span class="math inline">\(\mu_y\)</span>. For values between 0 and 1, the prediction is somewhere in between. If the correlation is negative, we predict a reduction instead of an increase. Note that if the correlation is positive but smaller than 1, our prediction of <span class="math inline">\(y\)</span> is closer to its average than <span class="math inline">\(x\)</span> to its average (in standard units).</p>
+<p>In Python, we can obtain the least squares estimates using the <code>smf.ols</code> function:</p>
+<div id="6b5b3a60" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">'son ~ father'</span>, data<span class="op">=</span>galton_heights).fit()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>model.params</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>Intercept    38.651452
+father        0.442552
+dtype: float64</code></pre>
+</div>
+</div>
+<p>The most common way we use <code>smf.ols</code> is by using the character <code>~</code> to let <code>smf.ols</code> know which is the variable we are predicting (left of <code>~</code>) and which we are using to predict (right of <code>~</code>). The intercept is added automatically to the model that will be fit.</p>
+<p>Here we add the regression line using <code>geom_smooth(method="lm")</code>, which in Python (plotnine) computes and adds a linear regression line to a plot along with confidence intervals:</p>
+<div id="35d1da55" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  ggplot(galton_heights, aes(<span class="st">'father'</span>, <span class="st">'son'</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_point(alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_smooth(method<span class="op">=</span><span class="st">'lm'</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="script_10_files/figure-html/cell-9-output-1.png" width="288" height="288" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In our example, the correlation between sons’ and fathers’ heights is about 0.5. Our predicted value for the son’s height <span class="math inline">\(y =\)</span> 71.49 for a 72-inch father was only 0.88 standard deviations larger than the average son, in contrast to the father’s height, which was 1.14 standard deviations above average.</p>
+<p>This is why we call it <em>regression</em>: the son regresses to the average height. In fact, the title of Galton’s paper was: <em>Regression toward mediocrity in hereditary stature</em>.</p>
+<p>It is a fact that children of extremely tall parents are taller than average, yet typically shorter than their parents. You can appreciate it on Figure <a href="#fig-mean-son-vs-father" class="quarto-xref">Fig.&nbsp;<span>10.1</span></a>. Extremely tall parents have an extreme combinations of alleles, and have also benefited from environmental factors by chance, which may not repeat in the next generation. The same phenomenon, called <em>regression toward the mean</em>, happens in sport. Athletes who perform extremely well one year are certainly good (high expectation) but have also probably been lucky (a positive error) so they are more likely to perform relatively worse the next year, etc. This phenomenon is ubiquitous and can lead to fallacies.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+</section>
+<section id="predicted-values-are-random-variables" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="predicted-values-are-random-variables"><span class="header-section-number">2.4</span> Predicted values are random variables</h3>
+<p>Once we fit our model, we can obtain predictions of <span class="math inline">\(y\)</span> by plugging the estimates into the regression model. For example, if the father’s height is <span class="math inline">\(x\)</span>, then our prediction <span class="math inline">\(\hat{y}\)</span> for the son’s height is:</p>
+<p><span class="math display">\[\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x\]</span></p>
+<p>When we plot <span class="math inline">\(\hat{y}\)</span> versus <span class="math inline">\(x\)</span>, we see the regression line.</p>
+<p>Keep in mind that the prediction <span class="math inline">\(\hat{y}\)</span> is also a random variable and mathematical theory tells us what the standard errors are. If we assume the errors are normal, or we have a large enough sample size, we can use theory to construct confidence intervals as well. In fact, the ggplot layer <code>geom_smooth(method = "lm")</code> that we previously used plots <span class="math inline">\(\hat{y}\)</span> and surrounds it by confidence intervals:</p>
+<div id="10a7b2d7" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  ggplot(galton_heights, aes(<span class="st">'son'</span>, <span class="st">'father'</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_point()</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_smooth(method<span class="op">=</span><span class="st">'lm'</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="script_10_files/figure-html/cell-10-output-1.png" width="288" height="288" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Python method <code>get_prediction</code> of an <code>smf.ols</code> object takes the data as input and returns the prediction. If requested, the standard errors and other information from which we can construct confidence intervals are provided:</p>
+<div id="40376a90" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="op">=</span> model.get_prediction(galton_heights)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>y_hat.summary_frame().columns</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>Index(['mean', 'mean_se', 'mean_ci_lower', 'mean_ci_upper', 'obs_ci_lower',
+       'obs_ci_upper'],
+      dtype='object')</code></pre>
+</div>
+</div>
+</section>
+<section id="explained-variance" class="level3" data-number="2.5">
+<h3 data-number="2.5" class="anchored" data-anchor-id="explained-variance"><span class="header-section-number">2.5</span> Explained variance</h3>
+<p>Any dataset will give us estimates of the model, but how well does the model represent our data? To investigate this we can compute quality metrics and visually assess the model, which is explained later.</p>
+<p>Under the linear regression assumptions, the conditional standard deviation is:</p>
+<p><span class="math display">\[
+  \mbox{SD}(y \mid x ) = \sigma_y \sqrt{1-\rho^2}
+\]</span></p>
+<p>To see why this is intuitive, notice that without conditioning, <span class="math inline">\(\mbox{SD}(y) = \sigma_y\)</span>, we are looking at the variability of all the sons. But once we condition, we are only looking at the variability of the sons with the same father’s height (for instance all those with a 72-inch, father). This group will tend to have similar heights so the standard deviation is reduced.</p>
+<p>This is usually quantified in terms of proportion of variance. So we say that <span class="math inline">\(X\)</span> explains <span class="math inline">\(1- (1-\rho^2)=\rho^2\)</span> (the Pearson correlation squared) of the variance. The proportion of variance explained by the model is commonly called the <em>coefficient of determination</em> or <span class="math inline">\(R^2\)</span>. Another way of deriving <span class="math inline">\(R^2\)</span> is described in the following steps:</p>
+<p>First, we compute the model predictions: <span class="math display">\[\hat{y}_i = \hat{\beta_0} + \hat{\beta_1} x_i .\]</span></p>
+<p>Then, we compute the <em>residuals</em> (by comparing the predictions with the actual values) <span class="math display">\[\hat{\epsilon}_i = y_i - \hat{y}_i ,\]</span></p>
+<p>and the <em>residual sum of squares</em> <span class="math display">\[RSS = \sum_{i=1}^N \hat{\epsilon}_i^2 .\]</span></p>
+<p>Lastly, we can compare the <em>residual sum of squares</em> to the total <em>sum of squares</em> (<em>SS</em>) of <span class="math inline">\(y\)</span> <span class="math display">\[R^2 = 1 - \frac{\sum_{i=1}^N \hat{\epsilon}_i^2}{\sum_{i=1}^N (y_i - \bar{y})^2} = 1 - \frac{RSS}{SS} .\]</span></p>
+<p>It can take any value between 0 and 1, since the sum of squares represents the variation around the global mean and the residual sum of squares represents the variation around the model predictions. In case the model learned no variation, it learned at least the global mean. In this case the sum of squares and the residual sum of squares are equal and <span class="math inline">\(R^2 = 0\)</span>. In case the model is perfect, the residuals are zero and hence the second term vanishes and the <span class="math inline">\(R^2\)</span> becomes 1.</p>
+<p>The <span class="math inline">\(R^2\)</span> is usually best combined with a scatter plot of <span class="math inline">\(y\)</span> against <span class="math inline">\(\hat{y}\)</span>.</p>
+<div id="97631c88" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">'son ~ father'</span>, data<span class="op">=</span>galton_heights).fit()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> model.predict(galton_heights)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> model.rsquared</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>df_pred <span class="op">=</span> galton_heights.copy()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>df_pred[<span class="st">'pred'</span>] <span class="op">=</span> pred</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  ggplot(df_pred, aes(<span class="st">'pred'</span>, <span class="st">'son'</span>))</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_point()</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_abline(intercept<span class="op">=</span><span class="dv">0</span>, slope<span class="op">=</span><span class="dv">1</span>)  <span class="co"># match R defaults</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> annotate(</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">'text'</span>,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>      x<span class="op">=</span><span class="dv">67</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>      y<span class="op">=</span><span class="dv">77</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>      label<span class="op">=</span><span class="vs">rf'</span><span class="dv">$</span><span class="vs">R</span><span class="dv">^</span><span class="vs">2 = </span><span class="sc">{</span>r2<span class="sc">:.2f}</span><span class="dv">$</span><span class="vs">'</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'Predicted height'</span>, y<span class="op">=</span><span class="st">'height'</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>))</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="script_10_files/figure-html/cell-12-output-1.png" width="384" height="384" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="testing-the-relationship-between-y-and-x" class="level3" data-number="2.6">
+<h3 data-number="2.6" class="anchored" data-anchor-id="testing-the-relationship-between-y-and-x"><span class="header-section-number">2.6</span> Testing the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(x\)</span></h3>
+<p>The LSE is derived from the data <span class="math inline">\(y_1,\dots,y_n\)</span>, which are a realization of random variables. This implies that our estimates are random variables. Using the assumption of independent Gaussian noise, we obtain the following distribution:</p>
+<p><span class="math display">\[ p(\hat \beta) = N(\beta, \sigma^2/ns^2_x)\]</span></p>
+<p>Hence, if the modeling assumptions hold, the estimates are unbiased, meaning that their expected value are the true values of the parameter <span class="math inline">\(\mathbb{E}[\hat \beta_1] = \beta_1\)</span>. Moreover they are consistent, meaning that for infinitely large sample size they converge to the true values.</p>
+<p>Another result allows us to build a hypothesis test, namely: <span class="math display">\[p\left(\frac{\hat{\beta_1} - \beta_1}{\hat{se}(\hat{\beta_1})}\right) = t_{n-2}\left(\frac{\hat{\beta_1} - \beta_1}{\hat{se}(\hat{\beta_1})}\right)\]</span> where <span class="math inline">\(t_{n-2}\)</span> denotes the student’s <span class="math inline">\(t\)</span> distribution with <span class="math inline">\(n-2\)</span> degrees of freedom and <span class="math display">\[\hat{se}(\hat{\beta_1}) = \sqrt{\frac{1}{n-2}\frac{\sum_i(y_i-\bar{y_i})^2}{\sum_i(x_i-\bar{x_i})^2}}\]</span> As for the t-test presented for comparing two groups in Section <a href="../../topic08_Statistical-Testing-II/script/script_08.html#sec-student-t" class="quarto-xref"><span>Section 8.4.1.1</span></a>, the degrees of freedom is equal to the number of data points <span class="math inline">\(n\)</span> minus two, the number of model parameters (<span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>).</p>
+<p>Remember, the <span class="math inline">\(P-\)</span>value of a statistical test is the <strong>probability</strong> of the value of a <strong>test statistic</strong> being at least as extreme as the one observed in our data <strong>under the null hypothesis</strong>.</p>
+<p>In our case we can formulate the null hypothesis, that <span class="math inline">\(y\)</span> does not depend on <span class="math inline">\(x\)</span> as follows:</p>
+<ul>
+<li>The null hypothesis for parameter <span class="math inline">\(\beta_1\)</span> is <span class="math inline">\(H_0: \beta_1 = 0\)</span></li>
+<li>The test statistic is <span class="math inline">\(\hat{t} = \frac{\hat{\beta_1} - \beta_1}{\hat{se}(\hat{\beta_1})} = \frac{\hat{\beta_1}}{\hat{se}(\hat{\beta_1})}\)</span></li>
+<li>The probability under the null model is <span class="math inline">\(P(t \geq \hat{t}), \mbox{where } t \sim t_{n-2}\)</span></li>
+</ul>
+<p>How do we do this in Python? The <code>summary2().tables[1].</code> function helps us here. It reports t-statistics (<code>t value</code>) and two-sided <span class="math inline">\(P-\)</span>values under <code>Pr(&gt;|t|)</code>. Indeed, <span class="math inline">\(P(|t| \geq |\hat{t}|)\)</span> yields the two-sided p-value because the Student’s t-distribution is symmetric.</p>
+<!-- summary returns some smf object that prints P-values not in the exponential form -->
+<div id="a01012de" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model.summary2().tables[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Coef.</th>
+<th data-quarto-table-cell-role="th">Std.Err.</th>
+<th data-quarto-table-cell-role="th">t</th>
+<th data-quarto-table-cell-role="th">P&gt;|t|</th>
+<th data-quarto-table-cell-role="th">[0.025</th>
+<th data-quarto-table-cell-role="th">0.975]</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Intercept</th>
+<td>38.651452</td>
+<td>4.714218</td>
+<td>8.198911</td>
+<td>4.763915e-14</td>
+<td>29.348145</td>
+<td>47.954760</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">father</th>
+<td>0.442552</td>
+<td>0.068178</td>
+<td>6.491103</td>
+<td>8.288243e-10</td>
+<td>0.308005</td>
+<td>0.577099</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<!--
+## Multivariate regression
+
+Since Galton's original development, regression has become one of the most widely used tools in data science. One reason for this has to do with the fact that regression permits us to find relationships between two variables taking into account the effects of other variables. This has been particularly popular in fields where randomized experiments are hard to run, such as economics and epidemiology. 
+
+When we are not able to randomly assign each individual to a treatment or control group, confounding is particularly prevalent. For example, consider estimating the effect of eating fast foods on life expectancy using data collected from a random sample of people in a jurisdiction. Fast food consumers are more likely to be smokers, drinkers, and have lower incomes. Therefore, a naive regression model may lead to an overestimate of the negative health effect of fast food. So how do we account for confounding in practice? In this section we learn how linear regression against multiple variables, or multivariate regression, can help with such situations and can be used to describe how one or more variables affect an outcome variable. 
+
+
+### A multivariate example: The baseball dataset
+
+```{r,echo=FALSE}
+img_path <- "assets/img/"
+```
+
+We will use data from baseball, leveraging a famous real application of regression which has led to improved estimations of baseball player values in the 90's ^[A lengthier case study on this dataset is given in R. Irizzarys' book.] Here we will not build a model of player value but, instead, we will focus on predicting the game scores of a team. 
+
+#### Baseball basics
+
+The goal of a baseball game is to score more runs (points) than the other team. Each team has 9 batters that have an opportunity to hit a ball with a bat in a predetermined order. After the 9th batter, the first batter bats again, then the second, and so on.
+
+Each time a batter has an opportunity to bat, the other team's _pitcher_ throws the ball and the batter tries to hit it. The batter either makes an _out_ and returns to the bench or the batter hits it. 
+
+When the batter hits the ball, the batter wants to pass as many _bases_ as possible before the opponent team catches the ball. There are four bases with the fourth one called _home plate_. Home plate is where batters start by trying to hit, so the bases form a cycle.
+
+```{r, echo = FALSE, out.width="50%"}
+# source: http://quarterlyspeedbump.com/wp-content/uploads/2012/03/Baseball_Diamond1.jpeg
+
+knitr::include_graphics(file.path(img_path,"Baseball_Diamond1.png"))
+```
+
+(Courtesy of Cburnett^[https://en.wikipedia.org/wiki/User:Cburnett]. CC BY-SA 3.0 license^[https://creativecommons.org/licenses/by-sa/3.0/deed.en].)
+# Source: [Wikipedia Commons](https://commons.wikimedia.org/wiki/File:Baseball_diamond_simplified.svg))
+
+
+A batter who stops at one of the intermediate three bases can resume running along the base cycle when next batters hit the ball. A batter who goes around the bases and arrives home (directly or indirectly with stops at intermediate bases), scores a **run**. 
+
+We want to understand what makes a team score well on average. Hence, the average number of runs is our response variable. 
+
+#### Home runs
+
+A **home run** happens when the batter who hits the ball goes all the way home. This happens when the ball is hit very far, giving time for the batter to perform the full run. It is very good for the score because not only the batter scores a run, but the other players of the same team who are already on the pitch standing at intermediate bases typically finish their runs too.  
+
+Not surprisingly, average home runs positively correlate with average runs:
+
+```{r runs-vs-hrs, message=FALSE, warning=FALSE}
+library(Lahman)
+Teams <- as.data.table(Teams)
+Teams_filt <- Teams[yearID %in% 1961:2001]
+Teams_filt[,c('HR_per_game','R_per_game') := list(HR/G, R/G)]%>%
+  ggplot(aes(HR_per_game, R_per_game)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method="lm")
+```
+
+A univariate linear regression gives the following parameter estimates:
+
+```{r lm-runs-vs-hrs, message=FALSE, warning=FALSE}
+fit_r_vs_hr <- lm(R_per_game~HR_per_game, data=Teams_filt)
+fit_r_vs_hr
+```
+So this tells us that teams that hit 1 more HR per game than the average team, score `r sprintf("%.3f", coef(fit_r_vs_hr)[2])` more runs per game than the average team. Given that the most common final score is a difference of a run, this can certainly lead to a large increase in wins. Not surprisingly, HR hitters are very expensive. Because we are working on a budget, we will need to find some other way to increase wins. So, in the next section, we move our attention to another possible predictive variable of runs.
+
+
+#### Base on balls
+Obviously the pitcher is encouraged to throw the ball at the batter. This is achieved thanks to the so-called **base on balls** rule stating that if the pitcher fails to throw the ball through a predefined area considered to be hittable (the strikezone), the batter is permitted to go to the first base.
+
+A base on ball is not as great as a home run but it makes the batter progress by one base so it should be rather beneficial for the score. Let us now scatter plot average runs against average base on balls:
+
+```ojysrnbbplyvbq
+Teams_filt[,BB_per_game := BB/G]%>%
+  ggplot(aes(BB_per_game, R_per_game)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method="lm")
+```
+
+Here, again we see a clear association. If we find the regression line for predicting runs from bases on balls, we a get slope of:
+
+```{r, warning=FALSE, message=FALSE}
+get_slope <- function(x, y) cor(x, y) * sd(y) / sd(x)
+bb_slope <- Teams_filt[,.(slope = get_slope(BB_per_game, R_per_game) )] 
+bb_slope 
+```
+So does this mean that if we go and hire low salary players with many BB, and who therefore increase the number of walks per game by 2, our team will score `r round(bb_slope*2, 1)` more runs per game? 
+
+In fact, it looks like BBs and HRs are also associated:
+
+```hxdmxsusutrra
+Teams_filt %>%
+  ggplot(aes(HR_per_game, BB_per_game)) + 
+  geom_point(alpha = 0.5) +
+  geom_smooth(method="lm")
+```
+
+We know that HRs cause runs because, as the name "home run" implies, when a player hits a HR they are guaranteed at least one run. Could it be that HRs also cause BB and this makes it appear as if BB cause runs? 
+
+It turns out that pitchers, afraid of HRs, will sometimes avoid throwing strikes to HR hitters. As a result, HR hitters tend to have more BBs and a team with many HRs will also have more BBs. Although it may appear that BBs cause runs, it is actually the HRs that cause most of these runs. We say that BBs are _confounded_ with HRs. Nonetheless, could it be that BBs still help? To find out, we somehow have to adjust for the HR effect. Linear regression will help us parse all this out and quantify the associations. This can in turn help determine what players to recruit.
+
+#### Understanding confounding through stratification 
+We first untangle the direct from the indirect effects step-by-step by stratification to get a concrete understanding of the situation. 
+
+A first approach is to keep HRs fixed at a certain value and then examine the relationship between BB and runs. As we did when we stratified fathers by rounding to the closest inch, here we can stratify HR per game to the closest tenth. We filter out the strata with few points to avoid highly variable estimates:
+
+```yil
+dat <- Teams_filt[,HR_strata := round(HR/G, 1)][HR_strata >= 0.4 & HR_strata <=1.2]
+```
+
+and then make a scatterplot for each strata:
+
+```{r runs-vs-bb-by-hr-strata, out.width="80%", fig.height=5}
+dat %>% 
+  ggplot(aes(BB_per_game, R_per_game)) +  
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  facet_wrap( ~ HR_strata) 
+```
+
+Remember that the regression slope for predicting runs with BB was `r round(bb_slope, 1)`. Once we stratify by HR, these slopes are substantially reduced:
+
+```yil
+dat[order(HR_strata),.(slope = get_slope(BB_per_game, R_per_game)), by='HR_strata'] 
+```
+
+The slopes are reduced, but they are not 0, which indicates that BBs are helpful for producing runs, just not as much as previously thought ^[One can extract data of so-called singles, i.e the number of runs reaching the first base, and find that the effects on runs are similar than for BBs, which is consistent with the intuition that BB directly contributes to runs because it brings the batter to the first base. See R. Irizzary's book.]
+
+Although our understanding of the application tells us that HR cause BB but not the other way around, we can still check whether stratifying by BB makes the effect of HR go down. To do this, we use the same code except that we swap HR and BBs to get this plot:
+
+```{r runs-vs-hr-by-bb-strata, out.width="100%",echo=FALSE}
+dat <- Teams_filt[,.(BB_strata = round(BB/G,1), 
+         HR_per_game = HR/G,
+         R_per_game = R/G)][BB_strata >= 2.8 & BB_strata <= 3.9]
+dat %>% 
+  ggplot(aes(HR_per_game, R_per_game)) +  
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  facet_wrap( ~ BB_strata) 
+```
+
+In this case, the slopes are reduced a bit, which is consistent with the fact that BB do in fact cause some runs:
+
+```yil
+dat[order(BB_strata),.(slope = get_slope(HR_per_game, R_per_game)), by = 'BB_strata']
+```
+
+Compared to the original:
+
+
+```yil
+hr_slope <- Teams_filt[,.(slope = get_slope(HR_per_game, R_per_game))]
+hr_slope
+```
+
+####  Data suggests additive effects
+
+It is somewhat complex to be computing regression lines for each strata. We are essentially fitting models like this:
+
+$$
+\mbox{E}[R \mid BB = x_1, \, HR = x_2] = \beta_0 + \beta_1(x_2) x_1 + \beta_2(x_1) x_2
+$$
+
+with the slopes for $x_1$ changing for different values of $x_2$ and vice versa. But is there an easier approach?
+
+If we take random variability into account, the slopes in the strata don't appear to change much. If these slopes are in fact the same, this implies that $\beta_1(x_2)$ and $\beta_2(x_1)$ are constants. This in turn implies that the expectation of runs conditioned on HR and BB can be written like this:
+
+$$
+\mbox{E}[R \mid BB = x_1, \, HR = x_2] = \beta_0 + \beta_1 x_1 + \beta_2 x_2
+$$
+
+This model suggests that if the number of HR is fixed at $x_2$, we observe a linear relationship between runs and BB with an intercept of $\beta_0 + \beta_2 x_2$. Our exploratory data analysis suggested this. The model also suggests that as the number of HR grows, the intercept growth is linear as well and determined by $\beta_1 x_1$. 
+
+In this analysis, referred to as _multivariate regression_, you will often hear people say that the BB slope $\beta_1$ is _adjusted_ for the HR effect. If the model is correct then confounding has been accounted for. But how do we estimate $\beta_1$ and $\beta_2$ from the data? For this, we need to derive some theoretical results that generalize the results from univariate linear regression.
+
+### Fitting multivariate regression
+
+For a data set $(\x_i, y_i)$ with $i \in \{1 \dots n\}$ and $\x_i$ a vector of length $p$, the multiple linear regression model is defined as:
+$$y_i = \beta_0 + \sum_{j=1}^p \beta_j x_{i,j} + \epsilon_i$$
+with free parameters $\beta_0$ and $\bs{\beta}$ and a random error
+$\epsilon_i \sim N(0, \sigma^2)$ that is i.i.d. (independently and identically  distributed).
+
+The model can be written in matrix notation
+$$ \y = \X \bs{\beta} + \bs{\epsilon} $$
+here the matrix $\X$ is of dimension $n \times (p + 1)$ where each row $i$ corresponds to the vector $\x_i$ with a 1 prepended to accommodate the intercept. The error is distributed as $\bs{\epsilon} \sim N(\mathbf{0}, \bs\Sigma)$ as a multivariate Gaussian with covariance $\bs\Sigma = \sigma^2 \I$ (i.i.d).
+
+In the same way as for the simple linear model, parameters can be estimated by finding the LSE. For multiple linear regression, we obtain
+$$\hat{\bs{\beta}} = (\X^\top\X)^{-1}\X^\top \y$$
+$$\hat{\sigma}^2 = \frac{\hat{\bs\epsilon}^\top\hat{\bs\epsilon}}{n - p} .$$
+
+As for the univariate case, we have that, under the assumptions of the model, the least squares estimates are unbiased. This means that, if the data truly originates from such a data generative model, the expected value of the estimates over repeated random realizations, equals the true underlying parameter values:
+
+$$E[\hat \beta_j] = \beta_j$$
+
+Moreover, the estimates are consistent: They converge to the true values with increasing sample sizes:
+
+$$\hat\beta_j \xrightarrow[n \to \infty]{} \beta_j$$
+
+Remarkably, this holds true even if the explanatory variables are correlated (unless perfectly correlated, in which case the parameters become not identifiable).
+
+To fit a multiple linear regression model in R, we can use the same `lm` function as for the simple linear regression, we only need to adapt the formula to include all predictor variables. Here is the application to fitting the average runs against the home runs and the bases on balls:
+
+```{r, fig.height=5, fig.width=5}
+fit <- lm(R_per_game ~ HR_per_game + BB_per_game,
+          data=Teams_filt)
+coef(fit)
+```
+
+We see that the coefficient for home runs and for bases on balls are similar to those we tediously estimated by stratifications.
+
+The object `fit` includes more information about the fit, including statistical assessments. We can use the function `summary` to extract more of this information:
+
+```yil
+summary(fit)
+```
+
+Other useful functions to extract information from `lm` objects are
+
+* `predict` to compute the fitted values or predict response for new data
+* `resid` to compute the residuals
+
+To understand the statistical assessments included in the summary we need to remember that the LSE are random variables. Mathematical statistics gives us some ideas of the distribution of these random variables.
+
+
+### Testing sets of parameters 
+#### Nested models
+Hypothesis testing can be done on individual coefficients of a multivariate regression, with an appropriate t-test just as in the univariate case.
+But testing individual parameters may not suffice. Sometimes, we are interested in testing an entire set of variables. We then compare so-called **nested models**. We compare a full model $\Omega$ to a reduced model $\omega$ where model $\omega$ is a special case of the more general model $\Omega$. For multivariate regression, this typically consists of setting a set of parameters to 0 in the reduced model.
+
+Consider the following example model: $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3$
+
+For testing whether the coefficients of two explanatory variables $x_1$ and $x_2$ should be 0, one would consider:
+
+- Full model: all $\beta$'s can take any value.
+- Reduced model: $\beta_1 = \beta_2 = 0$ (only the mean $\beta_0$ and the third parameter $\beta_3$ can take any value).
+
+#### F-test and ANOVA
+The F-test can be applied to compare two nested linear regressions. It is based on comparing the fit improvements as measured by the change residual sum of squares. The idea is that the larger model, which has more parameters, always fits better to the data. With the F-test, we ask whether this improvement is significant under the null hypothesis that the smaller model is the correct one.
+
+$$F = \frac{(RSS_{\omega} - RSS_{\Omega}) / (q - p)}{RSS_{\Omega} / (n - q)} , $$
+
+where $q$ is the number of parameters in (dimension of) model $\Omega$ and $p$ the number of parameters in (dimension of) model $\omega$ and $RSS$ designates residual sums of squares.
+
+The statistic $F$ is distributed according to the F distribution with (q - p) and (n - q) degrees of freedom respectively. We reject the null hypothesis if $F$ is larger than the critical value corresponding to the significance level. This analysis is also frequently referred to as "Analysis of Variance" or **ANOVA**.
+
+#### Example: Testing the difference of means in 3 groups {-}
+
+As an example let us consider testing whether fuel consumption of cars depends on the number of cylinders using the `mtcars` dataset: 
+
+```{r lecture12-linear-regression-mpg, echo=FALSE, fig.height=5, fig.width=5}
+data("mtcars")
+boxplot(mpg ~ factor(cyl), data=mtcars, xlab="Cylinders", ylab="Miles per Gallon")
+```
+
+In this example, we are interested in whether there is a difference in the fuel consumption of cars depending on the number of cylinders in the car.
+
+For this purpose, we will work with the following model:
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2$$
+
+Here, $x_1$ and $x_2$ will be indicator variables:
+
+- group "6 cylinders": $x_1 = 1$
+- group "8 cylinders": $x_2 = 1$
+
+We want to test the effect of both indicators at the same time:
+
+- **H0:** $\beta_1 = \beta_2 = 0$
+- Full model: $\Omega$ is the space where all three $\beta$ can take any value.
+- Reduced model: $\omega$ is the space where only $\beta_0$ can take any value.
+
+In R, we can easily test this:
+
+```yil
+data("mtcars")
+# for the example we need a factor
+# else it will be interpreted as number
+mtcars$cyl <- as.factor(mtcars$cyl)
+# fit the full model
+full <- lm(mpg ~ cyl, data=mtcars)
+# have a look at the model matrix
+# which is automatically created
+head(model.matrix(full))
+# fit the reduced model (only the intercept "1")
+reduced <- lm(mpg ~ 1, data=mtcars)
+```
+
+```yil
+#compare the models
+anova(reduced, full)
+```
+
+From the result, we can see that the full model models the data significantly better than the reduced model containing only the intercept. Therefore, we can conclude that there is a difference in the means of the 3 groups.
+
+-->
+</section>
+</section>
+<section id="sec-lin-reg-diagnostic" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="sec-lin-reg-diagnostic"><span class="header-section-number">3</span> Diagnostic plots</h2>
+<p>The assumptions of a mathematical model never hold exactly in practice. The questions for the practitioners are threefold: 1) How badly are the assumptions violated on the dataset at hand? 2) What are the implications for the claimed conclusions? How can the issue be addressed?</p>
+<p>The assumptions of linear regressions are:</p>
+<ul>
+<li>The expected values of the response are a linear combinations of the explanatory variables</li>
+<li>Errors are identically and independently distributed.</li>
+<li>Errors follow a normal distribution.</li>
+</ul>
+<p>We will see that two diagnostic plots will be helpful: the residual plot and the q-q plot of the residuals.</p>
+<section id="assessing-non-linearity-with-residual-plot" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="assessing-non-linearity-with-residual-plot"><span class="header-section-number">3.1</span> Assessing non-linearity with residual plot</h3>
+<p><strong>Diagnostic plot</strong></p>
+<p>Non-linearity is typically revealed by noticing that the average of the residual depends on the predicted values. A smooth fit (<code>geom_smooth</code> default) on the residual plot can help spotting systematic non-linear dependencies (See Figure <a href="#fig-non-linear-qc" class="quarto-xref">Fig.&nbsp;<span>10.3</span></a>).</p>
+<div id="2d5b904f" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `geom_smooth()` using method = 'loess'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-fig-non-linear-qc" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-display">
+<div id="fig-non-linear-qc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-non-linear-qc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="script_10_files/figure-html/fig-non-linear-qc-output-1.png" width="384" height="384" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-non-linear-qc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Detecting non-linearity. (Left). Observed value against predictions for linear fit on data generated as y = x^3 + noise. The fitted line is shown in blue. (Right) Residual versus predicted value of the same data. A smooth fit to the residual is shown in blue. The smooth fit highlights that the errors depend on the predicted expected values, indicative of non-linearity.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>So what?</strong> The implications of non-linearity depends on the application purposes:</p>
+<ul>
+<li><p>Predictions are suboptimal. They could be improved with a more complex model. However, they may be good enough for the use case, and they would not necessarily deteriorate on unseen data.</p></li>
+<li><p>Explained variance is underestimated.</p></li>
+<li><p>The i.i.d assumption is violated: The residuals depend on the predicted mean, suggesting that the errors depend on <span class="math inline">\(\mathbb{E}[y|x]\)</span> and therefore on each other. Therefore, statistical tests are flawed.</p></li>
+<li><p>Conditional dependencies can be affected. To see the latter assume a model in which two variables <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> depend on a common cause <span class="math inline">\(z\)</span> in a non-linear fashion (eg. <span class="math inline">\(y=z^2 + \epsilon\)</span> and <span class="math inline">\(x=z^2+\epsilon'\)</span>). These two variables <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are independent conditioned on their common cause <span class="math inline">\(z\)</span>. However, a linear regression of <span class="math inline">\(y\)</span> on <span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span> would fail to discard the contribution of <span class="math inline">\(x\)</span>.</p></li>
+</ul>
+<p><strong>What to do?</strong> If non-linearity is revealed in the fit, one can either transform the explanatory variables or the response (eg log-transformtaion, powers, etc). Note that the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. The <code>I</code> in Python implements a few convenience functions to build such non-linear transformation on the fly while calling lm(). For instance, the R call: <code>smf.ols('y ~ x + I(x**2) + I(x**3)', data=df)</code> fits a polynomial of degree 3.</p>
+</section>
+<section id="when-error-variance-is-not-constant-heteroscedasticity" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="when-error-variance-is-not-constant-heteroscedasticity"><span class="header-section-number">3.2</span> When error variance is not constant: Heteroscedasticity</h3>
+<p>It happens not so rarely that the variance of the residuals is not constant across all data points. This property is called <strong>heteroscedasticity</strong>. Heteroscedasticity violates the i.i.d assumption of the errors.</p>
+<p><strong>Diagnostic plot</strong></p>
+<p>The residual plots can help spotting when error variance depends on response mean. Here is a synthetic example:</p>
+<div id="361654ee" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">101</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.normal(loc<span class="op">=</span><span class="dv">5</span> <span class="op">*</span> x, scale<span class="op">=</span><span class="fl">0.1</span> <span class="op">*</span> x)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"x"</span>: x, <span class="st">"y"</span>: y})</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> smf.ols(<span class="st">"y ~ x"</span>, data<span class="op">=</span>df).fit()</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"y_hat"</span>] <span class="op">=</span> m.fittedvalues</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"resid"</span>] <span class="op">=</span> m.resid</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"y_hat"</span>, <span class="st">"resid"</span>))</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_abline(intercept<span class="op">=</span><span class="dv">0</span>, slope<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="vs">r"</span><span class="dv">$</span><span class="er">\</span><span class="vs">hat{y}</span><span class="dv">$</span><span class="vs">"</span>, y<span class="op">=</span><span class="st">"residual"</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>))</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="script_10_files/figure-html/cell-16-output-1.png" width="384" height="384" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>So what?</strong> For prediction, the problem may or not be a real issue. Indeed the fit can be driven by a few data points because the least squares errors give too much importance to the points with high noise. This is particularly a problem with low number of points in areas with large noise.</p>
+<p>As the residuals are not i.i.d., the statistical tests are flawed.</p>
+<p><strong>What to do?</strong></p>
+<p>In case of heteroscedasticity, one can try to transform the response variable <span class="math inline">\(y\)</span>, such as: log-transformation, square root, or variance stabilizing transformation <a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>.</p>
+<p>However, as before, the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. Alternatively, one can use methods with a different noise model. One possibility is to consider weighted least squares, when there is the possibility to estimate before end the relative error variances on the data. This is sometimes the case, for instance, if one has access to experimental uncertainties. Another direction is to use generalized linear models <a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+</section>
+<section id="gaussianity-q-q-plot-of-the-residuals" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="gaussianity-q-q-plot-of-the-residuals"><span class="header-section-number">3.3</span> Gaussianity: Q-Q-plot of the residuals</h3>
+<p>The Gaussian assumption of the errors is key to all statistical tests. An implication that the errors follow a Gaussian distribution is that the residuals also follow a Gaussian distribution.</p>
+<p><strong>Diagnostic plot</strong></p>
+<p>We use here a QQ-plot of the residuals against the normal distribution.</p>
+<p>The plotnine function <code>stat_qq()</code> and its companion <code>stat_qq_line()</code> generate qq-plot against a Gaussian fitted to the input vector. We do not have to worry about the mean and the standard deviation of the input vector. Here is a “good” example based on simulated data.</p>
+<div id="38bc1253" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"x"</span>: np.arange(<span class="dv">1</span>, <span class="dv">101</span>),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"y"</span>:  np.random.normal(loc<span class="op">=</span><span class="dv">5</span> <span class="op">*</span> x, scale<span class="op">=</span><span class="dv">10</span>)})</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> smf.ols(<span class="st">"y ~ x"</span>, data<span class="op">=</span>df).fit()</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>df_resid <span class="op">=</span> pd.DataFrame({<span class="st">"resid"</span>: m.resid})</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    ggplot(df_resid, aes(sample<span class="op">=</span><span class="st">"resid"</span>))</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> stat_qq()</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> stat_qq_line()</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="script_10_files/figure-html/cell-17-output-1.png" width="384" height="384" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And here is a “bad” example based on a simulated example, in which the errors are Student t-distributed with degree of freedom 1:</p>
+<div id="5e8c4899" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"x"</span>:  np.arange(<span class="dv">1</span>, <span class="dv">101</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"y"</span>: np.random.standard_t(df<span class="op">=</span><span class="dv">1</span>, size<span class="op">=</span><span class="dv">100</span>)})</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> smf.ols(<span class="st">"y ~ x"</span>, data<span class="op">=</span>df).fit()</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>df_resid <span class="op">=</span> pd.DataFrame({<span class="st">"resid"</span>: m.resid})</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    ggplot(df_resid, aes(sample<span class="op">=</span><span class="st">"resid"</span>))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> stat_qq()</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> stat_qq_line()</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>))</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="script_10_files/figure-html/cell-18-output-1.png" width="384" height="384" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>So what?</strong> If Gaussianity of the residuals is not satisifed, this means that the noise model is wrong. This can have the following practical implications:</p>
+<ul>
+<li><p>With enough data, the regression lines might not be too severely affected the least squares estimates converge to the expected values. Applying least squares to fit and predict does not depend on the Gaussian assumption!</p></li>
+<li><p>Hypothesis testing can be flawed.</p></li>
+</ul>
+<p><strong>What to do</strong> We may work with fundamentally non-Gaussian data (like Poisson distributed data, which are count data), or data with long tails and outliers. If one has an idea of what could be a better noise model, consider a generalized linear model with another distribution. Alternatively, use case resampling to estimate confidence intervals.</p>
+</section>
+</section>
+<section id="conclusions" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="conclusions"><span class="header-section-number">4</span> Conclusions</h2>
+<p>Linear models:</p>
+<ul>
+<li>are a powerful and versatile tool</li>
+<li>can be used to
+<ul>
+<li>predict future data</li>
+<li>quantify explained variance</li>
+<li>assess linear relations between variables (hypothesis testing)</li>
+<li>control for confounding (multiple linear regression)</li>
+</ul></li>
+<li>assumptions need to be checked (diagnostic plots)</li>
+<li>can be generalized for different distributions (GLMs for classification: next lecture)</li>
+</ul>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>this is a guessed formula for the sake of the explanation. You will build your own model on true data in the exercise and see why the 0.5 coefficients is probably not correct.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The popular deep neural networks are able, with enough data, to automatically learn these transformations. Nevertheless, their final operation (so-called last layer), is typically a linear combination as in <a href="#eq-E-linreg" class="quarto-xref">Eq.&nbsp;<span>10.3</span></a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>See the Wikipedia article on <a href="https://en.wikipedia.org/wiki/Francis_Galton">Francis Galton</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Galton made important contributions to statistics and genetics, but he was also one of the first proponents of eugenics, a scientifically flawed philosophical movement favored by many biologists of Galton’s time but with horrific historical consequences. You can read more about it here: <a href="https://pged.org/history-eugenics-and-genetics">https://pged.org/history-eugenics-and-genetics</a>.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p> <span class="math inline">\(N(x | 0, \sigma^2) = \frac{1}{\sigma\sqrt{2 \pi}} \exp(-\frac{x^2}{2 \sigma^2}).\)</span><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p> See the bestseller <em>Thinking, Fast and Slow</em> by Nobel prize–winning psychologist Daniel Kahneman (thank you, Lisa!), or the Wikipedia article on <a href="https://en.wikipedia.org/wiki/Regression_toward_the_mean">regression toward the mean</a>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>See the Wikipedia article on <a href="https://en.wikipedia.org/wiki/Variance-stabilizing_transformation">variance-stabilizing transformations</a>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>See the Wikipedia article on <a href="https://en.wikipedia.org/wiki/Generalized_linear_model">Generalized linear model</a>.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../topic09_Statistical-Testing-III/script/script_09.html" class="pagination-link" aria-label="Statistical Assessments for Big Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Statistical Assessments for Big Data</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../appendix03_Plotting/script/appendix_03.html" class="pagination-link" aria-label="Additional plotting tools">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Additional plotting tools</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

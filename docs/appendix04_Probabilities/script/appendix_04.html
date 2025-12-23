@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -38,7 +38,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-597958c53c93a607afca12fd375c57ed.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-87f2a376d176e4e5e755e23f537f413f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -125,9 +125,7 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Data Analysis and Visualization in Python</a> 
     </div>
@@ -236,6 +234,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Statistical Assessments for Big Data</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../topic10_LinearRegression/script/script_10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Linear Regression</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -270,7 +274,7 @@ window.Quarto = {
   <li><a href="#probability-conditional-probability-and-dependence" id="toc-probability-conditional-probability-and-dependence" class="nav-link active" data-scroll-target="#probability-conditional-probability-and-dependence"><span class="header-section-number">B.1</span> Probability, conditional probability, and dependence</a></li>
   <li><a href="#expected-value-variance-and-covariance" id="toc-expected-value-variance-and-covariance" class="nav-link" data-scroll-target="#expected-value-variance-and-covariance"><span class="header-section-number">B.2</span> Expected value, variance, and covariance</a></li>
   <li><a href="#probs-sample-estimates" id="toc-probs-sample-estimates" class="nav-link" data-scroll-target="#probs-sample-estimates"><span class="header-section-number">B.3</span> Sample estimates</a></li>
-  <li><a href="#appendix-lin-reg" id="toc-appendix-lin-reg" class="nav-link" data-scroll-target="#appendix-lin-reg"><span class="header-section-number">B.4</span> Linear regression</a></li>
+  <li><a href="#sec-appendix-lin-reg" id="toc-sec-appendix-lin-reg" class="nav-link" data-scroll-target="#sec-appendix-lin-reg"><span class="header-section-number">B.4</span> Linear regression</a></li>
   <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="header-section-number">B.5</span> Resources</a></li>
   </ul>
 </nav>
@@ -410,8 +414,8 @@ r =\frac{\sum ^n _{i=1}(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum ^n _{i=1}(x_i 
 \end{align}\]</span></p>
 <p>where <span class="math inline">\(\bar{x}=\frac{1}{n}\sum_{i=1}^n x_i\)</span> is the sample mean, and analogously for <span class="math inline">\(\bar{y}\)</span>.</p>
 </section>
-<section id="appendix-lin-reg" class="level2" data-number="B.4">
-<h2 data-number="B.4" class="anchored" data-anchor-id="appendix-lin-reg"><span class="header-section-number">B.4</span> Linear regression</h2>
+<section id="sec-appendix-lin-reg" class="level2" data-number="B.4">
+<h2 data-number="B.4" class="anchored" data-anchor-id="sec-appendix-lin-reg"><span class="header-section-number">B.4</span> Linear regression</h2>
 <p>This is the proof for the univariate linear regression estimates.</p>
 <p>For a data set <span class="math inline">\((x, y)_i\)</span> with <span class="math inline">\(i \in \{1 \dots N\}\)</span> the univariate linear model is defined as <span class="math display">\[y_i = \alpha + \beta x_i + \epsilon_i\]</span> with free parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> and a random error <span class="math inline">\(\epsilon_i \sim N(0, \sigma^2)\)</span> that is i.i.d. (independently and identically distributed).</p>
 <p>The normal distribution is defined as <span class="math display">\[N(\epsilon | 0, \sigma^2) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp(-\frac{\epsilon^2}{2 \sigma^2}) .\]</span></p>

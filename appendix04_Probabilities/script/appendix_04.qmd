@@ -174,7 +174,7 @@ r =\frac{\sum ^n _{i=1}(x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum ^n _{i=1}(x_i 
 where $\bar{x}=\frac{1}{n}\sum_{i=1}^n x_i$ is the sample mean, and analogously for $\bar{y}$.
 
 
-## Linear regression {#appendix-lin-reg}
+## Linear regression {#sec-appendix-lin-reg}
 This is the proof for the univariate linear regression estimates.
 
 For a data set $(x, y)_i$ with $i \in \{1 \dots N\}$ the univariate linear model is defined as

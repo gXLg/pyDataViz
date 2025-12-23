@@ -76,7 +76,7 @@ The effect size determines whether an effect is actually important. If we discov
 
 ### The relationship of sample size and significance
 
-Assume now that we have a very small effect size. For instance, assume we have two groups, $X$ and $Y$, that are both normally distributed with variance 1. But $\E[X] = \mu_x = 0$ whereas $\E[Y]=\mu_y=0.01$. We sample from these distribution and do a $t$-test to try to reject the null hypothesis that $\E[X]=\E[Y]$ (i.e. the effect size is exactly 0).
+Assume now that we have a very small effect size. For instance, assume we have two groups, $X$ and $Y$, that are both normally distributed with variance 1. But $\mathbb{E}[X] = \mu_x = 0$ whereas $\mathbb{E}[Y]=\mu_y=0.01$. We sample from these distribution and do a $t$-test to try to reject the null hypothesis that $\mathbb{E}[X]=\mathbb{E}[Y]$ (i.e. the effect size is exactly 0).
 
 If our sample size is small, e.g. $n_x=n_y=10$, the difference in means is unlikely to be statistically significant.
 
@@ -457,7 +457,7 @@ We notice a deviation from the assumption of uniformity at the low end of the di
 
 Instead of conservatively minimizing the probability of false positives, the Benjamini-Hochberg correction ^[Among the top 100 cited scientific papers of all times. https://www.nature.com/news/the-top-100-papers-1.16224] takes a more balanced view and instead controls the so-called **False discovery rate (FDR)** defined as the expected fraction of false positives among all discoveries:
 
-$$\operatorname{FDR} = \E[\frac{V}{\max(R,\ 1)}]$$,
+$$\operatorname{FDR} = \mathbb{E}[\frac{V}{\max(R,\ 1)}]$$,
 where $\max(R,\ 1)$ ensures the denominator to not be 0.
 
 To do this, we first order our (unadjusted) $P$-values. Let the ordered unadjusted $P$-values be: $P_1 \le P_2 \le \ ... \ \le P_m$. Let $j$ refer to a rank in this ordering, so $P_j$ is the j-th smallest $P$-value, and $H_{0,j}$ is the respective null hypothesis.
