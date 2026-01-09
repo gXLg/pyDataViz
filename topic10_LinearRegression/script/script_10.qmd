@@ -203,7 +203,7 @@ $$ \mathbb{E}[\text{son} | \text{father}] =\beta_0 + \beta_1 \text{father}$$
 
 is reasonable. Fitting such a model would allow us to avoid doing stratifications, as we could continuously estimate the expected value of son's height. How do we estimate these coefficients? To this end, we need a bit more theory.
 
-### Maximum likelihood and least squares estimates {#ML-LSE}
+### Maximum likelihood and least squares estimates {#sec-ML-LSE}
 Fitting a linear regression, i.e. estimating the parameters, is based on a widely used principle called **maximum likelihood**. The maximum likelihood principle consists in choosing as parameter values those for which the data is most probable. What is the probability of our data?
 
 Here we model the probability of the heights of the sons given the heights of their fathers. Generally, we will always consider the values of the explanatory variables to be given. Furthermore we will assume that, conditioned on the values of the explanatory variable, the observations are independent. Here, this means that the height of the sons are independent given the heights of the fathers. Hence the likelihood is:
