@@ -51,6 +51,8 @@ This Chapter introduces linear regression as an effective way to deal with these
 
 * The conditional distribution $p(y | x_1,...,x_p)$ is a Gaussian distribution whose variance is independent of $x_1,...x_p$, simplifying greatly issue number 1.
 
+* Variables $x_1, x_2, ... x_p$ are independent
+
 * The conditional expectation of $y$ is a simple linear combinations of the explanatory variables, that is:
 
 $$
@@ -71,7 +73,7 @@ $$
 
 where sex is 1 for male and 0 for female, and mother and father designate each parent's body height. 
 
-The linear model in @eq-E-linreg, can deal with continuous as well as discrete explanatory variables, solving the issue number 2. Moreover, because @eq-E-linreg models independent additive contributions of the explanatory variables, it has just one parameter per explanatory variable. The effects of the explanatory variables do not depend on the value of the other variables. These effects do not change between strata. Hence, linear regression does not suffer from a combinatorial explosion of strata (issue number 3).
+The linear model in @eq-E-linreg, can deal with continuous as well as discrete explanatory variables, solving the issue number 2. Moreover, because @eq-E-linreg models independent additive contributions of the explanatory variables, it has just one parameter per explanatory variable. These effects do not change between strata. Hence, linear regression does not suffer from a combinatorial explosion of strata (issue number 3).
 
 ### Limitations
 These assumptions of linear regression make the task easier, but how limiting are they?
@@ -97,15 +99,15 @@ $$H_0: \beta_j=0.$$
 
 * To **quantify how much variation** of a response variable can be explained by a set of explanatory variables.
 
-This Chapter explains first univariate linear regression using a historical dataset of body height. We will then go to the multivariate case using an example from baseball. Finally we will assess what is the practical impact of violations of the modeling assumptions, and how to diagnose them. A substantial part of the Chapter is based on an adaptation of Rafael Irizzary's book.
+This Chapter explains first univariate linear regression using a historical dataset of body height. We will then go to the multivariate case using an example from baseball. Finally we will assess what is the practical impact of violations of the modeling assumptions, and how to diagnose them. A substantial part of the Chapter is based on an adaptation of Rafael Irizarry's book.
 
 ## Univariate regression
 
 ### Galton's height dataset
-We start with linear regression against a single variable, or univariate regression. We use the dataset from which regression was born. The is an example from genetics. Francis Galton^[See the Wikipedia article on
-[Francis Galton](https://en.wikipedia.org/wiki/Francis_Galton).] studied the variation and heredity of human traits. Among many other traits, Galton collected and studied height data from families to try to understand heredity^[Galton made important contributions to statistics and genetics, but he was also one of the first proponents of eugenics, a scientifically flawed philosophical movement favored by many biologists of Galton's time but with horrific historical consequences. You can read more about it here: [https://pged.org/history-eugenics-and-genetics](https://pged.org/history-eugenics-and-genetics).]. While doing this, he developed the concepts of correlation and regression, as well as a connection to pairs of data that follow a normal distribution. A very specific question Galton tried to answer was: how well can we predict a child's height based on the parents' height? 
+We start with linear regression against a single variable, or univariate regression. We use the dataset from which regression was born. Francis Galton^[See the Wikipedia article on
+[Francis Galton](https://en.wikipedia.org/wiki/Francis_Galton).] studied the variation and heredity of human traits. Among many other traits, Galton collected and studied height data from families to try to understand heredity^[Galton made important contributions to statistics and genetics, but he was also one of the first proponents of eugenics, a scientifically flawed philosophical movement favored by many biologists of Galton's time but with horrific historical consequences. You can read more about it here: [https://pged.org/history-eugenics-and-genetics](https://pged.org/history-eugenics-and-genetics).]. While doing this, he developed the concepts of correlation and regression, as well as a connection to pairs of data that follow a normal distribution. A central question Galton explored was the relationship between parents’ heights and the heights of their children.
 
-We have access to Galton's family height data through the __HistData__ R [dataset](https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/csv/HistData/GaltonFamilies.csv), that can be downloaded and imported to python. This data records height in inches from several dozen families: mothers, fathers, daughters, and sons. To imitate Galton's analysis, we will create a dataset with the heights of fathers and a randomly selected son of each family: 
+We have access to Galton's family height data through the __HistData__ R [dataset](https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/csv/HistData/GaltonFamilies.csv), that can be downloaded and imported to python. This data records height in inches from several dozen families: mothers, fathers, daughters, and sons.  To explain linear regression, we extract a subset of the data consisting of the heights of fathers and a randomly selected son of each family: 
 
 
 ```{python}
@@ -161,7 +163,7 @@ galton_heights["father_strata"] = (
 )
 ```
 
-The centers of the groups are increasing with the father height, giving a first glimpse as how hereditary body height is.  
+The medians of the groups are increasing with the father height, giving a first glimpse as how hereditary body height is.  
 
 By strata, we can estimate the conditional expectations. In our example, we end up with the following prediction for the son of a father who is 72 inches tall:
 
@@ -420,7 +422,7 @@ In fact, the title of Galton's paper was:
 _Regression toward mediocrity in hereditary stature_.
 
 
-It is a fact that children of extremely tall parents are taller than average, yet typically shorter than their parents. You can appreciate it on Figure @fig-mean-son-vs-father. Extremely tall parents have an extreme combinations of alleles, and have also benefited from environmental factors by chance, which may not repeat in the next generation. The same phenomenon, called _regression toward the mean_, happens in sport. Athletes who perform extremely well one year are certainly good (high expectation) but have also probably been lucky (a positive error) so they are more likely to perform relatively worse the next year, etc. This phenomenon is ubiquitous and can lead to fallacies.^[
+It is a fact that children of extremely tall parents are taller than average, yet typically shorter than their parents. You can appreciate it on @fig-mean-son-vs-father. Extremely tall parents have an extreme combinations of alleles, and have also benefited from environmental factors by chance, which may not repeat in the next generation. The same phenomenon, called _regression toward the mean_, happens in sport. Athletes who perform extremely well one year are certainly good (high expectation) but have also probably been lucky (a positive error) so they are more likely to perform relatively worse the next year, etc. This phenomenon is ubiquitous and can lead to fallacies.^[
 See the bestseller *Thinking, Fast and Slow* by Nobel prize–winning psychologist
 Daniel Kahneman (thank you, Lisa!), or the Wikipedia article on
 [regression toward the mean](https://en.wikipedia.org/wiki/Regression_toward_the_mean).
@@ -435,7 +437,7 @@ $$\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x$$
 
 When we plot $\hat{y}$ versus $x$, we see the regression line.
 
-Keep in mind that the prediction $\hat{y}$ is also a random variable and mathematical theory tells us what the standard errors are. If we assume the errors are normal, or we have a large enough sample size, we can use theory to construct confidence intervals as well. In fact, the ggplot layer `geom_smooth(method = "lm")` that we previously used plots $\hat{y}$ and surrounds it by confidence intervals:
+Keep in mind that the prediction $\hat{y}$ is also a random variable. The standard errors can be derived analytically. If we assume the errors are normal, or we have a large enough sample size, we can use theory to construct confidence intervals as well. In fact, the ggplot layer `geom_smooth(method = "lm")` that we previously used plots $\hat{y}$ and surrounds it by confidence intervals:
 
 ```{python}
 (
@@ -500,7 +502,7 @@ df_pred['pred'] = pred
 (
   ggplot(df_pred, aes('pred', 'son'))
   + geom_point()
-  + geom_abline(intercept=0, slope=1)  # match R defaults
+  + geom_abline(intercept=0, slope=1)
   + annotate(
       'text',
       x=67,
@@ -521,7 +523,7 @@ $$ p(\hat \beta) = N(\beta, \sigma^2/ns^2_x)$$
 
 Hence, if the modeling assumptions hold, the estimates are unbiased, meaning that their expected value are the true values of the parameter $\mathbb{E}[\hat \beta_1] = \beta_1$. Moreover they are consistent, meaning that  for infinitely large sample size they converge to the true values.
 
-Another result allows us to build a hypothesis test, namely:
+Another result allows us to build a hypothesis test for any given null-hypothesis values of $\beta_1$, namely
 $$p\left(\frac{\hat{\beta_1} - \beta_1}{\hat{se}(\hat{\beta_1})}\right) = t_{n-2}\left(\frac{\hat{\beta_1} - \beta_1}{\hat{se}(\hat{\beta_1})}\right)$$
 where $t_{n-2}$ denotes the student's $t$ distribution with $n-2$ degrees of freedom and 
 $$\hat{se}(\hat{\beta_1}) = \sqrt{\frac{1}{n-2}\frac{\sum_i(y_i-\bar{y_i})^2}{\sum_i(x_i-\bar{x_i})^2}}$$
@@ -532,7 +534,9 @@ Remember, the $P-$value of a statistical test is the **probability** of the valu
 
 In our case we can formulate the null hypothesis, that $y$ does not depend on $x$ as follows: 
 
-* The null hypothesis for parameter $\beta_1$ is $H_0: \beta_1 = 0$
+* The null hypothesis for parameter $\beta_1$ is $H_0: \beta_1 = 0$: there is no linear association between $x$ and $y$
+* Reject $H_0$: we conclude that there is a statistically significant linear association between $x$ and $y$
+* Do not reject $H_0$: the data do not provide sufficient evidence of a statistically significant linear association between $x$ and $y$
 * The test statistic is $\hat{t} = \frac{\hat{\beta_1} - \beta_1}{\hat{se}(\hat{\beta_1})} = \frac{\hat{\beta_1}}{\hat{se}(\hat{\beta_1})}$
 * The probability under the null model is $P(t \geq \hat{t}), \mbox{where } t \sim t_{n-2}$
 
@@ -575,7 +579,7 @@ When we are not able to randomly assign each individual to a treatment or contro
 ### A multivariate example: The baseball dataset
 
 
-We will use data from baseball, leveraging a famous real application of regression which has led to improved estimations of baseball player values in the 90's ^[A lengthier case study on this dataset is given in R. Irizzarys' book.] Here we will not build a model of player value but, instead, we will focus on predicting the game scores of a team. 
+We will use data from baseball, leveraging a famous real application of regression which has led to improved estimations of baseball player values in the 90's ^[A lengthier case study on this dataset is given in R. Irizarry's book.] Here we will not build a model of player value but, instead, we will focus on predicting the game scores of a team. 
 
 #### Baseball basics
 
@@ -700,7 +704,7 @@ Remember that the regression slope for predicting runs with BB was `{python} flo
 )
 ```
 
-The slopes are reduced, but they are not 0, which indicates that BBs are helpful for producing runs, just not as much as previously thought ^[One can extract data of so-called singles, i.e the number of runs reaching the first base, and find that the effects on runs are similar than for BBs, which is consistent with the intuition that BB directly contributes to runs because it brings the batter to the first base. See R. Irizzary's book.]
+The slopes are reduced, but they are not 0, which indicates that BBs are helpful for producing runs, just not as much as previously thought ^[One can extract data of so-called singles, i.e the number of runs reaching the first base, and find that the effects on runs are similar than for BBs, which is consistent with the intuition that BB directly contributes to runs because it brings the batter to the first base. See R. Irizarry's book.]
 
 Although our understanding of the application tells us that HR cause BB but not the other way around, we can still check whether stratifying by BB makes the effect of HR go down. To do this, we use the same code except that we swap HR and BBs to get this plot:
 
@@ -879,7 +883,7 @@ From the result, we can see that the full model models the data significantly be
 
 ## Diagnostic plots {#sec-lin-reg-diagnostic}
 
-The assumptions of a mathematical model never hold exactly in practice. The questions for the practitioners are threefold:  1) How badly are the assumptions violated on the dataset at hand? 2) What are the implications for the claimed conclusions? How can the issue be addressed?
+The assumptions of a mathematical model never hold exactly in practice. The questions for the practitioners are threefold:  1) How badly are the assumptions violated on the dataset at hand? 2) What are the implications for the claimed conclusions? 3) How can the issue be addressed?
 
 The assumptions of linear regressions are:
 
@@ -887,9 +891,9 @@ The assumptions of linear regressions are:
 * Errors are identically and independently distributed.
 * Errors follow a normal distribution.
 
-We will see that two diagnostic plots will be helpful: the residual plot and the q-q plot of the residuals.
+We will see that two diagnostic plots will be helpful: the residual plot and the Q-Q plot of the residuals.
 
-### Assessing non-linearity with residual plot
+### Assessing non-linearity with residual plots
 **Diagnostic plot**
 
 Non-linearity is typically revealed by noticing that the average of the residual depends on the predicted values. A smooth fit (`geom_smooth` default) on the residual plot can help spotting systematic non-linear dependencies (See Figure @fig-non-linear-qc).
@@ -951,7 +955,7 @@ The implications of non-linearity depends on the application purposes:
 * Conditional dependencies can be affected. To see the latter assume a model in which two variables $x$ and $y$ depend on a common cause $z$ in a non-linear fashion (eg. $y=z^2 + \epsilon$ and $x=z^2+\epsilon'$). These two variables $x$ and $y$ are independent conditioned on their common cause $z$. However, a linear regression of $y$ on $x$ and $z$ would fail to discard the contribution of $x$.  
 
 **What to do?**
-If non-linearity is revealed in the fit, one can either transform the explanatory variables or the response (eg log-transformtaion, powers, etc). Note that the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. The `I` in Python implements a few convenience functions to build such non-linear transformation on the fly while calling lm(). For instance, the R call: `smf.ols('y ~ x + I(x**2) + I(x**3)', data=df)` fits a polynomial of degree 3.
+If non-linearity is revealed in the fit, one can either transform the explanatory variables or the response (eg log-transformation, powers, etc). Note that the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. The `I` in Python implements a few convenience functions to build such non-linear transformation on the fly while calling `smf.ols()`. For instance, the call: `smf.ols('y ~ x + I(x**2) + I(x**3)', data=df)` fits a polynomial of degree 3.
 
 ### When error variance is not constant: Heteroscedasticity
 It happens not so rarely that the variance of the residuals is not constant across all data points. This property is called **heteroscedasticity**. Heteroscedasticity violates the i.i.d assumption of the errors.
@@ -986,7 +990,7 @@ As the residuals are not i.i.d., the statistical tests are flawed.
 In case of heteroscedasticity, one can try to transform the response variable $y$, such as: log-transformation, square root, or variance stabilizing transformation ^[See the Wikipedia article on
 [variance-stabilizing transformations](https://en.wikipedia.org/wiki/Variance-stabilizing_transformation).]. 
 
-However, as before, the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. Alternatively, one can use methods with a different noise model. One possibility is to consider weighted least squares, when there is the possibility to estimate before end the relative error variances on the data. This is sometimes the case, for instance, if one has access to experimental uncertainties. Another direction is to use generalized linear models ^[See the Wikipedia article on
+However, as before, the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. Alternatively, one can use methods with a different noise model. One possibility is to consider weighted least squares, when there is the possibility to estimate beforehand the relative error variances on the data. This is sometimes the case, for instance, if one has access to experimental uncertainties. Another direction is to use generalized linear models ^[See the Wikipedia article on
 [Generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model).]
 
 ### Gaussianity: Q-Q-plot of the residuals
@@ -994,9 +998,11 @@ The Gaussian assumption of the errors is key to all statistical tests. An implic
 
 **Diagnostic plot**
 
-We use here a QQ-plot of the residuals against the normal distribution.
+We use here a Q-Q plot of the residuals against the normal distribution.
 
-The plotnine function `stat_qq()` and its companion `stat_qq_line()` generate qq-plot against a Gaussian fitted to the input vector. We do not have to worry about the mean and the standard deviation of the input vector. Here is a "good" example based on simulated data.
+The plotnine function `stat_qq()` and its companion `stat_qq_line()` generate Q-Q plot against a Gaussian fitted to the input vector. We do not have to worry about the mean and the standard deviation of the input vector. Here is a "good" example based on simulated data.
+The residuals, by construction, have a mean 0, but their variance is not necessarily 1. If they follow a Gaussian distribution, the Q-Q plot should show a line whose slope equals the standard deviation of the residuals. 
+To check this visually in a robust way, `stat_qq_line()` draws the line passing through the first and third quartiles of the data.
 
 ```{python}
 np.random.seed(0)
@@ -1031,7 +1037,7 @@ df_resid = pd.DataFrame({"resid": m.resid})
 ```
 
 **So what?**
-If Gaussianity of the residuals is not satisifed, this means that the noise model is wrong. This can have the following practical implications:
+If Gaussianity of the residuals is not satisfied, this means that the noise model is wrong. This can have the following practical implications:
 
 * With enough data, the regression lines might not be too severely affected the least squares estimates converge to the expected values. Applying least squares to fit and predict does not depend on the Gaussian assumption! 
 
