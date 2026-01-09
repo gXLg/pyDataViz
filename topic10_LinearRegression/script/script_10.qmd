@@ -620,7 +620,7 @@ A univariate linear regression gives the following parameter estimates:
 fitted_model = smf.ols('R_per_game ~ HR_per_game', data=teams_filtered).fit()
 print(fitted_model.params)
 ```
-So this tells us that teams that hit 1 more HR per game than the average team, score `r sprintf("%.3f", coef(fit_r_vs_hr)[2])` more runs per game than the average team. Given that the most common final score is a difference of a run, this can certainly lead to a large increase in wins. Not surprisingly, HR hitters are very expensive. Because we are working on a budget, we will need to find some other way to increase wins. So, in the next section, we move our attention to another possible predictive variable of runs.
+So this tells us that teams that hit 1 more HR per game than the average team, score `{python} float(round(fitted_model.params[1], 3))` more runs per game than the average team. Given that the most common final score is a difference of a run, this can certainly lead to a large increase in wins. Not surprisingly, HR hitters are very expensive. Because we are working on a budget, we will need to find some other way to increase wins. So, in the next section, we move our attention to another possible predictive variable of runs.
 
 
 #### Base on balls
@@ -1053,3 +1053,18 @@ Linear models:
 * assumptions need to be checked (diagnostic plots)
 * can be generalized for different distributions (GLMs for classification: next lecture)
 
+### To remember
+
+Now you should:
+
+* Understand linear regression as a method to test conditional dependence ($p(y|x) \neq p(y)$) and estimate the effects of variables
+
+* Interpret regression coefficients ($\beta$) and $R^2$ 
+
+* Explain how multivariate regression controls for confounding
+
+* List the four key assumptions of Linear Regression 
+
+* Diagnose assumption violations using residual plots and Q-Q plots
+
+* Apply statistical tests correctly: Use t-tests for individual coefficients and F-tests (ANOVA) for comparing nested models.
