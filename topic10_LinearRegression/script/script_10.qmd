@@ -600,7 +600,7 @@ We want to understand what makes a team score well on average. Hence, the averag
 
 #### Home runs
 
-A **home run** happens when the batter who hits the ball goes all the way home. This happens when the ball is hit very far, giving time for the batter to perform the full run. It is very good for the score because not only the batter scores a run, but the other players of the same team who are already on the pitch standing at intermediate bases typically finish their runs too.  
+A **home run** happens when the batter who hits the ball goes all the way home (see [this video](https://youtu.be/AJ7kLlwKDJI?t=35)). This happens when the ball is hit very far, giving time for the batter to perform the full run. It is very good for the score because not only the batter scores a run, but the other players of the same team who are already on the pitch standing at intermediate bases typically finish their runs too.  
 
 Not surprisingly, average home runs positively correlate with average runs:
 
