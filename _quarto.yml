@@ -84,13 +84,14 @@ book:
        - topic04_Plotting-I/script/script_04.qmd
        - topic05_Plotting-II/script/script_05.qmd
        - topic06_Plotting-III/script/script_06.qmd
-       
     - part: "III Conclude"
       chapters:
         - topic07_Statistical-Testing-I/script/script_07.qmd
         - topic08_Statistical-Testing-II/script/script_08.qmd
         - topic09_Statistical-Testing-III/script/script_09.qmd
         - topic10_LinearRegression/script/script_10.qmd
+        - topic12_SupervisedLearning/script/script_12.qmd
+
   appendices:
     - appendix03_Plotting/script/appendix_03.qmd
     - appendix04_Probabilities/script/appendix_04.qmd
