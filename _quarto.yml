@@ -47,7 +47,7 @@ format:
     toc: true
     toc-location: left
     toc-depth: 5
-    highlight-style: github
+    highlight-style: tango
     number-sections: true
     number-depth: 3
     page-layout: article
@@ -90,6 +90,7 @@ book:
         - topic08_Statistical-Testing-II/script/script_08.qmd
         - topic09_Statistical-Testing-III/script/script_09.qmd
         - topic10_LinearRegression/script/script_10.qmd
+        - topic11_LogisticRegression/script/script_11.qmd
         - topic12_SupervisedLearning/script/script_12.qmd
 
   appendices:

@@ -45,6 +45,7 @@ from sklearn.metrics import (
     precision_recall_curve,
     average_precision_score,
 )
+from sklearn.calibration import calibration_curve
 
 np.random.seed(123)
 
@@ -58,7 +59,7 @@ heights["y"] = (heights["sex"] == "M").astype(int)
 heights.head()
 ```
 
-We can attempt to do so using linear regression. If we assign a 1 for the male category and a 0 for the female category, then we can fit a linear regression whose prediction gives us a value for the category and whose input is the height of the student. 
+We can attempt to do so using linear regression. We can fit a linear regression to predict sex from height by assigning 1 for male and 0 for female. 
 Let us plot the predicted linear regression line and the (height, sex) pairs.
 
 ```{python}
@@ -88,7 +89,7 @@ heights["height_bins"] = pd.cut(
     include_lowest=True,
 )
 heights["mean_height_bins"] = heights.groupby("height_bins")["height"].transform("mean")
-heights["prop"] = heights.groupby("height_bins")["sex"].transform(lambda s: (s == "M").mean())
+heights["prop"] = heights.groupby("height_bins")["y"].transform("mean")
 
 props = (
     heights[["height_bins", "mean_height_bins", "prop"]]
@@ -124,7 +125,7 @@ We can estimate the overall population odds easily using the table of males and 
 heights["sex"].value_counts()
 ```
 
-If we take as an estimate for $p(\text{male})$ the frequency of males in our dataset then, the odds for a student to be a male is simply estimated as the male to female ratio:
+If we estimate $p(\text{male})$ as the proportion of males in the dataset, then the odds of a student being male can be estimated as the ratio of males to females:
 
 $\text{Population odds} \simeq \text{male:female} = 293 / 258 = 1.07$.
 
@@ -165,7 +166,10 @@ props_valid = props[props["valid_odds"]].copy()
 # Major and minor breaks on log10 scale, restricted to the plotted range [0.1, 10]
 exponents = np.arange(-1, 2, dtype=float)  # -1, 0, 1 -> 0.1, 1, 10
 breaks = 10.0 ** exponents
-minor_raw = np.tile(np.arange(1.0, 10.0), len(exponents)) * np.repeat(10.0 ** exponents, 9)
+minor_raw = (
+    np.tile(np.arange(1.0, 10.0), len(exponents))
+    * np.repeat(10.0 ** exponents, 9)
+)
 minor_breaks = minor_raw[(minor_raw >= 0.1) & (minor_raw <= 10)]
 
 p_log_odds = (
@@ -182,7 +186,7 @@ p_log_odds = (
   + ylab("Male:Female")
   + scale_y_log10(breaks=breaks, minor_breaks=minor_breaks, limits=(0.1, 10))
   + annotation_logticks(sides="l")
-  + scale_color_manual(values={False: "#999999", True: "#000000"})
+    + scale_color_manual(values={False: "#000000", True: "#999999"})
   + theme(legend_position="none")
 )
 
@@ -367,7 +371,7 @@ p_fit_male = (
   ggplot(props, aes("mean_height_bins", "prop"))
   + geom_point()
   + labs(x="Height (cm)", y="Estimated P(Male)")
-  + geom_point(
+  + geom_line(
       data=heights.sort_values("height"),
       mapping=aes("height", "mu_hat"),
       color="darkred",
@@ -388,7 +392,7 @@ overview
 ## Interpreting a logistic regression fit
 ### Predicted odds
 
-In logistic regression, the logit of the predicted response/probability for a certain input is the predicted log odds for the positive class (y=1) on that input. 
+In logistic regression, the logit of the predicted response/probability for a certain input is the predicted log odds for the positive class (y=1) on that input.^[Cox, DR (1958). "The regression analysis of binary sequences (with discussion)". J R Stat Soc B. 20 (2): 215–242. doi:10.1111/j.2517-6161.1958.tb00292.x. JSTOR 2983890.]
 For example, for a height of 178 cm the log odds is:
 ```{python}
 log_odds_178 = (
@@ -778,8 +782,8 @@ heights["multi_logistic_mu_hat"] = multi_logistic_fit.predict(heights)
 
 roc_rows = []
 for label, scores in [
-    ("Univariate", heights["mu_hat"]),
-    ("Multivariate", heights["multi_logistic_mu_hat"]),
+  ("Univariate", heights["mu_hat"]),
+  ("Multivariate", heights["multi_logistic_mu_hat"]),
 ]:
   # Drop any rows with missing scores to avoid NaNs in ROC computation
   mask = scores.notna()
@@ -801,7 +805,7 @@ ggroc
 ```
 
 We can see that for lower values of false positive rates, the true positive rate is higher on the multiple logistic regression model. This suggests this model has a better performance. 
-Classification performance can also be measured by the AUC (area under the ROC curve). An AUC of 1 means that the model is perfectly able to distinguish between the positive and negative classes. An AUC of 0.5, which corresponds to the AUC of a ROC curve which is a diagonal line, means the classifier model is no better than random classification.
+Classification performance can also be measured by the AUC (area under the ROC curve). The Area Under the Curve (AUC) condenses this performance into a single value: the probability that a randomly selected positive instance is ranked higher than a randomly selected negative one (as an exercise, prove it). An AUC of 1 means that the model is perfectly able to distinguish between the positive and negative classes. An AUC of 0.5, which corresponds to the AUC of a ROC curve which is a diagonal line, means the classifier model is no better than random classification.
 
 ```{python}
 auc_uni = roc_auc_score(heights["y"], heights["mu_hat"])
@@ -822,7 +826,20 @@ Let's compute the ROC curve and its AUC on the logistic regression on the imbala
 imbalanced_heights["mu_hat"] = logistic_fit_imbalanced.predict(imbalanced_heights)
 fpr_imb, tpr_imb, _ = roc_curve(imbalanced_heights["y"], imbalanced_heights["mu_hat"])
 auc_imb = roc_auc_score(imbalanced_heights["y"], imbalanced_heights["mu_hat"])
-auc_imb
+
+roc_imb_df = pd.DataFrame({"fpr": fpr_imb, "tpr": tpr_imb})
+
+(
+  ggplot(roc_imb_df, aes("fpr", "tpr"))
+  + geom_line(color="darkred")
+  + geom_abline(intercept=0, slope=1, linetype="dashed", color="grey")
+  + labs(
+      x="False positive rate",
+      y="True positive rate",
+      title=f"Imbalanced dataset ROC curve (AUC={auc_imb:.3f})",
+    )
+  + theme(figure_size=(5, 3.5))
+)
 ```
 From its AUC value, the performance of this model seems similar to the model on the balanced dataset.
 Let's inspect such performances using a Precision Recall curve, which, for different cutoffs plots the precision ($\frac{T P}{T P+F P}$) against the recall ($\frac{T P}{P}$). To plot a precision recall curve we can use functions from `sklearn.metrics`.
@@ -860,9 +877,78 @@ Although the ROC curves of both models look similar, the precision recall curves
 Because the dataset is imbalanced for the female (negative class), the corresponding logistic regression model provides lower precisions for the same recall, meaning that such model is worse at classifying males. The PR curves is hence used in very imbalanced situations in which the positive class is strongly under-represented. These are "finding a needle in a haystack" situations, such as detecting a rare disease or retrieving a relevant web page among billions of web pages across the web. Then, the precision-recall curves emphasize better the performance of the model among the top scoring predictions than the ROC curve. 
 
 
-## Conclusions
+## Calibration of predicted probabilities
 
-### To remember
+The ROC and PR curves evaluate how well a model *ranks* positives above negatives (this is called **discrimination**). However, logistic regression outputs *probabilities*, and a different diagnostic question is often crucial:
+
+> When the model predicts 0.8, do about 80% of such cases actually belong to the positive class?
+
+This property is called **calibration**. Generally, a probabilistic model is calibrated if the estimated probabilities are accurate. Calibration is critical when deploying prediction models in real-world settings. Even models with strong discriminatory power may lead to flawed decisions if they misrepresent absolute risk. Calibration is particularly important in clinical contexts, finance, insurance, severe weather forecast, etc. For these application areas, calibration should be evaluated alongside discrimination and overall accuracy. A model can have a good ROC-AUC (good ranking) but still be poorly calibrated (wrong probability scale).
+
+One way to visualize calibration is the **reliability diagram** (also called a calibration curve).^[A common single-number summary of probability accuracy is the *Brier score*, $\frac{1}{n}\sum_i (y_i-\hat p_i)^2$ (lower is better).]
+
+To assess calibration, we can:
+
+1. Fit a probabilistic model and obtain predicted probabilities $\hat p$.
+2. Group predictions into bins and compare:
+   - mean predicted probability in the bin
+   - observed fraction of positives in the bin
+
+If the model is perfectly calibrated, these points lie on the diagonal line $y=x$.
+
+In principle, calibration should be assessed on held-out data (otherwise there is a risk of overfitting, i.e., the model may look better calibrated than it really is on unseen data). We will introduce train/test splitting and out-of-sample evaluation in the next Chapter. For now, we illustrate the idea on the same data used for fitting.
+
+```{python}
+calib_df = heights.dropna(subset=["y", "height", "mother", "father"]).copy()
+
+# Fit a multivariate logistic regression (same model as above)
+calib_fit = smf.glm(
+  "y ~ height + mother + father",
+  data=calib_df,
+  family=sm.families.Binomial(),
+).fit()
+
+calib_df["p_hat"] = calib_fit.predict(calib_df)
+calib_df = calib_df.dropna(subset=["p_hat"])  # safety
+calib_df["p_hat"] = calib_df["p_hat"].clip(0.0, 1.0)
+
+# Compute calibration curve (quantile bins = similar counts per bin)
+frac_pos, mean_pred = calibration_curve(
+  calib_df["y"],
+  calib_df["p_hat"],
+  n_bins=10,
+  strategy="quantile",
+)
+
+calib_curve_df = pd.DataFrame({"mean_pred": mean_pred, "frac_pos": frac_pos})
+calib_curve_df = calib_curve_df.dropna().sort_values("mean_pred")
+
+diag_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
+
+p_calib = (
+  ggplot(calib_curve_df, aes("mean_pred", "frac_pos"))
+  + geom_point(color="#1f77b4")
+  + geom_line(diag_df, aes("x", "y"), linetype="dashed", color="grey")
+  + labs(
+      x="Mean predicted probability",
+      y="Observed fraction of positives",
+      title="Reliability diagram (in-sample illustration)",
+  )
+  + scale_x_continuous(limits=(0, 1))
+  + scale_y_continuous(limits=(0, 1))
+  + theme(figure_size=(5, 3.5))
+)
+
+if len(calib_curve_df) >= 2:
+  p_calib = p_calib + geom_line(color="#1f77b4")
+
+p_calib
+```
+
+Calibration and discriminative power are two distinct aspects of a classifier. A classifier can be perfectly calibrated without any discrimination power. For instance, a model predicting 50% chance to be male for any input values in a balanced population is well-calibrated, yet has no discriminative power.
+
+
+## Conclusion
 
 Now you should be able to:
 
@@ -877,6 +963,8 @@ Now you should be able to:
 * know how to compare performance of classifiers using a ROC curve
 * know what a PR curve is
 * know how to compare performance of classifiers using a PR curve
+* know the difference between discrimination and calibration
+* know how to assess calibration with a reliability diagram
 
 
 

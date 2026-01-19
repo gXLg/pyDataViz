@@ -14,6 +14,16 @@ pre code {
   white-space: inherit;
 }
 
+/* Code typography (match older bookdown look: smaller + clearer) */
+pre,
+pre code,
+.sourceCode {
+  font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95em;
+  line-height: 1.55;
+}
+
 /* Reset default margins and padding */
 body {
   margin: 0;
