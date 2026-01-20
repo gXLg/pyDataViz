@@ -298,11 +298,11 @@ Generalized linear models (GLM) generalize linear regression by allowing the lin
 As we have seen in the special case of the logistic regression, which is an instance of a GLM, we changed the linear regression by applying a transformation to the linear combination of the features in order to use it for another type of predictions.
 
 * Logistic regression is one instance of generalized linear models, which all exploit the same idea:
-  * 1. A probability distribution from the exponential family 
+  * A probability distribution from the exponential family 
     * Logistic regression: Bernoulli
-  * 2. A linear predictor $\eta = \mathbf{X}\boldsymbol{\beta}$  
+  * A linear predictor $\eta = \mathbf{X}\boldsymbol{\beta}$  
     * Logistic regression: $\operatorname{logit}(\mu_i) = \eta_i = \beta_0 + \sum_{j=1}^p \beta_j x_{ij}$
-  * 3. A link function $g$ such that $\text{E}(y) = \mu = g^{-1}(\eta)$
+  * A link function $g$ such that $\text{E}(y) = \mu = g^{-1}(\eta)$
     * Logistic regression: $g=\operatorname{logit}$ and $g^{-1}=\operatorname{sigmoid}$
   
 The inverse of the link function is called the _activation_ function, which in logistic regression is the logistic function. 
