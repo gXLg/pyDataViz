@@ -253,7 +253,7 @@ Second, the key issue is that it is easy with flexible mathematical functions to
 
 As previously stated, a supervised learning task starts with an available dataset that we use to build a model so that this model will eventually be used in completely independent datasets, as shown in @fig-dataset1.
 
-![](assets/img/topic12_supervised_learning/dataset.png){#fig-dataset1 width=500px}
+![](../../assets/img/topic12_supervised_learning/dataset.png){#fig-dataset1 width=500px}
 
 The first challenge arises when we do not know these independent datasets. However, in such cases, we still want to make sure that our model is not only working well when applied to the available dataset but can generalize well to independent unknown datasets. In particular, we want to make sure that we are not over-fitting to the dataset that the model was trained on.
 
@@ -263,7 +263,7 @@ How to minimize error on data we have never seen? We will make the following ass
 
 Under this assumption, one common strategy to evaluate the performance of the model on independent datasets is to select a subset of our dataset and pretend it is an independent dataset. As illustrated in @fig-dataset2, we divide the available dataset into a training set and a test set. We will train our algorithm exclusively on the training set and use the test set only for evaluation purposes.
 
-![](assets/img/topic12_supervised_learning/train_test_dataset.png){#fig-dataset2 width=500px}
+![](../../assets/img/topic12_supervised_learning/train_test_dataset.png){#fig-dataset2 width=500px}
 
 Typically, we select a small piece of the dataset so that we have as much data as possible to train. However, we also want the test set to be large enough to obtain a stable estimate of the performance of the model on independent datasets. Common choices for the size of the train set are to use 10\%-30\% of the data for testing.
 
@@ -279,7 +279,7 @@ Cross-validation is often used as a strategy to assess the performance of a mach
 
 In cross-validation the data is randomly split into a number k of folds (e.g. 3, 5 or 10), as illustrated in @fig-crossval1.
 
-![](assets/img/topic12_supervised_learning/c_val.png){#fig-crossval1 width=700px}
+![](../../assets/img/topic12_supervised_learning/c_val.png){#fig-crossval1 width=700px}
 
 Then, a model is repeatedly trained on $k-1$ folds and evaluated on the fold not used for training. In this manner, we train $k$ models with a different training dataset on each fold $i$ with $i\in\{1,...,k\}$. After the $k$ models have been trained and evaluated on the respective left-out folds, evaluation metrics can be summarized into a combined evaluation metric.
 
@@ -429,7 +429,7 @@ A decision tree is a method that involves partitioning or segmenting the trainin
 
 As an example for a decision tree model for a regression task, we consider the `Hitters` dataset ^[https://rdrr.io/cran/ISLR/man/Hitters.html] to predict a baseball player’s (log-transformed) `Salary` based on the feature `Years` (the number of years that he has played in the major leagues) and on the feature `Hits` (the number of hits that he made in the previous year). A regression tree for this dataset is shown in @fig-dt1. The constructed tree consist of 3 splitting rules. First, observations having `Years<4.5` get passed to the right branch and observations having `Years>=4.5` to the left branch. The predicted log-transformed salary for these players in the right is given by the mean log-transformed salary of all training samples in this node, which is in this case `5.11`. Players assigned to the left branch are further subdivided by the feature `Hits`.
 
-![](assets/img/topic12_supervised_learning/dt_reg.png){#fig-dt1 width=300px}
+![](../../assets/img/topic12_supervised_learning/dt_reg.png){#fig-dt1 width=300px}
 
 After the training is finalized, the tree regions the players into three regions: players who have played for four or fewer years, players who have played for five or more years and who made fewer than 118 hits last year, and players who have played for five or more years and who made at least 118 hits last year. A graphical representation of this resulting segmentation can be observed in @fig-dt2.
 
@@ -540,7 +540,7 @@ play_tennis_df
 
 Figure @fig-dt3 shows an example of a decision tree for solving the described classification task. The initial splitting rule tests whether the value of the `Outlook` feature of each sample is either sunny or rainy. Samples with the feature value being sunny are passed to the right node. If the outlook is rainy for a subset of the initial samples in the dataset, these samples are passed to the left node. Here, a second feature test is performed. This test involves checking the humidity feature for all samples. If the humidity value is normal, a third splitting rule is defined for checking whether the day is windy or not. In total, four regions result from the training process of the decision tree.
 
-![](assets/img/topic12_supervised_learning/dt_class.png){#fig-dt3 width=300px}
+![](../../assets/img/topic12_supervised_learning/dt_class.png){#fig-dt3 width=300px}
 
 Note that decision trees for classification tasks can be constructed with both numerical and categorical features, even though our tennis example only contains categorical data. Feature tests for numerical features can be formulated with an (un)equality for a certain feature, as described before for regression trees. For instance, a node in a decision tree could test whether the temperature feature is higher than 20 degrees Celsius (`Temperature>20`).
 
@@ -548,7 +548,7 @@ Note that decision trees for classification tasks can be constructed with both n
 
 For constructing a random forest, the first step is called aggregation (or bagging), which involves generating many predictors, each using regression or classification trees. To ensure that the individual trees are not the same, we use bootstrap to induce randomness. These two features combined explain the name: the bootstrap makes the individual trees randomly different, and the combination of trees is the forest. In a random forest for classification tasks, the predicted output is the majority vote of the contained decision trees. In contrast, the predicted value of a random forest regressor is the mean of the predictions from each decision tree in the random forest.
 
-![](assets/img/topic12_supervised_learning/rf.png){#fig-rf width=500px}
+![](../../assets/img/topic12_supervised_learning/rf.png){#fig-rf width=500px}
 
 The specific steps for building a random forest can be formulated as follows:
 

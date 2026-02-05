@@ -55,7 +55,7 @@ Yeast is a good old friend of humans. Thanks to yeast, we can make bread, wine, 
 
 Our dataset [@gagneur2013] allows addressing these questions (and further yeast genetic questions). The lab strain was crossed with a wild isolate growing well on maltose. Overall, 158 offsprings, also called segregants, were considered. During a cross, parental chromosomes are recombined at discrete random locations in a process called cross-over ^[ See [Wikipedia](<https://en.wikipedia.org/wiki/Chromosomal_crossover>) and [Khan Academy](<https://www.khanacademy.org/science/biology/classical-genetics/chromosomal-basis-of-genetics/a/linkage-mapping>) ]. Consequently, the chromosomes of the segregants consist of alternated segments inherited from either parent. Yeast has 16 chromosomes. Figure @fig-yeast-cross illustrates this crossing process for one chromosome.
 
-![Cross of the lab strain and wild isolate. Meiotic recombination implies that chromosomes of the offsprings consist of alternated segments inherited from either parent.](assets/img/lec09-stat-testing/lec09_yeast_cross.png){#fig-yeast-cross width=600px}
+![Cross of the lab strain and wild isolate. Meiotic recombination implies that chromosomes of the offsprings consist of alternated segments inherited from either parent.](../../assets/img/lec09-stat-testing/lec09_yeast_cross.png){#fig-yeast-cross width=600px}
 
 This shuffling of the genetic information is helpful to identify on which chromosomal location(s) genetic variations responsible for the growth rate difference could reside.
 
@@ -63,7 +63,7 @@ This shuffling of the genetic information is helpful to identify on which chromo
 
 The `genotype` table reports the genotype of each of the 158 yeast strains at 1,000 genomic locations called genetic markers. At each marker, the genotype values are either "Lab strain" or "Wild isolate" (Figure @fig-genotype-matrix).
 
-![Sketch of the genotype of segregants (rows) across the 16 chromosomes. The genotypes are provided at 1,000 genomic positions (called markers, vertical line). The colors indicate the genotype (blue: Lab strain, red: Wild isolate).](assets/img/lec09-stat-testing/lec09_genotype.png){#fig-genotype-matrix width=800px}
+![Sketch of the genotype of segregants (rows) across the 16 chromosomes. The genotypes are provided at 1,000 genomic positions (called markers, vertical line). The colors indicate the genotype (blue: Lab strain, red: Wild isolate).](../../assets/img/lec09-stat-testing/lec09_genotype.png){#fig-genotype-matrix width=800px}
 
 See below for a section of the data table:
 
@@ -273,7 +273,7 @@ This empirical approach is quite intuitive. Let us now formalize it and precisel
 ### Concepts of Statistical Hypothesis Testing  
 We just implemented one type of Hypothesis test. Figure @fig-hypothesis-test-overview provides an overview of Hypothesis testing.
 
-![We assume an underlying random process (i.e. "Nature"). We collected data which is a particular realization of this random process, and from this data we computed a test statistic. In the bottom row, we now play the role of the Devil's advocate and assume that the underlying random process conforms to the null hypothesis. Based on this assumption, different realizations of the dataset could arise as different realizations of the random process, for which the test statistics would get different values. Then we compute how likely it is to observe the test statistics as extreme as, or more extreme than the ones we got from our actual data. We use this probability to reject or not the null hypothesis.](assets/img/lec09-stat-testing/lec10_Stat-testing-overview.png){#fig-hypothesis-test-overview width=800px}
+![We assume an underlying random process (i.e. "Nature"). We collected data which is a particular realization of this random process, and from this data we computed a test statistic. In the bottom row, we now play the role of the Devil's advocate and assume that the underlying random process conforms to the null hypothesis. Based on this assumption, different realizations of the dataset could arise as different realizations of the random process, for which the test statistics would get different values. Then we compute how likely it is to observe the test statistics as extreme as, or more extreme than the ones we got from our actual data. We use this probability to reject or not the null hypothesis.](../../assets/img/lec09-stat-testing/lec10_Stat-testing-overview.png){#fig-hypothesis-test-overview width=800px}
 
 #### Test statistic
 To develop our test, we first need to define a **test statistic** (Figure @fig-hypothesis-test-overview). This is a single number that summarizes the data and captures the trend. The more extreme the test statistic, the stronger the trend.
@@ -536,7 +536,7 @@ For the yeast example, we observed a difference of median growth rates of about 
 
 We often face scenarios like this one, where we would like to estimate a certain quantity and report on the uncertainty of this estimate. This framework is called parameter estimation, and it is summarized in the following diagram:
 
-![](assets/img/lec09-stat-testing/lec10_Parameter-estimation-overview.png){width=800px}
+![](../../assets/img/lec09-stat-testing/lec10_Parameter-estimation-overview.png){width=800px}
 
 As before, there is a random process which produced our data, on which we compute summary statistics. But rather than just rejecting a null hypothesis, we now want to *infer* a parameter from our summary statistics, and also get an idea how precise our inference is. The confidence interval is a method to quantify our uncertainty about a parameter estimate. Note that in this scenario we do not need ways of assessing the distribution under a null data generation process, but rather under the actual data generation process.
 
