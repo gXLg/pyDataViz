@@ -133,6 +133,7 @@ real_df = pd.DataFrame({"x_real": x_real, "y_real": np.sin(2 * np.pi * x_real)})
     + geom_point()
     + geom_line(real_df, aes("x_real", "y_real"), color="blue")
     + my_theme
+    + theme(figure_size=(4, 3))
 )
 ```
 
@@ -183,6 +184,7 @@ melted_df = pd.concat(frames, ignore_index=True)
     + geom_line(melted_df, aes("x_real", "value"), color="green")
     + facet_wrap("~variable")
     + my_theme
+    + theme(figure_size=(5, 5))
 )
 ```
 
@@ -237,7 +239,7 @@ truth_df = pd.concat([truth15, truth100], ignore_index=True)
     + geom_line(fit_df, aes("x", "y"), color="green")
     + facet_wrap("~panel")
     + my_theme
-    + theme(figure_size=(6, 3))
+    + theme(figure_size=(5, 3))
 )
 ```
 
@@ -376,10 +378,9 @@ cv_results = cross_validate(
     cv=cv,
     scoring={"roc_auc": "roc_auc"},
 )
-cv_results
 ```
 
-As we can observe, the `cv_results` dictionary returns the ROC-AUC values computed over the $k=5$ models. The performance measurements for each model can be obtained as follows:
+The `cv_results` dictionary returns the ROC-AUC values computed over the $k=5$ models. The performance measurements for each model can be obtained as follows:
 
 ```{python}
 pd.DataFrame({"roc_auc": cv_results["test_roc_auc"]})
@@ -390,20 +391,31 @@ Additionally, summary statistics can be computed:
 ```{python}
 roc_mean = cv_results["test_roc_auc"].mean()
 roc_std = cv_results["test_roc_auc"].std()
-print(f"Mean ROC-AUC over {k} folds: {roc_mean:.3f} ± {roc_std:.3f}")
+
+pd.DataFrame(
+    {
+        "Mean ROC AUC": [roc_mean],
+        "SD ROC AUC": [roc_std],
+    }
+).round(3)
 ```
 
 The final model can be obtained by fitting a logistic regression model on the full dataset:
 
 ```{python}
 log_reg.fit(X, y)
-coef = pd.Series(log_reg.coef_.ravel(), index=X.columns).sort_values(key=np.abs, ascending=False)
+
+coef = pd.Series(
+    log_reg.coef_.ravel(),
+    index=X.columns).sort_values(key=np.abs, ascending=False
+)
+
 coef.to_frame("coefficient")
 ```
 
 ## Random Forests as alternative models
 
-There is a plethora of supervised learning algorithms out there. Providing a reasonable survey of them is out of the scope of this module. We therefore introduce here a single supervised learning method beyond linear and logistic regression which is working well in many situations: Random forests. Just as linear and logistic regression should be the first baseline models to try, random forests can be seen as the first non-interpretable supervised learning model to give a shoot for. From this basis, many other options can be considered, often depending on the application areas.
+There is a plethora of supervised learning algorithms out there. Providing a reasonable survey of them is out of the scope of this module. We therefore introduce here a single supervised learning method beyond linear and logistic regression which is working well in many situations: Random forests. Just as linear and logistic regression should be the first baseline models to try, random forests can be seen as the first non-interpretable supervised learning model to give a shot for. From this basis, many other options can be considered, often depending on the application areas.
 
 Random forests can be applied to both regression and classification tasks. In this section, we introduce random forests as a further type of model for solving both tasks, as these are easy to understand and achieve state-of-the-art performance in many prediction tasks.
 
@@ -536,7 +548,7 @@ Note that decision trees for classification tasks can be constructed with both n
 
 For constructing a random forest, the first step is called aggregation (or bagging), which involves generating many predictors, each using regression or classification trees. To ensure that the individual trees are not the same, we use bootstrap to induce randomness. These two features combined explain the name: the bootstrap makes the individual trees randomly different, and the combination of trees is the forest. In a random forest for classification tasks, the predicted output is the majority vote of the contained decision trees. In contrast, the predicted value of a random forest regressor is the mean of the predictions from each decision tree in the random forest.
 
-![](assets/img/topic12_supervised_learning/rf_wiki.png){#fig-rf width=500px}
+![](assets/img/topic12_supervised_learning/rf.png){#fig-rf width=500px}
 
 The specific steps for building a random forest can be formulated as follows:
 
@@ -577,11 +589,27 @@ heights_df["sex_predicted"] = rf_classifier.predict(X)
 heights_df
 ```
 
-## Conclusion
+## Discussion
 
 This chapter introduced concepts from supervised machine learning for prediction tasks. Here, the main focus is to build and evaluate models that identify trends in the training dataset but are still able to generalize to (new) independent datasets. We described cross-validation as a strategy to prevent over-fitting.
 
 Additionally, we introduced random forests as alternative machine learning models to linear and logistic regression for regression and classification tasks, since they are easy to understand and interpret and still show good performance in many application tasks. However, there are many more algorithms for solving regression and/or classification tasks in supervised learning. A few of the most popular methods include support vector machines (SVMs), (Deep) Neural Networks, k-Nearest Neighbors and Naive Bayes classifiers.
+
+## Conclusion
+By now you should now the concepts of:
+
+**Supervised learning**
+* Build and evaluate models that identify trends in the training dataset but are still able
+to generalize to (new) independent datasets
+* Cross-validation as a strategy to prevent over-fitting
+* Cross-validation pitfalls
+
+**Random forests**
+* RF fitting for classification and for regression tasks
+* Decision trees
+* Bagging
+* RFs are “random” with respect to features and samples
+
 
 ## Resources
 

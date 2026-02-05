@@ -1,14 +1,27 @@
-*/exercise
-*/presentation
-*/exam
-*/slides
-dataviz_book/extdata/*
+# Data (keep out of git for now; revisit later)
+extdata/
+
+# Quarto / Jupyter
+
+.quarto/
+**/*.quarto_ipynb
+*_cache/
+*_files/
+**/*_files/
+.ipynb_checkpoints/
+
+# Rendered output (do NOT ignore if we  decide to publish from docs/)
+docs/
+
+# RStudio / R
 .Rproj.user
 .Rhistory
 
-/.quarto/
-**/*.quarto_ipynb
+# Local Python environments / kernels
+.venv/
+venv/
+.dataviz/
+
 
 # macOS
 .DS_Store
-**/.DS_Store

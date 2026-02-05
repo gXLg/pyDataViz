@@ -24,11 +24,15 @@ from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
 
 # Set theme similar to original
 mysize = 9
-mytheme = (theme_bw() +
-           theme(axis_title=element_text(size=mysize),
-                 axis_text=element_text(size=mysize),
-                 legend_title=element_text(size=mysize),
-                 legend_text=element_text(size=mysize)))
+mytheme = (
+  theme_bw() +
+  theme(
+    axis_title=element_text(size=mysize),
+    axis_text=element_text(size=mysize),
+    legend_title=element_text(size=mysize),
+    legend_text=element_text(size=mysize)
+  )
+)
 
 np.random.seed(0)
 ```
@@ -47,9 +51,17 @@ We use a subset of the base R `mtcars` dataset consisting of 10 rows (cars) and 
 
 ```{python}
 from plotnine.data import mtcars
-mat = mtcars.iloc[1:10][["mpg", "carb", "hp", "wt"]].copy()
+mat = mtcars.iloc[1:10][
+  ["mpg", "carb", "hp", "wt"]
+].copy()
+
 mat.index = mtcars.name[1:10]
-mat.columns = ["Miles.per.gallon", "Carburetor", "Horsepower", "Weight"]
+mat.columns = [
+  "Miles.per.gallon",
+  "Carburetor",
+  "Horsepower",
+  "Weight"
+]
 mat.head()
 ```
 
@@ -63,7 +75,12 @@ Here is a basic call to `sns.clustermap` on our data matrix `mat`:
 ```{python}
 #| fig-align: center
 import seaborn as sns
-g = sns.clustermap(mat, row_cluster=False, col_cluster=False, figsize=(4,4))
+g = sns.clustermap(
+  mat,
+  row_cluster=False,
+  col_cluster=False,
+  figsize=(4,4)
+)
 ```
 
 Strikingly, the horsepower variable saturates the color scale because horsepower lives in  a different scale than the other variables. Consequently, we barely see variations in the other variables.    
@@ -85,7 +102,13 @@ With `sns.clustermap` we can also scale the data by rows or columns by setting t
 #| fig-align: center
 #| label: fig-scaled_heatmap
 #| fig-cap: Scaled heatmap.
-sns.clustermap(mat, row_cluster=False, col_cluster=False, z_score=1, figsize=(4,4))
+sns.clustermap(
+  mat,
+  row_cluster=False,
+  col_cluster=False,
+  z_score=1,
+  figsize=(4,4)
+)
 ```
 
 Scaling allows us to appreciate the variation for all variables. The default color scale is centered on 0. Because each column is centered, we find positive (red-ish) and negative (blue-ish) values in each column. 
@@ -131,24 +154,33 @@ X, y = make_blobs(
 
 # Build data frames
 dt = pd.DataFrame({
-    'Cluster': [f'C{i+1}' for i in y],
-    'x': X[:, 0],
-    'y': X[:, 1]
+    "Cluster": [f"C{i+1}" for i in y],
+    "x": X[:, 0],
+    "y": X[:, 1]
 })
 
 mu_dt = pd.DataFrame({
-    'Cluster': [f'C{i+1}' for i in range(K)],
-    'x': centers[:, 0],
-    'y': centers[:, 1],
-    'label': [f'mu[{i+1}]' for i in range(K)]
+    "Cluster": [f"C{i+1}" for i in range(K)],
+    "x": centers[:, 0],
+    "y": centers[:, 1],
+    "label": [f"mu[{i+1}]" for i in range(K)]
 })
 
 # Plot
-(ggplot(dt, aes(x='x', y='y', color='Cluster')) +
-    geom_point() +
-    mytheme +
-    geom_point(mu_dt, aes(x='x', y='y', color='Cluster'),
-               shape='x', size=3, show_legend=False))
+(
+  ggplot(
+    dt,
+    aes(x="x", y="y", color="Cluster"))
+    + geom_point()
+    + mytheme
+    + geom_point(
+      mu_dt,
+      aes(x="x", y="y", color="Cluster"),
+      shape="x",
+      size=3,
+      show_legend=False
+  )
+)
 ```
 
 Formally, one aims to determine the clusters $C_1,...,C_K$ and the centroids $\boldsymbol{\mu_1},...,\boldsymbol{\mu_K}$ in order to minimize the within-cluster sum of squares:
@@ -204,7 +236,13 @@ Let us now apply K-means to the `mat` data matrix searching for 2 clusters. This
 #| fig-align: center
 import sklearn
 scaler = sklearn.preprocessing.StandardScaler()
-X = pd.DataFrame(scaler.fit_transform(mat), index=mat.index, columns=mat.columns)
+
+X = pd.DataFrame(
+  scaler.fit_transform(mat),
+  index=mat.index,
+  columns=mat.columns
+)
+
 k = 2
 clust_km = sklearn.cluster.KMeans(n_clusters=k, n_init=20)
 clust_km.fit(X)
@@ -217,13 +255,23 @@ We now update our heatmap with the results of the clustering. We make use of the
 #| fig-align: 'center'
 #| fig-cap: Heatmap with K-mean cluster annotation.
 #| label: fig-kmeanheatmap
-row_ann = pd.Series(["C"+str(s) for s in clust_km.labels_], index = mat.index)
+row_ann = pd.Series(
+  ["C"+str(s) for s in clust_km.labels_],
+  index = mat.index
+)
+
 unique_categories = np.unique(row_ann.values)
 palette = sns.color_palette("husl", len(unique_categories))
 color_mapping = dict(zip(unique_categories, palette))
 row_col = row_ann.map(color_mapping)
-sns.clustermap(X.iloc[np.argsort(clust_km.labels_)], row_colors=row_col,
-               row_cluster=False, col_cluster=False, figsize=(4,4))
+
+sns.clustermap(
+  X.iloc[np.argsort(clust_km.labels_)],
+  row_colors=row_col,
+  row_cluster=False,
+  col_cluster=False,
+  figsize=(4,4)
+)
 ```
 
 Cluster $C_1$ appears to group the heavy, powerful and gas-consuming cars and cluster $C_2$ the light, less powerful and more economic cars.
@@ -235,7 +283,12 @@ A major limitation of the K-means algorithm is that it relies on a predefined nu
 ```{python}
 #| echo: false
 #| fig-align: center
-sns.clustermap(X[["Horsepower","Weight"]], row_cluster=True, col_cluster=False, figsize=(4,4))
+sns.clustermap(
+  X[["Horsepower","Weight"]],
+  row_cluster=True,
+  col_cluster=False,
+  figsize=(4,4)
+)
 ```
 
 
@@ -245,9 +298,22 @@ sns.clustermap(X[["Horsepower","Weight"]], row_cluster=True, col_cluster=False, 
 #| fig-align: center
 tempdf = X[["Horsepower","Weight"]].copy()
 tempdf["label"] = X.index
-adjust_text_dict = {'arrowprops': {'arrowstyle': '-','color': 'grey'}}
-(ggplot(tempdf, aes(x="Horsepower", y="Weight", label="label")) + geom_point()
-  +  geom_text(adjust_text=adjust_text_dict) + mytheme + theme(figure_size=(4,4)))
+
+adjust_text_dict = {
+  "arrowprops": {"arrowstyle": "-","color": "grey"}
+}
+
+(
+  ggplot(
+    tempdf,
+    aes(x="Horsepower", y="Weight", label="label")
+  )
+  + geom_point()
+  + geom_text(adjust_text=adjust_text_dict)
+  + mytheme
+  + theme(figure_size=(4,4)
+  )
+)
 ```
 
 Unlike with K-means, there is no objective function associated with hierarchical clustering. Hierarchical clustering is simply defined by how it operates.
@@ -280,8 +346,12 @@ In Python, Hierarchical clustering can be performed using either the `Agglomerat
 
 ```{python}
 from scipy.cluster.hierarchy import dendrogram, linkage, fcluster
-hc_scipy = linkage(X, method='average')
-hc_sklearn = sklearn.cluster.AgglomerativeClustering(linkage='average').fit_predict(X)
+
+hc_scipy = linkage(X, method="average")
+
+hc_sklearn = sklearn.cluster.AgglomerativeClustering(
+  linkage="average"
+  ).fit_predict(X)
 ```
 
 The results of hierarchical clustering can be shown using a dendrogram (i.e., a tree representation). Here, observations that are determined to be similar by the clustering algorithm are displayed close to each other in the `x`-axis. The height in the dendrogram at which two clusters are merged represents the distance between those two clusters.
@@ -309,7 +379,10 @@ After having inspected the result of a hierarchical clustering, it is often inte
 Typically, one cuts dendrogram either at a given height, or in order to obtain a certain number of clusters. The functions `fcluster` from scipy and `AgglomerativeClustering` from scikit-learn support both options. Here is an example of cutting the dendrogram to get 3 clusters.
 
 ```{python}
-hc_sklearn = sklearn.cluster.AgglomerativeClustering(n_clusters=3, linkage='average').fit(X)
+hc_sklearn = sklearn.cluster.AgglomerativeClustering(
+  n_clusters=3,
+  linkage="average").fit(X)
+
 hc_sklearn.labels_
 ```
 ```{python}
@@ -333,12 +406,25 @@ Let us first visualize the outcome of K-means and of the hierarchical clustering
 
 ```{python}
 #| fig-align: 'center'
-row_ann = pd.DataFrame({"kmeans":["C"+str(s) for s in clust_km.labels_], "hc":["C"+str(s) for s in hc_sklearn.labels_]}, index = X.index)
+row_ann = pd.DataFrame(
+  {
+    "kmeans":["C"+str(s) for s in clust_km.labels_],
+    "hc":["C"+str(s) for s in hc_sklearn.labels_]
+  },
+  index = X.index
+)
+
 unique_categories = np.unique(row_ann.values)
 palette = sns.color_palette("husl", len(unique_categories))
 color_mapping = dict(zip(unique_categories, palette))
 row_col = row_ann.map(lambda x: color_mapping[x])
-sns.clustermap(X, row_colors=row_col, col_cluster=False, figsize=(5,5))
+
+sns.clustermap(
+  X,
+  row_colors=row_col,
+  col_cluster=False,
+  figsize=(5,5)
+)
 ```
 
 Comparing clustering results is a challenging task. When clustering into two groups, we could use evaluation measures from classification, which we will introduce later. Moving from two partitions of the data into arbitrarily many groups requires new ideas.
@@ -404,40 +490,95 @@ n = 20
 mu = np.array([0.0, 0.0])
 Sig = np.array([[1.0, 1.0],
                 [1.0, 2.0]])
-xy = np.random.multivariate_normal(mean=mu, cov=Sig, size=n)
-xy = xy - xy.mean(axis=0)  # center (like scale(..., center=TRUE, scale=FALSE))
-dt = pd.DataFrame({'x1': xy[:, 0], 'x2': xy[:, 1]})
+
+xy = np.random.multivariate_normal(
+  mean=mu,
+  cov=Sig,
+  size=n
+)
+
+# center (like scale(..., center=TRUE, scale=FALSE))
+xy = xy - xy.mean(axis=0)  
+
+dt = pd.DataFrame(
+  {
+    "x1": xy[:, 0],
+    "x2": xy[:, 1]
+  }
+)
 m = np.abs(xy).max()
 lims = [-m, m]
+
 # PCA (first principal component)
 pca = sklearn.decomposition.PCA(n_components=2).fit(xy)
 pc1 = pca.components_[0]  # (vx, vy), unit vector
 b1 = pc1[1] / pc1[0]      # slope of PC1 line through origin
+
 # Arrow for u_vec (first PC direction) from the mean (0,0)
 u_vec = pd.DataFrame({
-    'x':   [mu[0]],
-    'y':   [mu[1]],
-    'xend':[mu[0] + pc1[0]],
-    'yend':[mu[1] + pc1[1]]
+    "x":   [mu[0]],
+    "y":   [mu[1]],
+    "xend":[mu[0] + pc1[0]],
+    "yend":[mu[1] + pc1[1]]
 })
+
 # A point x and its projection onto PC1: p(x)
 x_pt = np.array([2.5, 2.0])
 y_coords = pca.components_.dot(x_pt - mu)   # coordinates in PC basis
 xp1 = mu + y_coords[0] * pc1                # projection of x onto PC1
+
 # Plot
-(ggplot(dt, aes('x1', 'x2'))
-    + geom_point(size=1)
-    + labs(x=r'$x_1$', y=r'$x_2$')
-    + scale_x_continuous(limits=lims)
-    + scale_y_continuous(limits=lims)
-    + geom_abline(intercept=0, slope=b1)
-    + geom_segment(u_vec, aes(x='x', y='y', xend='xend', yend='yend'), color='darkred', size=1, arrow=arrow(length = 0.1))
-    + annotate('text', x=-0.4, y=0.7, label='w', color='darkred')
-    + annotate('text', x=x_pt[0]+0.1, y=x_pt[1]+0.1, label='x', color='black', va='bottom')
-    + annotate('segment', x=x_pt[0], y=x_pt[1], xend=xp1[0], yend=xp1[1], color='black')
-    + annotate('segment', x=x_pt[0], y=x_pt[1], xend=0, yend=0, color='black')
-    + annotate('text', x=xp1[0]-0.7, y=xp1[1]+0.1, label='p(x)', color='black')
-    + mytheme + theme(figure_size=(3,3))
+(
+  ggplot(
+    dt,
+    aes("x1", "x2")
+  )
+  + geom_point(size=1)
+  + labs(x=r"$x_1$", y=r"$x_2$")
+  + scale_x_continuous(limits=lims)
+  + scale_y_continuous(limits=lims)
+  + geom_abline(intercept=0, slope=b1)
+  + geom_segment(
+    u_vec,
+    aes(x="x", y="y", xend="xend", yend="yend"),
+    color="darkred",
+    size=1,
+    arrow=arrow(length = 0.1)
+  )
+  + annotate("text", x=-0.4, y=0.7, label="w", color="darkred")
+  + annotate(
+    "text",
+    x=x_pt[0]+0.1,
+    y=x_pt[1]+0.1,
+    label="x",
+    color="black",
+    va="bottom"
+  )
+  + annotate(
+    "segment",
+    x=x_pt[0],
+    y=x_pt[1],
+    xend=xp1[0],
+    yend=xp1[1],
+    color="black"
+  )
+  + annotate(
+    "segment",
+    x=x_pt[0],
+    y=x_pt[1],
+    xend=0,
+    yend=0,
+    color="black"
+  )
+  + annotate(
+    "text",
+    x=xp1[0]-0.7,
+    y=xp1[1]+0.1,
+    label="p(x)",
+    color="black"
+  )
+  + mytheme
+  + theme(figure_size=(3,3))
 )
 ```
 
@@ -537,11 +678,14 @@ The output can be stored in `pca_res`, which contains information about the valu
 An overview of the PCA result can be obtained from the object attributes. We remark that the cumulative proportion is always equal to one for the last principal component.
 
 ```{python}
-sum_df = pd.DataFrame({
-    'Variance': pca_res.explained_variance_,
-    'Proportion of Variance': pca_res.explained_variance_ratio_,
-    'Cumulative Proportion': np.cumsum(pca_res.explained_variance_ratio_)
-}, index=[f'PC{i+1}' for i in range(pca_res.n_components_)])
+sum_df = pd.DataFrame(
+  {
+    "Variance": pca_res.explained_variance_,
+    "Proportion of Variance": pca_res.explained_variance_ratio_,
+    "Cumulative Proportion": np.cumsum(pca_res.explained_variance_ratio_)
+  },
+  index=[f"PC{i+1}" for i in range(pca_res.n_components_)]
+)
 sum_df
 ```
 
@@ -553,8 +697,16 @@ Plotting the results of  PCA is particularly important. The so-called **scree pl
 
 ```{python}
 #| fig-align: center
-(ggplot(sum_df, aes('sum_df.index', 'Variance', group=1)) + geom_line()
-+ geom_point() + mytheme + theme(figure_size=(4,3)))
+(
+  ggplot(
+    sum_df,
+    aes("sum_df.index", "Variance", group=1)
+  )
+  + geom_line()
+  + geom_point()
+  + mytheme
+  + theme(figure_size=(4,3))
+)
 ```
 
 The scree plot shows the variance in each projected direction. The y-axis contains the eigenvalues, which essentially stand for the amount of variation. We can use a scree plot to select the principal components to keep. If the scree plot has an 'elbow' shape, it can be used to decide how many principal components to use for further analysis. For example, we may achieve dimensionality reduction by transforming the original four dimensional data (first four variables of `mtcars`) to a two-dimensional space by using the first two principal components.
@@ -563,35 +715,80 @@ A variant of the scree plot can be considered by plotting the proportion of the 
 
 ```{python}
 #| fig-align: center
-(ggplot(sum_df, aes('sum_df.index', 'Proportion of Variance', group=1)) 
-+ geom_line() + geom_point() + mytheme + theme(figure_size=(4,3)))
+(
+  ggplot(
+    sum_df,
+    aes("sum_df.index", "Proportion of Variance", group=1)
+  )
+  + geom_line()
+  + geom_point()
+  + mytheme
+  + theme(figure_size=(4,3))
+)
 ```
 
 We can access the projection of the original data on the principal components by using the method `.transform()`. A scatterplot shows the projection of the data on the first two principal components.
 
 ```{python}
 #| fig-align: center
-scores_df = pd.DataFrame(pca_res.transform(X),\
-  columns = [f'PC{i+1}' for i in range(pca_res.n_components_)], \
-    index=mat.index)
-p = (ggplot(scores_df, aes('PC1', 'PC2')) + geom_point()
-    + geom_text(aes(label='scores_df.index'), adjust_text=adjust_text_dict) + mytheme)
+scores_df = pd.DataFrame(
+    pca_res.transform(X),
+    columns = [
+      f"PC{i+1}" for i in range(pca_res.n_components_)
+    ],
+    index=mat.index
+  )
+
+p = (
+  ggplot(
+    scores_df,
+    aes("PC1", "PC2")
+  )
+  + geom_point()
+  + geom_text(
+    aes(label="scores_df.index"),
+    adjust_text=adjust_text_dict
+  )
+  + mytheme
+)
+
 p
 ```
 
-The **biplot** shows the projection of the data on the first two principal components. It includes both the position of each sample in terms of `PC1` and `PC2` and also shows how the initial variables map onto this. The correlation between variables can be derived from the angle between the vectors. Here, a small angle is related to a high correlation.
+The **biplot** shows the projection of the data on the first two principal components. It includes both the position of each sample in terms of `PC1` and `PC2` and also shows how the initial variables map onto this.
 The sign of the variable loadings in the new dimensional space indicates their contribution to the PCs. Here `Miles per Gallon` correlates positively with PC1, while the other three variables contribute negatively to the first component.
+Of note, concluding about the similarity of high-dimensional variables or observations from their mere vicinity on a 2D representation (be PCA or a non-linear mapping such as UMAP or t-SNE) is a common mistake in data science. The PCA projection is blind to variations that are orthogonal to the projection plane. In particular, if two variables (or two observations) are highly correlated then their projection on the plane will be correlated (small angle). However, the converse is not true. The projections of two variables (or two observations) can be strongly correlated (small angle) even though the underlying variables (or observations) are not correlated in the complete space. Correlation of the projections is a necessary but not a sufficent condition for correlation.      
 
 ```{python}
 #| fig-align: center
-scale_x = scores_df['PC1'].std() * 3 # Scale loadings to fit the space
-scale_y = scores_df['PC2'].std() * 3
-load_df = pd.DataFrame({'xstart': 0.0, 'ystart': 0.0, 'label': mat.columns,
-    'xend': pca_res.components_.T[:,0] * scale_x,
-    'yend': pca_res.components_.T[:,1] * scale_y})
-(p + geom_segment(load_df, aes('xstart', 'ystart', xend='xend', yend='yend'), \
-  color='tomato', arrow=arrow(length=0.1))
-+ geom_text(load_df, aes('xend', 'yend', label='label'), color='tomato', adjust_text=adjust_text_dict))
+scale_x = scores_df["PC1"].std() * 3 # Scale loadings to fit the space
+scale_y = scores_df["PC2"].std() * 3
+
+load_df = pd.DataFrame(
+  {
+    "xstart": 0.0,
+    "ystart": 0.0,
+    "label": mat.columns,
+    "xend": pca_res.components_.T[:,0] * scale_x,
+    "yend": pca_res.components_.T[:,1] * scale_y
+  }
+)
+
+(
+  p
+  + geom_segment(
+    load_df,
+    aes("xstart", "ystart", xend="xend", yend="yend"),
+    color="tomato",
+    arrow=arrow(length=0.1)
+  )
+  + geom_text(
+    load_df,
+    aes("xend", "yend", label="label"),
+    color="tomato",
+    adjust_text=adjust_text_dict
+  )
+)
 ```
 
 ### PCA summary

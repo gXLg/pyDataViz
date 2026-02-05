@@ -152,16 +152,19 @@ When working with notebooks or interactive environments, it's crucial to write c
 **Avoid state-dependent operations**: Write code so that running a cell multiple times doesn't break your analysis. For example:
 
 ```python
-# BAD: This will give different results each time you run it
+# BAD: This will give different results
+# each time you run it
+# If you run this cell twice, x becomes 12, then 13, etc.
 x = 10
-x = x + 1  # If you run this cell twice, x becomes 12, then 13, etc.
+x = x + 1  
 print(x)
 ```
 
 ```python
 # GOOD: This always gives the same result
+# No matter how many times you run this, y is always 11
 x = 10
-y = x + 1  # No matter how many times you run this, y is always 11
+y = x + 1  
 print(y)
 ```
 
@@ -188,7 +191,8 @@ By creating and saving a script with the code above, we would not need to retype
 Any line in Python that starts with a hash symbol `#` is a **comment** and is not executed. Use comments to explain what your code is doing.
 
 ```{python}
-# Code to compute solution to a quadratic equation of the form ax^2 + bx + c
+# Code to compute solution to a quadratic equation
+# of the form ax^2 + bx + c
 
 # Define the variables
 a = 3 
@@ -257,10 +261,10 @@ A **dictionary** (`dict`) stores key-value pairs and is similar to a named list 
 
 ```python
 record = {
-"name": "John Doe",
-"student_id": 1234,
-"grades": [95, 82, 91, 97, 93],
-"final_grade": "A"
+    "name": "John Doe",
+    "student_id": 1234,
+    "grades": [95, 82, 91, 97, 93],
+    "final_grade": "A"
 }
 ```
 
@@ -274,7 +278,7 @@ print(type(record))
 You access elements in a dictionary using their keys in square brackets:
 
 ```python
-record['student_id']
+record["student_id"]
 ```
 ### Boolean
 
@@ -322,7 +326,7 @@ tips.head()
 
 To access one of the columns, use its name in the access operator `[]`
 ```{python}
-tips['time']
+tips["time"]
 ```
 
 ### Categorical Data
@@ -336,7 +340,7 @@ import seaborn as sns
 import pandas as pd
 
 # Load example dataset
-tips = sns.load_dataset('tips')
+tips = sns.load_dataset("tips")
 
 # Check which columns are categorical
 tips.dtypes
@@ -345,15 +349,15 @@ tips.dtypes
 Let's look at one categorical column — day (the day of the week the tip was recorded).
 
 ```{python}
-# Convert 'day' to category type
-tips['day'] = tips['day'].astype('category')
-tips['day'].dtype
+# Convert "day" to category type
+tips["day"] = tips["day"].astype("category")
+tips["day"].dtype
 ```
 
 We can inspect the unique categories using the `.cat.categories` accessor:
 
 ```{python}
-tips['day'].cat.categories
+tips["day"].cat.categories
 ```
 
 By default, categories have no particular order.
@@ -361,15 +365,17 @@ But we can reorder them to reflect the natural order of the week.
 
 ```{python}
 # Define a meaningful order for the days
-ordered_days = ['Thur', 'Fri', 'Sat', 'Sun']
+ordered_days = ["Thur", "Fri", "Sat", "Sun"]
 
-# Re-categorize 'day' with an explicit order
-tips['day'] = pd.Categorical(tips['day'],
-                             categories=ordered_days,
-                             ordered=True)
+# Re-categorize "day" with an explicit order
+tips["day"] = pd.Categorical(
+    tips["day"],
+    categories=ordered_days,
+    ordered=True
+)
 
 # Check the new order
-tips['day'].cat.categories
+tips["day"].cat.categories
 
 ```
 
@@ -449,7 +455,7 @@ arr[1:-1:2]
 We can convert a NumPy array into a pandas DataFrame:
 
 ```{python}
-pd.DataFrame(mat, columns=['A', 'B', 'C'])
+pd.DataFrame(mat, columns=["A", "B", "C"])
 ```
 
 ### List And Arrays: References And Copies
@@ -507,7 +513,12 @@ Numpy library comes with a handful set of operation that help working with data.
 
 ```{python}
 import pandas as pd
-url = 'https://raw.githubusercontent.com/rafalab/dslabs/master/inst/extdata/murders.csv'
+
+url = (
+    "https://raw.githubusercontent.com/rafalab/dslabs/"
+    "master/inst/extdata/murders.csv"
+)
+
 murders = pd.read_csv(url)
 murders.head()
 ```
@@ -516,7 +527,7 @@ We will be working with individual columns, converted to vectors.
 To convert a column to a NumPy array, use the `.values` attribute after accessing a column. Note: it's not a function call, so parentheses are not needed.
 
 ```{python}
-murders['state'].values
+murders["state"].values
 ```
 
 ### `np.sort()`
@@ -525,7 +536,7 @@ Say we want to sort the vector, use `.sort()` operation.
 
 ```{python}
 
-total = murders['total'].values
+total = murders["total"].values
 total = np.sort(total)
 total[:10]
 ```
@@ -535,20 +546,20 @@ total[:10]
 If we only want the largest value, we can use `.max()`. To get the *index* of the largest value, we use `.argmax()`.
 
 ```{python}
-# Get the maximum value in the 'total' column
-max_total = murders['total'].values.max()
+# Get the maximum value in the "total" column
+max_total = murders["total"].values.max()
 print(max_total)
 
 # Get the index of the state with the maximum total
-i_max = murders['total'].values.argmax()
+i_max = murders["total"].values.argmax()
 
 # Use that index to verify
-murders['total'].values[i_max]
+murders["total"].values[i_max]
 
 # Find out which state has the most murders.
 # Note: the order of entries when getting .values is the same
 
-murders['state'].values[i_max]
+murders["state"].values[i_max]
 ```
 
 ### `.sum()``
@@ -556,7 +567,7 @@ murders['state'].values[i_max]
 Compute a sum of the array by using the `sum` function.
 
 ```{python}
-murders['total'].values.sum()
+murders["total"].values.sum()
 ```
 
 ### Vectorized Arithmetics
@@ -568,7 +579,11 @@ California has the most murders, but it also has the largest population. To comp
 Arithmetic operations on NumPy arrays are applied *element-wise*.
 
 ```{python}
-inches = np.array([69, 62, 66, 70, 70, 73, 67, 73, 67, 70])
+inches = np.array(
+    [
+        69, 62, 66, 70, 70, 73, 67, 73, 67, 70
+    ]
+)
 centimeters = inches * 2.54
 print(centimeters)
 ```
@@ -586,16 +601,19 @@ If we perform an operation between two arrays of the same length, the operation 
 This means that to compute the murder rate per 100,000 people, we can simply divide the `total` array by the `population` array and multiply by 100,000.
 
 ```{python}
-murder_rate = murders['total'].values / murders['population'].values * 100_000
+murder_rate = (
+    murders["total"].values /
+    murders["population"].values * 100_000
+)
 ```
 Note that the number 100000 in Python is written with an underscore to improve readability; Python supports both options.
 
 Now we can add this rate as a new column to our DataFrame and sort by it to get a more meaningful ranking of state safety.
 
 ```{python}
-murders['rate'] = murder_rate
+murders["rate"] = murder_rate
 idx_max_rate = murder_rate.argmax()
-murders['state'].values[idx_max_rate]
+murders["state"].values[idx_max_rate]
 ```
 
 
@@ -604,14 +622,14 @@ murders['state'].values[idx_max_rate]
 We can use a logical condition to create a boolean arrays (`True`/`False` values). For example, let's find states with a murder rate less than 0.71.
 
 ```{python}
-ind = murders['rate'].values < 0.71
+ind = murders["rate"].values < 0.71
 ind.dtype
 ```
 
 We can then use this boolean array inside square brackets `[]` to filter any other array of the same size, or even the whole dataframem keeping only the rows where the condition is `True`.
 
 ```{python}
-murders['state'][ind]
+murders["state"][ind]
 ```
 
 To count how many states meet this condition, we can take the `sum()` of the boolean array, since `True` is treated as 1 and `False` as 0.
@@ -625,12 +643,12 @@ ind.sum()
 We can combine multiple logical conditions using the operators `&` (and), `|` (or), and `~` (not). For example, to find safe states in the West region (murder rate <= 1):
 
 ```python
-# Note the parentheses around each condition, which are required
-is_west = murders['region'].values == 'West'
-is_safe = murders['rate'].values <= 1
+# Note the parentheses around each required condition
+is_west = murders["region"].values == "West"
+is_safe = murders["rate"].values <= 1
 
 ind = is_west & is_safe
-murders['state'][ind]
+murders["state"][ind]
 ```
 
 
@@ -653,21 +671,26 @@ Let's see a basic example of a `for` loop that solves multiple quadratic equatio
 equations = [
     {"a": 1, "b": 1, "c": -1},    # x^2 + x - 1 = 0
     {"a": 2, "b": -3, "c": 1},   # 2x^2 - 3x + 1 = 0
-    {"a": 1, "b": 0, "c": -4}    # x^2 - 4 = 0
+    {"a": 1, "b": 0, "c": +4}    # x^2 + 4 = 0
 ]
 
 for i, eq in enumerate(equations):
     a, b, c = eq["a"], eq["b"], eq["c"]
     discriminant = b**2 - 4*a*c
     
+    print(f"Equation {i+1}: {a}x² + {b}x + {c} = 0")
+
     if discriminant >= 0:
         solution_1 = (-b + np.sqrt(discriminant)) / (2*a)
         solution_2 = (-b - np.sqrt(discriminant)) / (2*a)
-        print(f"Equation {i+1}: {a}x² + {b}x + {c} = 0")
-        print(f"Solutions: x₁ = {solution_1:.3f}, x₂ = {solution_2:.3f}")
+        
+        print(
+            f"Solutions: x₁ = {solution_1:.3f}, "
+            f"x₂ = {solution_2:.3f}"
+        )
     else:
-        print(f"Equation {i+1}: {a}x² + {b}x + {c} = 0")
         print("No real solutions (complex roots)")
+    
     print("-" * 40)
 ```
 
@@ -676,7 +699,14 @@ This loop demonstrates how we can process multiple datasets or perform repetitiv
 Create your own functions using `def`. You can plot simple graphs using plotnine package.
 ```{python}
 import pandas as pd
-from plotnine import ggplot, aes, geom_line, theme_minimal, theme
+
+from plotnine import (
+    aes,
+    geom_line,
+    ggplot,
+    theme_minimal,
+    theme
+)
 
 def parabola(n):
     if n > 0 and type(n) == int:
@@ -685,10 +715,10 @@ def parabola(n):
         y = x**2
         
         # Create a DataFrame for plotnine
-        df = pd.DataFrame({'x': x, 'y': y})
+        df = pd.DataFrame({"x": x, "y": y})
         
         # Create the plot using plotnine
-        plot = (ggplot(df, aes(x='x', y='y')) +
+        plot = (ggplot(df, aes(x="x", y="y")) +
                 geom_line() +
                 theme_minimal() +
                 theme(figure_size=(4,3)))
@@ -719,17 +749,26 @@ In this course, we often use simulated data to explore data visualization and mo
 ```{python}
 # random integers
 np.random.seed(0)
-print('randints:', np.random.randint(low=0, high=10, size=5))
+print("randints:", np.random.randint(low=0, high=10, size=5))
 
 # normal distribution (mean, std)
-print('normal sample:', np.random.normal(loc=0.0, scale=1.0, size=5))
+print(
+    "normal sample:",
+    np.random.normal(loc=0.0, scale=1.0, size=5)
+)
 
 # uniform
-print('uniform:', np.random.rand(5))
+print("uniform:", np.random.rand(5))
 
 # choice with probabilities
-print('choice:', np.random.choice(['red', 'green', 'blue'], size=5,\
-    p=[0.1, 0.7, 0.2]))
+print(
+    "choice:",
+    np.random.choice(
+        ["red", "green", "blue"],
+        size=5,
+        p=[0.1, 0.7, 0.2]
+    )
+)
 ```
 
 #### Scripts vs. Jupyter Notebooks: Choosing the Right Tool

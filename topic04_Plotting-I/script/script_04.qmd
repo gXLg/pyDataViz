@@ -71,7 +71,16 @@ Consider the following vector `height` containing (hypothetical) height measurem
 ```{python}
 #| echo: false
 np.random.seed(0)
-height_df = pd.DataFrame({'height': np.round(np.append(np.random.normal(1.73, 0.045, 499), 165), 2)})
+
+heights = np.append(
+    np.random.normal(1.73, 0.045, 499),
+    165,
+)
+height_df = pd.DataFrame(
+  {
+    "height": np.round(heights, 2)
+  }
+)
 ```
 
 ```{python}
@@ -81,14 +90,18 @@ height_df.head()
 Calculating the mean height returns the following output:
 
 ```{python}
-height_df['height'].mean()
+height_df["height"].mean()
 ```
 
 There is something obviously wrong. We can plot the data to investigate.
 
 ```{python}
 #| fig-align: "center"
-(ggplot(height_df, aes('height')) + geom_histogram(bins=50) + mytheme)
+(
+  ggplot(height_df, aes("height"))
+  + geom_histogram(bins=50)
+  + mytheme
+)
 ```
 
 There is an outlier (height=165). One particular value has probably been entered in centimeters rather than meters. As a result, the mean is inflated.
@@ -96,17 +109,21 @@ There is an outlier (height=165). One particular value has probably been entered
 A quick way to fix our dataset is to remove the outlier, for instance with:
 
 ```{python}
-height_df = height_df[height_df['height'] < 3]
+height_df = height_df[height_df["height"] < 3]
 ```
 
 Now our plotted data seems more realistic and the mean height makes sense.
 
 ```{python}
-height_df['height'].mean()
+height_df["height"].mean()
 ```
 ```{python}
 #| fig-align: "center"
-(ggplot(height_df, aes('height')) + geom_histogram() + mytheme)
+(
+  ggplot(height_df, aes("height"))
+  + geom_histogram()
+  + mytheme
+)
 ```
 
 While developing analysis scripts, we recommend to frequently visualize the data to make sure no mistake in the input or during the processing occurred.
@@ -126,15 +143,34 @@ Here is a sophisticated motivating example. The plot shows the relationship betw
 ```{python}
 #| label: fig-gapminder-motivation
 #| fig-align: "center"
-gapminder = pd.read_csv("https://raw.github.com/jennybc/gapminder/refs/heads/main/inst/extdata/gapminder.tsv", sep="\t")
-gm_df = gapminder[gapminder['year'].isin([1977, 2007])]
+gapminder = pd.read_csv(
+  (
+    "https://raw.github.com/jennybc/gapminder/refs/"
+    "heads/main/inst/extdata/gapminder.tsv"
+  ),
+  sep="\t"
+)
+
+gm_df = gapminder[gapminder["year"].isin([1977, 2007])]
 (
-    ggplot(gm_df, aes(x='gdpPercap', y='lifeExp', color='continent', size='pop'))
+    ggplot(
+      gm_df,
+      aes(
+        x="gdpPercap",
+        y="lifeExp",
+        color="continent",
+        size="pop")
+    )
     + geom_point()
     + scale_x_log10()
-    + facet_grid('~year')
-    + labs(x='per-capita GDP', y='Life expectancy at birth', size = 'Population')
-    + mytheme  + theme(figure_size=(6,3))
+    + facet_grid("~year")
+    + labs(
+        x="per-capita GDP",
+        y="Life expectancy at birth",
+        size = "Population"
+      )
+    + mytheme
+    + theme(figure_size=(6,3))
 )
 ```
 
@@ -173,7 +209,9 @@ Grammar of graphics composes plots by combining layers. The major layers are:
 To demonstrate the application of grammar of graphics, we will build step by step the gapminder figure @fig-gapminder-motivation. First, we have a look at the first lines of the dataset:
 
 ```{python}
-gm_df[['country','continent','gdpPercap','lifeExp','year']].head()
+gm_df[
+  ["country","continent","gdpPercap","lifeExp","year"]
+].head()
 ```
 
 For starting with the visualization we initiate a `ggplot` object which generates a plot with background:
@@ -187,21 +225,33 @@ Next, we can define the data to be plotted, which needs to be a `pandas.DataFram
 
 ```{python}
 #| fig-align: "center"
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp')))
+(ggplot(gm_df, aes(x="gdpPercap", y="lifeExp")))
 ```
 
 We want to visualize the data with a simple scatter plot. In a scatter plot, the values of two variables are plotted along two axes. Each pair of values is represented as a point. We combine the function `geom_point()` to create a scatter plot:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp'))
-  + geom_point())
+(
+  ggplot(
+    gm_df,
+    aes(x="gdpPercap", y="lifeExp")
+  )
+  + geom_point()
+)
 ```
 
 One of the advantages of plotting with grammar-of-graphics libraries is that the plot object can be stored and modified. For example:
 
 ```{python}
-p = ggplot(gm_df, aes(x='gdpPercap', y='lifeExp')) + geom_point()
+p = (
+  ggplot(
+    gm_df,
+    aes(x="gdpPercap", y="lifeExp")
+  )
+  + geom_point()
+)
+
 print(type(p))
 ```
 
@@ -213,21 +263,44 @@ We can easily map variables to different colors, sizes or shapes depending on th
 
 ```{python}
 #| fig-align: "center"
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp', color='continent')) + geom_point())
+(
+  ggplot(
+    gm_df,
+    aes(x="gdpPercap", y="lifeExp", color="continent")
+  )
+  + geom_point()
+)
 ```
 
 Instead of color, we can also use different shapes for characterizing categories (note: some backends limit number of shapes):
 
 ```{python}
 #| fig-align: "center"
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp', shape='continent')) + geom_point())
+(
+  ggplot(
+    gm_df,
+    aes(x="gdpPercap", y="lifeExp", shape="continent")
+    )
+  + geom_point()
+)
 ```
 
 Additionally, we distinguish the population of each country by giving a size to the points in the scatter plot:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp', color='continent', size='pop')) + geom_point())
+(
+  ggplot(
+    gm_df,
+    aes(
+      x="gdpPercap",
+      y="lifeExp",
+      color="continent",
+      size="pop"
+    )
+  )
+  + geom_point()
+)
 ```
 
 #### Global versus individual mapping
@@ -236,7 +309,15 @@ Mapping of aesthetics in `aes()` can be done globally or at individual layers. G
 
 ```{python}
 #| fig-align: "center"
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp')) + geom_point(aes(color='continent', size='pop')))
+(
+  ggplot(
+    gm_df,
+    aes(x="gdpPercap", y="lifeExp")
+    )
+    + geom_point(
+      aes(color="continent", size="pop")
+    )
+)
 ```
 
 Note that individual layer mapping cannot be recognized by other layers. For instance, we can add another layer for smoothing with `stat_smooth()`.
@@ -244,23 +325,36 @@ Note that individual layer mapping cannot be recognized by other layers. For ins
 ```{python}
 #| eval: false
 # this doesn't work as stat_smooth didn't know aes(x , y)
-(ggplot(gm_df) +
-  geom_point(aes(x='gdpPercap', y='lifeExp')) +
-  stat_smooth(color='blue'))
+(
+  ggplot(gm_df)
+  + geom_point(aes(x="gdpPercap", y="lifeExp"))
+  + stat_smooth(color="blue")
+)
 ```
 ```{python}
 #| fig-align: "center"
 # this works but is redundant
-(ggplot(gm_df) +
-  geom_point(aes(x='gdpPercap', y='lifeExp')) +
-  stat_smooth(aes(x='gdpPercap', y='lifeExp'), color='blue'))
+(
+  ggplot(gm_df)
+  + geom_point(aes(x="gdpPercap", y="lifeExp"))
+  + stat_smooth(
+    aes(x="gdpPercap", y="lifeExp"),
+    color="blue"
+  )
+)
 ```
 ```{python}
 #| fig-align: "center"
-# the common aes(x, y) shared by all the layers can be put in the ggplot()
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp')) +
-  geom_point() +
-  stat_smooth(color='blue'))
+# the common aes(x, y) shared by all the layers
+# can be put in the ggplot()
+(
+  ggplot(
+    gm_df,
+    aes(x="gdpPercap", y="lifeExp")
+  )
+  + geom_point()
+  + stat_smooth(color="blue")
+)
 ```
 
 ### Facets, axes and labels
@@ -269,10 +363,20 @@ For comparing the data from different years, we can add a facet with `facet_wrap
 
 ```{python}
 #| fig-align: "center"
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp', color='continent', size='pop'))
-   + geom_point() 
-   + facet_wrap('~year')
-   + theme(figure_size=(6,3)))
+(
+  ggplot(
+    gm_df,
+    aes(
+      x="gdpPercap",
+      y="lifeExp",
+      color="continent",
+      size="pop"
+    )
+  )
+  + geom_point() 
+  + facet_wrap("~year")
+  + theme(figure_size=(6,3))
+)
 ```
 
 For a better visualization of the data points, we can consider log scaling (detailed in section @sec-log-scaling). Finally, we can adapt the axes labels of the plot with `labs()` and define a theme of our plot:
@@ -287,12 +391,22 @@ mytheme = theme(
     legend_text = element_text(size=mysize),
     ) + theme_minimal(base_size=mysize)
 
-(ggplot(gm_df, aes(x='gdpPercap', y='lifeExp'))
-    + geom_point(aes(color='continent', size='pop'))
-    + facet_grid('~year')
+(
+  ggplot(
+    gm_df,
+    aes(x="gdpPercap", y="lifeExp"))
+    + geom_point(aes(color="continent", size="pop"))
+    + facet_grid("~year")
     + scale_x_log10()
-    + labs(x='Per-capita GDP', y='Life expectancy at birth', size='Population')
-    + mytheme + theme(figure_size=(6,3)))
+    + labs(
+      x="Per-capita GDP",
+      y="Life expectancy at birth",
+      size="Population"
+    )
+    + mytheme
+    + theme(figure_size=(6,3)
+  )
+)
 ```
 
 ## Different types of one- and two-dimensional plots
@@ -308,20 +422,24 @@ A histogram represents the frequencies of values of a variable bucketed into ran
 We will make use of a dataset collecting Human Development Index (HDI from http://hdr.undp.org/) and Corruption Perception Index (CPI from http://www.transparency.org/) of various countries. We first load these data into a new data table `ind` and have a first look at the table:
 
 ```{python}
-ind = pd.read_csv('../../extdata/CPI_HDI.csv').drop(columns=['Unnamed: 0'])
+ind = (
+  pd.read_csv("../../extdata/CPI_HDI.csv")
+  .drop(columns=["Unnamed: 0"])
+)
+
 ind.head()
 ```
 
 ```{python}
 #| fig-align: "center"
-(ggplot(ind, aes('HDI')) + geom_histogram() + mytheme)
+(ggplot(ind, aes("HDI")) + geom_histogram() + mytheme)
 ```
 
 We can change the number of desired bins ^[There does not seem to be any widely accepted heuristics to choose the number of bins of a histogram based on data. We recommend trying different values if the default seems to be suboptimal.] in the `bins` argument of the `geom_histogram()` function:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(ind, aes('HDI')) + geom_histogram(bins=10) + mytheme)
+(ggplot(ind, aes("HDI")) + geom_histogram(bins=10) + mytheme)
 ```
 
 #### Density plots
@@ -332,7 +450,7 @@ As an example, we can visualize the distribution of the Human Development Index 
 
 ```{python}
 #| fig-align: "center"
-(ggplot(ind, aes('HDI')) + geom_density() + mytheme)
+(ggplot(ind, aes("HDI")) + geom_density() + mytheme)
 ```
 
 The `bw` argument of the `geom_density()` function allows to tweak the bandwidth of a density plot manually. The default option is a bandwidth rule, which is usually a good choice.
@@ -341,14 +459,24 @@ Setting a small bandwidth on the previous plot has a huge impact on the plot:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(ind, aes('HDI')) + geom_density(bw=0.01) + ggtitle('Small bandwidth') + mytheme)
+(
+  ggplot(ind, aes("HDI"))
+  + geom_density(bw=0.01)
+  + ggtitle("Small bandwidth")
+  + mytheme
+)
 ```
 
 Setting a large bandwidth has also a huge impact on the plot:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(ind, aes('HDI')) + geom_density(bw=1) + ggtitle('Large bandwidth') + mytheme)
+(
+  ggplot(ind, aes("HDI"))
+  + geom_density(bw=1)
+  + ggtitle("Large bandwidth")
+  + mytheme
+)
 ```
 
 Thus, we should be careful when changing the bandwidth, since we can get a wrong impression from the distribution of a continuous variable.
@@ -376,15 +504,26 @@ For instance, we can plot the distribution of a variable `x` with a histogram an
 #| echo: false
 #| fig-align: "center"
 xl = [0, 5]
-dt = pd.DataFrame({'x': np.random.lognormal(mean=0, sigma=0.5, size=1000)})
-dt['group'] = 'x'
+dt = pd.DataFrame(
+  {"x": np.random.lognormal(mean=0, sigma=0.5, size=1000)}
+)
+dt["group"] = "x"
 
-(ggplot(dt, aes('x')) + geom_histogram(bins=30) + mytheme)
+(
+  ggplot(dt, aes("x"))
+  + geom_histogram(bins=30)
+  + mytheme
+)
 ```
 ```{python}
 #| echo: false
 #| fig-align: "center"
-(ggplot(dt, aes('group', 'x')) + geom_boxplot() + coord_flip() + mytheme)
+(
+  ggplot(dt, aes("group", "x"))
+  + geom_boxplot()
+  + coord_flip()
+  + mytheme
+)
 ```
 
 Boxplots are particularly suited for plotting non-Gaussian symmetric and non-symmetric data and for plotting exponentially distributed data. However, boxplots are not well suited for bimodal data, since they only show one mode (the median). In the following example, we see a bimodal distribution in the histogram and the corresponding boxplot, which does not properly represent the distribution of the data.
@@ -392,20 +531,29 @@ Boxplots are particularly suited for plotting non-Gaussian symmetric and non-sym
 ```{python}
 #| echo: false
 #| fig-align: "center"
-dt = pd.DataFrame({
-    'x': 1,
-    'y': np.append(np.random.normal(loc=-3, size=100),np.random.normal(loc=3, size=100))
-})
-(ggplot(dt, aes(x='x', y='y'))
+dt = pd.DataFrame(
+  {
+    "x": 1,
+    "y": np.append(
+      np.random.normal(loc=-3, size=100),
+      np.random.normal(loc=3, size=100)
+    )
+  }
+)
+(
+  ggplot(dt, aes(x="x", y="y"))
   + geom_boxplot()
-  + mytheme)
+  + mytheme
+)
 ```
 ```{python}
 #| echo: false
 #| fig-align: "center"
-(ggplot(dt, aes(x='y'))
+(
+  ggplot(dt, aes(x="y"))
   + geom_histogram()
-  + mytheme)
+  + mytheme
+)
 ```
 
 Boxplots are also not suited for categorical data and discrete data with very few values, for which bar plots are preferred (@sec-barplots).
@@ -425,9 +573,12 @@ We already know a plot which can be used to visualize distributions, namely the 
 ```{python}
 #| fig-align: "center"
 x = scipy.stats.uniform.rvs(size=50)
-(ggplot(pd.DataFrame({'x': x}), aes(x='x'))
+
+(
+  ggplot(pd.DataFrame({"x": x}), aes(x="x"))
   + geom_histogram(bins=20)
-  + mytheme)
+  + mytheme
+)
 ```
 
 Just looking at the histogram, it is hard to see that the underlying data comes from the uniform distribution. 
@@ -450,12 +601,21 @@ We can make a scatter plot which compares the expected and the theoretical decil
 
 ```{python}
 #| fig-align: "center"
-(ggplot(pd.DataFrame({'x': np.arange(0,1.1,0.1), 'y':dec}), aes(x='x',y='y'))
+(
+  ggplot(
+    pd.DataFrame(
+      {
+        "x": np.arange(0,1.1,0.1),
+        "y":dec
+      }
+    ),
+    aes(x="x",y="y")
+  )
   + geom_point()
   + xlim(0,1)
   + ylim(0,1)
-  + xlab('Deciles of the uniform distribution')
-  + ylab('Deciles of the dataset')
+  + xlab("Deciles of the uniform distribution")
+  + ylab("Deciles of the dataset")
   + geom_abline(intercept=0, slope=1) # Add y=x line
   + mytheme)
 ```
@@ -466,13 +626,21 @@ For a finite sample we can estimate the quantile for every data point. One way i
 
 ```{python}
 #| fig-align: "center"
-(ggplot(pd.DataFrame({'x': (np.arange(1, len(x)+1) - 0.5) / len(x),
-                      'y': np.sort(x)}), aes(x='y', y='x'))
+(
+  ggplot(
+    pd.DataFrame(
+      {
+        "x": (np.arange(1, len(x)+1) - 0.5) / len(x),
+        "y": np.sort(x)
+      }
+    ),
+    aes(x="y", y="x")
+  )
   + geom_point()
   + xlim(0, 1)
   + ylim(0, 1)
-  + xlab('Quantiles of the uniform distribution')
-  + ylab('Quantiles of the dataset')
+  + xlab("Quantiles of the uniform distribution")
+  + ylab("Quantiles of the dataset")
   + geom_abline(intercept=0, slope=1)
   + mytheme)
 ```
@@ -497,13 +665,29 @@ For creating a barplot with `plotnine` we can use the function `geom_bar()`. In 
 
 ```{python}
 #| fig-align: "center"
-countries_dt = pd.DataFrame({
-    'Continent': ["North America", "South America", "Africa", "Asia", "Europe", "Oceania"],
-    'Number_countries': [23, 12, 54, 49, 50, 16]
-})
+countries_dt = pd.DataFrame(
+  {
+    "Continent": [
+      "North America",
+      "South America",
+      "Africa",
+      "Asia",
+      "Europe",
+      "Oceania"
+    ],
+    "Number_countries": [23, 12, 54, 49, 50, 16]
+  }
+)
 
-(ggplot(countries_dt, aes('Continent', 'Number_countries')) + geom_bar(stat='identity', width=0.7)
-    + mytheme + theme(figure_size=(6,3)))
+(
+  ggplot(
+    countries_dt,
+    aes("Continent", "Number_countries")
+  )
+  + geom_bar(stat="identity", width=0.7)
+  + mytheme
+  + theme(figure_size=(6,3))
+)
 ```
 
 #### Barplots with errorbars
@@ -521,15 +705,31 @@ In the following example (Figure @fig-hwy-sd), we plot the average highway miles
 #| label: fig-hwy-sd
 #| fig-align: "center"
 from plotnine.data import mpg
-mpg_df = mpg.copy()
-summary = mpg_df.groupby('class').agg(mean_hwy=('hwy', 'mean'), sd_hwy=('hwy', 'std')).reset_index()
-summary['ymax'] = summary['mean_hwy'] + summary['sd_hwy']
-summary['ymin'] = summary['mean_hwy'] - summary['sd_hwy']
 
-(ggplot(summary, aes('class', 'mean_hwy', ymax='ymax', ymin='ymin'))
-    + geom_bar(stat='identity')
-    + geom_errorbar(width=0.3)
-    + mytheme + theme(figure_size=(6,3)))
+mpg_df = mpg.copy()
+
+summary = (
+  mpg_df
+  .groupby("class")
+  .agg(
+    mean_hwy=("hwy", "mean"),
+    sd_hwy=("hwy", "std")
+  ).reset_index()
+)
+
+summary["ymax"] = summary["mean_hwy"] + summary["sd_hwy"]
+summary["ymin"] = summary["mean_hwy"] - summary["sd_hwy"]
+
+(
+  ggplot(
+  summary,
+  aes("class", "mean_hwy", ymax="ymax", ymin="ymin")
+  )
+  + geom_bar(stat="identity")
+  + geom_errorbar(width=0.3)
+  + mytheme
+  + theme(figure_size=(6,3))
+)
 ```
 
 #### Boxplots by category
@@ -540,14 +740,30 @@ For instance, we want to visualize the highway miles per gallon `hwy` for every	
 
 ```{python}
 #| fig-align: "center"
-(ggplot(mpg_df, aes('class', 'hwy')) + geom_boxplot() + mytheme + theme(figure_size=(6,3)))
+(
+  ggplot(
+    mpg_df, aes("class", "hwy")
+  )
+  + geom_boxplot()
+  + mytheme
+  + theme(figure_size=(6,3))
+)
 ```
 
 One can also use `geom_jitter()`, which arbitrarily adds some randomness to the x-position of the data points within each box in order to separate them visually.
 
 ```{python}
 #| fig-align: "center"
-p = ggplot(mpg_df, aes('class', 'hwy')) + geom_boxplot() + mytheme + theme(figure_size=(6,3))
+p = (
+  ggplot(
+  mpg_df,
+  aes("class", "hwy")
+  )
+  + geom_boxplot()
+  + mytheme
+  + theme(figure_size=(6,3))
+)
+
 (p + geom_jitter(width=0.2))
 ```
 
@@ -559,7 +775,15 @@ For a direct comparison, we show a violin plot for the `hwy` grouped by `class` 
 
 ```{python}
 #| fig-align: "center"
-(ggplot(mpg_df, aes('class', 'hwy')) + geom_violin() + mytheme + theme(figure_size=(6,3)))
+(
+  ggplot(
+    mpg_df,
+    aes("class", "hwy")
+  )
+  + geom_violin() 
+  + mytheme
+  + theme(figure_size=(6,3))
+)
 ```
 
 ### Plots for two continuous variables
@@ -572,22 +796,40 @@ In the next example, we analyze the relationship between the engine displacement
 
 ```{python}
 #| fig-align: "center"
-(ggplot(mpg_df, aes('displ', 'hwy')) + geom_point() + mytheme)
+(
+  ggplot(mpg_df, aes("displ", "hwy"))
+  + geom_point()
+  + mytheme
+)
 ```
 
 We can modify the previous plot by coloring the points depending on the vehicle class:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(mpg_df, aes('displ', 'hwy', color='class')) + geom_point() + mytheme)
+(
+  ggplot(
+    mpg_df,
+    aes("displ", "hwy", color="class"))
+    + geom_point()
+    + mytheme
+)
 ```
 
 Sometimes, too many colors can be hard to distinguish. In such cases, we can use `facet` to separate them into different plots:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(mpg_df, aes('displ', 'hwy')) + geom_point() + facet_wrap('~class')
-   + mytheme + theme(figure_size=(6,4)))
+(
+  ggplot(
+    mpg_df,
+    aes("displ", "hwy"))
+    + geom_point()
+    + facet_wrap("~class")
+    + mytheme
+    + theme(figure_size=(6,4)
+  )
+)
 ```
 
 ##### Text labeling
@@ -599,8 +841,19 @@ We first show the output of the classic text labeling with `geom_text()` for a r
 ```{python}
 #| fig-align: "center"
 mpg_subset = mpg_df.sample(n=30, random_state=12)
-adjust_text_dict = {'arrowprops': {'arrowstyle': '-','color': 'grey'}}
-(ggplot(mpg_subset, aes('displ', 'hwy', label='manufacturer')) + geom_point() + geom_text(adjust_text=adjust_text_dict) + mytheme)
+adjust_text_dict = {
+  "arrowprops": {"arrowstyle": "-","color": "grey"}
+}
+
+(
+  ggplot(
+    mpg_subset,
+    aes("displ", "hwy", label="manufacturer")
+  )
+  + geom_point()
+  + geom_text(adjust_text=adjust_text_dict)
+  + mytheme
+)
 ```
 
 ##### Log scaling {#sec-log-scaling}
@@ -609,8 +862,20 @@ We consider another example where we want to plot the weights of the brain and b
 
 ```{python}
 #| fig-align: "center"
-animals_df = pd.read_csv("https://raw.github.com/vincentarelbundock/Rdatasets/master/csv/MASS/Animals.csv")
-(ggplot(animals_df, aes('body', 'brain')) + geom_point() + mytheme)
+animals_df = pd.read_csv(
+      "https://raw.github.com/vincentarelbundock/Rdatasets/"
+      "master/csv/MASS/Animals.csv"
+  )
+
+(
+  ggplot(
+    animals_df,
+    aes("body", "brain")
+  )
+  + geom_point()
+  + mytheme
+)
+
 ```
 
 We can clearly see that there are a few points which are notably larger than most of the points. This makes it harder to interpret the relationships between most of these points. In such cases, we can consider **logarithmic** transformations and/or scaling. More precisely, a first idea would be to manually transform the values into a logarithmic space and plot the transformed values instead of the original values:
@@ -619,14 +884,31 @@ We can clearly see that there are a few points which are notably larger than mos
 #| fig-align: "center"
 animals_df["log_body"] = np.log10(animals_df["body"])
 animals_df["log_brain"] = np.log10(animals_df["brain"])
-(ggplot(animals_df, aes('log_body', 'log_brain')) + geom_point() + mytheme)
+
+(
+  ggplot(
+    animals_df,
+    aes("log_body", "log_brain")
+  )
+  + geom_point()
+  + mytheme
+)
 ```
 
 Alternatively, `plotnine` offers to simply scale the data without the need to transform. This can be done with the help of the functions `scale_x_log10()` and `scale_y_log10()` which allow appropriate scaling and labeling of the axes:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(animals_df, aes('body', 'brain')) + geom_point() + scale_x_log10() + scale_y_log10() + mytheme)
+(
+  ggplot(
+    animals_df,
+    aes("body", "brain")
+  )
+  + geom_point()
+  + scale_x_log10()
+  + scale_y_log10()
+  + mytheme
+)
 ```
 
 ## 2D-Density plots
@@ -637,11 +919,23 @@ The function `geom_bin_2d()` is creates 2D density plots in python:
 
 ```{python}
 #| fig-align: "center"
-x = np.random.randn(10000)
-y = x + np.random.randn(10000)
-df = pd.DataFrame({'x': x, 'y': y})
-(ggplot(df, aes('x', 'y')) + geom_bin_2d() + mytheme)
+x = np.random.randn(10_000)
+y = x + np.random.randn(10_000)
+
+df = pd.DataFrame({"x": x, "y": y})
+
+(
+  ggplot(
+    df,
+    aes("x", "y")
+  )
+  + geom_bin_2d()
+  + mytheme
+)
 ```
+
+Note: Hexagonal bins have superior properties in two dimensions compared to square bins, in particular reduced directional artifacts and greater robustness to changes in the x-y aspect ratio.
+As of 3 February 2026, hexagonal binning is not supported in Python’s `plotnine` but are  and in Python's `matplotlib` and in R's `ggplot2`. 
 
 #### Line plots
 
@@ -652,16 +946,23 @@ As an example we show the connection between the individual datapoints of unempl
 
 ```{python}
 #| echo: false
-economics = pd.read_csv("https://raw.github.com/vincentarelbundock/Rdatasets/master/csv/ggplot2/economics.csv")
-economics['date'] = pd.to_datetime(economics['date'])
-economics['unemploy_pop_ratio'] = economics['unemploy'] / economics['pop']
+economics = pd.read_csv(
+  "https://raw.github.com/vincentarelbundock/Rdatasets/"
+  "master/csv/ggplot2/economics.csv"
+)
+economics["date"] = pd.to_datetime(economics["date"])
+economics["unemploy_pop_ratio"] = economics["unemploy"] / economics["pop"]
 ```
 
 ```{python}
 #| fig-align: "center"
-(ggplot(economics, aes(x='date', y='unemploy_pop_ratio'))
+(
+  ggplot(
+    economics,
+    aes(x="date", y="unemploy_pop_ratio"))
   + geom_line()
-  + mytheme)
+  + mytheme
+)
 ```
 
 ## Further plots for low dimensional data
@@ -675,9 +976,24 @@ We can use the function `sns.pairplot()` from the library `seaborn` for construc
 ```{python}
 #| fig-align: "center"
 import seaborn as sns
-mpg = sns.load_dataset('mpg')
-columns_to_plot = ['displacement', 'cylinders', 'mpg', 'horsepower']
-sns.pairplot(mpg, vars=columns_to_plot, kind='scatter', diag_kind='kde', aspect=2, size=1)
+
+mpg = sns.load_dataset("mpg")
+
+columns_to_plot = [
+  "displacement",
+  "cylinders",
+  "mpg", 
+  "horsepower"
+]
+
+sns.pairplot(
+  mpg,
+  vars=columns_to_plot,
+  kind="scatter",
+  diag_kind="kde",
+  aspect=2,
+  size=1
+)
 ```
 
 This plot is recommended and suited for a handful of variables but does not scale up to much more variables.

@@ -53,7 +53,7 @@ This section introduces a dataset that we will use throughout this chapter, and 
 
 Yeast is a good old friend of humans. Thanks to yeast, we can make bread, wine, and (not the least for TUM and Munich) beer. Yeast is also very well liked and studied by biologists. The yeast strain commonly used in research labs grows poorly on maltose compared to wild yeast strains. Also making it hard to brew malt beer with the lab strain... One may wonder whether the lab strain has acquired a genetic mutation causing this poor fitness in the maltose media. If so, on which chromosome, near which gene? 
 
-Our dataset [@gagneur2013] allows addressing these questions (and further yeast genetic questions). The lab strain was crossed with a wild isolate growing well on maltose. Overall, 158 offsprings, also called segregants, were considered. During a cross, parental chromosomes are recombined at discrete random locations in a process called cross-over ^[ See [Wikipedia](https://en.wikipedia.org/wiki/Chromosomal_crossover) and [Khan Academy](https://www.khanacademy.org/science/biology/classical-genetics/chromosomal-basis-of-genetics/a/linkage-mapping) ]. Consequently, the chromosomes of the segregants consist of alternated segments inherited from either parent. Yeast has 16 chromosomes. Figure @fig-yeast-cross illustrates this crossing process for one chromosome.
+Our dataset [@gagneur2013] allows addressing these questions (and further yeast genetic questions). The lab strain was crossed with a wild isolate growing well on maltose. Overall, 158 offsprings, also called segregants, were considered. During a cross, parental chromosomes are recombined at discrete random locations in a process called cross-over ^[ See [Wikipedia](<https://en.wikipedia.org/wiki/Chromosomal_crossover>) and [Khan Academy](<https://www.khanacademy.org/science/biology/classical-genetics/chromosomal-basis-of-genetics/a/linkage-mapping>) ]. Consequently, the chromosomes of the segregants consist of alternated segments inherited from either parent. Yeast has 16 chromosomes. Figure @fig-yeast-cross illustrates this crossing process for one chromosome.
 
 ![Cross of the lab strain and wild isolate. Meiotic recombination implies that chromosomes of the offsprings consist of alternated segments inherited from either parent.](assets/img/lec09-stat-testing/lec09_yeast_cross.png){#fig-yeast-cross width=600px}
 
@@ -70,11 +70,15 @@ See below for a section of the data table:
 ```{python}
 #| echo: true
 
-genotype = pd.read_csv("../../extdata/eqtl/genotype.txt", sep="\t")
+genotype = pd.read_csv(
+    "../../extdata/eqtl/genotype.txt",
+    sep="\t"
+)
+
 genotype = genotype.melt(
-    id_vars='strain', 
-    var_name='marker', 
-    value_name='genotype'
+    id_vars="strain", 
+    var_name="marker", 
+    value_name="genotype"
 )
 
 genotype
@@ -85,7 +89,10 @@ If we want to know where the markers are located in the genome, we can consult t
 ```{python}
 #| echo: true
 
-marker = pd.read_csv("../../extdata/eqtl/marker.txt", sep='\t')
+marker = pd.read_csv(
+    "../../extdata/eqtl/marker.txt",
+    sep="\t"
+)
 marker
 ```
 
@@ -97,12 +104,15 @@ The `growth` table contains the growth rates expressed in generations per day fo
 ```{python}
 #| echo: true
 
-growth = pd.read_csv("../../extdata/eqtl/growth.txt", sep='\t')
+growth = pd.read_csv(
+    "../../extdata/eqtl/growth.txt",
+    sep="\t"
+)
 growth = pd.melt(
   growth,
-  id_vars='strain',
-  var_name='media',
-  value_name='growth_rate'
+  id_vars="strain",
+  var_name="media",
+  value_name="growth_rate"
 )
 ```
 
@@ -117,17 +127,28 @@ To assess this hypothesis, we first create a data table called `dt` that contain
 #| fig-align: center
 #| warning: false
 
-mk = marker.loc[(marker['chrom'] == "chr07") & (marker['start'] == 1069229)]['id'].item()
+mk = (
+    marker
+    .loc[
+        (marker["chrom"] == "chr07")
+        & (marker["start"] == 1_069_229),
+        "id",
+    ]
+    .item()
+)
 
-growth_sub = growth[growth['media'] == 'YPMalt']
-genotype_sub = genotype[genotype['marker'] == mk][['strain', 'genotype']]
+growth_sub = growth[growth["media"] == "YPMalt"]
+genotype_sub = genotype[genotype["marker"] == mk][["strain", "genotype"]]
 
-dt = pd.merge(growth_sub, genotype_sub, on='strain')
+dt = pd.merge(growth_sub, genotype_sub, on="strain")
 
 p = (
-  ggplot(dt, aes(x='genotype', y='growth_rate'))
+  ggplot(dt, aes(x="genotype", y="growth_rate"))
   + geom_boxplot()
-  + labs(x=f"Genotype at {mk}", y="Growth rate in Maltose\n[Generations/day]")
+  + labs(
+    x=f"Genotype at {mk}",
+    y="Growth rate in Maltose\n[Generations/day]"
+    )
   + mytheme
 )
 
@@ -135,8 +156,8 @@ p
 ```
 
 ```{python}
-dt[dt['genotype'] == 'Wild isolate']['growth_rate'].median() - \
-  dt[dt['genotype'] == 'Lab strain']['growth_rate'].median()
+dt[dt["genotype"] == "Wild isolate"]["growth_rate"].median() - \
+  dt[dt["genotype"] == "Lab strain"]["growth_rate"].median()
 ```
 
 
@@ -169,7 +190,7 @@ dt_permuted = dt.copy()
 
 np.random.seed(0) # Set the seed for reproducibility
 
-dt_permuted['genotype'] = np.random.permutation(dt_permuted['genotype'])
+dt_permuted["genotype"] = np.random.permutation(dt_permuted["genotype"])
 dt_permuted
 ```
 
@@ -177,9 +198,12 @@ For this simulated data, the boxplot looks less impressive:
 ```{python}
 #| fig-align: center
 (
-  ggplot(dt_permuted, aes(x='genotype', y='growth_rate'))
+  ggplot(dt_permuted, aes(x="genotype", y="growth_rate"))
   + geom_boxplot()
-  + labs(x=f"Genotype at {mk}", y="Growth rate in Maltose\n[Generations/day]")
+  + labs(
+    x=f"Genotype at {mk}",
+    y="Growth rate in Maltose\n[Generations/day]"
+    )
   + mytheme
 )
 ```
@@ -188,8 +212,8 @@ We can also recompute the difference of medians. To not have repeated code, let 
 
 ```{python}
 def diff_median(tab):
-    medians = tab.groupby('genotype')['growth_rate'].median()
-    difference = medians['Wild isolate'] - medians['Lab strain']
+    medians = tab.groupby("genotype")["growth_rate"].median()
+    difference = medians["Wild isolate"] - medians["Lab strain"]
     return difference
 
 T_obs = diff_median(dt)
@@ -214,7 +238,7 @@ T_permuted = np.full(m, np.nan)
 # iterate for i=0 to m-1 (Python is 0-indexed)
 for i in range(m):
   # We use the copy's index, assign by position using permutation
-  dt_permuted['genotype'] = np.random.permutation(dt_permuted['genotype'])
+  dt_permuted["genotype"] = np.random.permutation(dt_permuted["genotype"])
   # Store the difference of medians in the i-th entry of T_permuted
   T_permuted[i] = diff_median(dt_permuted)
 ```
@@ -227,11 +251,11 @@ Let us look at how these values distribute with a histogram and mark our origina
 #| fig-align: center
 #| warning: false
 
-null_dist_df = pd.DataFrame({'T_permuted': T_permuted})
+null_dist_df = pd.DataFrame({"T_permuted": T_permuted})
 (
-    ggplot(null_dist_df, aes(x='T_permuted'))
-    + geom_histogram(bins=30, fill='lightblue', color='darkblue', alpha=0.7)
-    + geom_vline(xintercept=T_obs, color='red')
+    ggplot(null_dist_df, aes(x="T_permuted"))
+    + geom_histogram(bins=30, fill="lightblue", color="darkblue", alpha=0.7)
+    + geom_vline(xintercept=T_obs, color="red")
     + labs(
         x="Difference in Medians (Wild - Lab)",
         y="Frequency",
@@ -249,7 +273,7 @@ This empirical approach is quite intuitive. Let us now formalize it and precisel
 ### Concepts of Statistical Hypothesis Testing  
 We just implemented one type of Hypothesis test. Figure @fig-hypothesis-test-overview provides an overview of Hypothesis testing.
 
-![We assume an underlying random process (i.e. 'Nature'). We collected data which is a particular realization of this random process, and from this data we computed a test statistic. In the bottom row, we now play the role of the Devil's advocate and assume that the underlying random process conforms to the null hypothesis. Based on this assumption, different realizations of the dataset could arise as different realizations of the random process, for which the test statistics would get different values. Then we compute how likely it is to observe the test statistics as extreme as, or more extreme than the ones we got from our actual data. We use this probability to reject or not the null hypothesis.](assets/img/lec09-stat-testing/lec10_Stat-testing-overview.png){#fig-hypothesis-test-overview width=800px}
+![We assume an underlying random process (i.e. "Nature"). We collected data which is a particular realization of this random process, and from this data we computed a test statistic. In the bottom row, we now play the role of the Devil's advocate and assume that the underlying random process conforms to the null hypothesis. Based on this assumption, different realizations of the dataset could arise as different realizations of the random process, for which the test statistics would get different values. Then we compute how likely it is to observe the test statistics as extreme as, or more extreme than the ones we got from our actual data. We use this probability to reject or not the null hypothesis.](assets/img/lec09-stat-testing/lec10_Stat-testing-overview.png){#fig-hypothesis-test-overview width=800px}
 
 #### Test statistic
 To develop our test, we first need to define a **test statistic** (Figure @fig-hypothesis-test-overview). This is a single number that summarizes the data and captures the trend. The more extreme the test statistic, the stronger the trend.
@@ -295,13 +319,13 @@ df_val = 8
 x_data = np.linspace(lims[0], lims[1], 1000)
 
 data_df = pd.DataFrame({
-    'x': np.linspace(lims[0], lims[1], 1000),
-    'y': chi2.pdf(x_data, df=df_val)
+    "x": np.linspace(lims[0], lims[1], 1000),
+    "y": chi2.pdf(x_data, df=df_val)
 })
 
 (
-    ggplot(data_df, aes(x='x', y='y'))
-    + geom_line(color='blue')
+    ggplot(data_df, aes(x="x", y="y"))
+    + geom_line(color="blue")
     + scale_x_continuous(
         name="T",
         breaks=bks,
@@ -322,15 +346,22 @@ Now assume the test statistic we observe is $T_\text{obs}=15$. Then the one-side
 
 t_obs = 15
 
-data_df_area = data_df[data_df['x'] >= t_obs].copy()
-t_obs_row = pd.DataFrame({'x': [t_obs], 'y': [chi2.pdf(t_obs, df=df_val)]})
-data_df_area = pd.concat([t_obs_row, data_df_area]).sort_values(by='x')
+data_df_area = data_df[data_df["x"] >= t_obs].copy()
+t_obs_row = pd.DataFrame(
+    {
+        "x": [t_obs],
+        "y": [chi2.pdf(t_obs, df=df_val)]
+    }
+)
 
+data_df_area = pd.concat(
+    [t_obs_row, data_df_area]
+    ).sort_values(by="x")
 
 (
-    ggplot(data_df, aes(x='x'))
-    + geom_line(aes(y='y'), color='black', size=0.75)
-    + geom_area(data_df_area, aes(y='y'), fill="grey", alpha=0.3)
+    ggplot(data_df, aes(x="x"))
+    + geom_line(aes(y="y"), color="black", size=0.75)
+    + geom_area(data_df_area, aes(y="y"), fill="grey", alpha=0.3)
     + geom_vline(aes(xintercept=t_obs), color="red", size=0.5)
     + scale_x_continuous(
         name="T",
@@ -350,18 +381,56 @@ For the two-tailed test, we are not expecting the test statistic to be on the up
 #| echo: false
 #| fig-align: center
 
-t_obs_low = chi2.ppf(chi2.sf(t_obs, df=df_val), df=df_val)
-data_df_upper = data_df[data_df['x'] >= t_obs].copy()
-data_df_upper = pd.concat([pd.DataFrame({'x': [t_obs], 'y': [chi2.pdf(t_obs, df=df_val)]}), data_df_upper]).sort_values(by='x')
+## create the table for the upper alternative
+data_df_upper = data_df[data_df["x"] >= t_obs].copy()
 
-data_df_lower = data_df[data_df['x'] <= t_obs_low].copy()
-data_df_lower = pd.concat([data_df_lower, pd.DataFrame({'x': [t_obs_low], 'y': [chi2.pdf(t_obs_low, df=df_val)]})]).sort_values(by='x')
+new_row = pd.DataFrame(
+    {
+        "x": [t_obs],
+        "y": [chi2.pdf(t_obs, df=df_val)],
+    }
+)
+
+data_df_upper = (
+    pd.concat(
+        [
+            new_row,
+            data_df_upper,
+        ]
+    )
+    .sort_values("x")
+)
+
+
+## create the table for the lower alternative
+t_obs_low = chi2.ppf(chi2.sf(t_obs, df=df_val), df=df_val)
+
+data_df_lower = data_df.loc[
+    data_df["x"] <= t_obs_low
+].copy()
+
+new_row = pd.DataFrame(
+    {
+        "x": [t_obs_low],
+        "y": [chi2.pdf(t_obs_low, df=df_val)],
+    }
+)
+
+data_df_lower = (
+    pd.concat(
+        [
+            data_df_lower,
+            new_row,
+        ]
+    )
+    .sort_values("x")
+)
 
 (
-    ggplot(data_df, aes(x='x'))
-    + geom_line(aes(y='y'), color='black', size=0.75)
-    + geom_area(data_df_upper, aes(y='y'), fill="grey", alpha=0.3)
-    + geom_area(data_df_lower, aes(y='y'), fill="grey", alpha=0.3)
+    ggplot(data_df, aes(x="x"))
+    + geom_line(aes(y="y"), color="black", size=0.75)
+    + geom_area(data_df_upper, aes(y="y"), fill="grey", alpha=0.3)
+    + geom_area(data_df_lower, aes(y="y"), fill="grey", alpha=0.3)
     + geom_vline(aes(xintercept=t_obs), color="red", size=0.5)
     + scale_x_continuous(
         name="T",
@@ -469,7 +538,7 @@ We often face scenarios like this one, where we would like to estimate a certain
 
 ![](assets/img/lec09-stat-testing/lec10_Parameter-estimation-overview.png){width=800px}
 
-As before, there is a random process which produced our data, on which we compute summary statistics. But rather than just rejecting a null hypothesis, we now want to *infer* a parameter from our summary statistics, and also get an idea how precise our inference is. The confidence interval is a method to quantify our uncertainty about a parameter estimate. note that in this scenario we do not need ways of assessing the distribution under a null data generation process, but rather under the actual data generation process.
+As before, there is a random process which produced our data, on which we compute summary statistics. But rather than just rejecting a null hypothesis, we now want to *infer* a parameter from our summary statistics, and also get an idea how precise our inference is. The confidence interval is a method to quantify our uncertainty about a parameter estimate. Note that in this scenario we do not need ways of assessing the distribution under a null data generation process, but rather under the actual data generation process.
 
 ### Repeating experiments to quantify uncertainty
 
@@ -490,10 +559,10 @@ sd_val = 0.25
 n_samples = 100
 rep_median_diff = np.random.normal(loc=mean_val, scale=sd_val, size=n_samples)
 
-dt_rep_exp = pd.DataFrame({'median_differences': rep_median_diff})
+dt_rep_exp = pd.DataFrame({"median_differences": rep_median_diff})
 
 (
-    ggplot(dt_rep_exp, aes(x='median_differences'))
+    ggplot(dt_rep_exp, aes(x="median_differences"))
     + geom_histogram(bins=20, color="black", fill="skyblue")
     + geom_vline(aes(xintercept=mean_val), color="red", size=0.5)
     + labs(
@@ -507,7 +576,7 @@ dt_rep_exp = pd.DataFrame({'median_differences': rep_median_diff})
 
 We see that many estimates are quite close to the one we measured in our first experiment. However, we also see that we get a range of results. 
 
-We do not know the true difference of medians, and in theory any of these estimates could be correct. So one way we could quantify our uncertainty is by reporting the full range of estimates we computed. However, this interval can quickly become very big. If we do the same experiment very often, it is quite plausible that we will have a bad day at some point and, for example, contaminate the samples, leading to an estimate that is very different than the others. We don't want the size of our interval to be entirely determined by one or two such outliers.
+We do not know the true difference of medians, and in theory any of these estimates could be correct. So one way we could quantify our uncertainty is by reporting the full range of estimates we computed. However, this interval can quickly become very big. If we do the same experiment very often, it is quite plausible that we will have a bad day at some point and, for example, contaminate the samples, leading to an estimate that is very different than the others. We don"t want the size of our interval to be entirely determined by one or two such outliers.
 
 A more robust alternative is to report an interval that covers the central $95\%$ of the values we got:
 
@@ -518,20 +587,20 @@ A more robust alternative is to report an interval that covers the central $95\%
 conf_int = np.quantile(rep_median_diff, [0.025, 0.975])
 
 ci_lines = pd.DataFrame({
-    'x_val': [T_obs, conf_int[0], conf_int[1]],
-    'linetype': ['solid', 'dashed', 'dashed'],
-    'color': ['black', 'red', 'red']
+    "x_val": [T_obs, conf_int[0], conf_int[1]],
+    "linetype": ["solid", "dashed", "dashed"],
+    "color": ["black", "red", "red"]
 })
 
-dt_rep_exp['in_interval'] = (dt_rep_exp['median_differences'] >= conf_int[0]) & \
-                            (dt_rep_exp['median_differences'] <= conf_int[1])
+dt_rep_exp["in_interval"] = (dt_rep_exp["median_differences"] >= conf_int[0]) & \
+                            (dt_rep_exp["median_differences"] <= conf_int[1])
 
 (
-    ggplot(dt_rep_exp, aes(x='median_differences', fill='in_interval'))
+    ggplot(dt_rep_exp, aes(x="median_differences", fill="in_interval"))
     + geom_histogram(bins=20, alpha=0.85)
-    + geom_vline(ci_lines, aes(xintercept='x_val', linetype='linetype', color="color"), size=0.5, show_legend=False)
-    + scale_color_manual(name="", values={"black": 'black', "red": 'red'})
-    + scale_linetype_manual(name="", values={"solid": 'solid', "dashed": 'dashed'})
+    + geom_vline(ci_lines, aes(xintercept="x_val", linetype="linetype", color="color"), size=0.5, show_legend=False)
+    + scale_color_manual(name="", values={"black": "black", "red": "red"})
+    + scale_linetype_manual(name="", values={"solid": "solid", "dashed": "dashed"})
     + labs(
         x="Estimated median difference in growth rate",
         y="Count",
@@ -580,16 +649,16 @@ from statsmodels.distributions.empirical_distribution import ECDF
 # 1. Calculate the ECDF object
 ecdf_x = ECDF(x)
 
-# 2. Create a DataFrame for plotnine using the ECDF object's attributes
+# 2. Create a DataFrame for plotnine using the ECDF object"s attributes
 plot_data = pd.DataFrame({
-    'x_val': ecdf_x.x,
-    'Fn_x': ecdf_x.y
+    "x_val": ecdf_x.x,
+    "Fn_x": ecdf_x.y
 })
 
 # 3. Plot the step function
 (
-  ggplot(plot_data, aes(x='x_val', y='Fn_x'))
-  + geom_step(size=1, direction='hv', color='darkgreen') 
+  ggplot(plot_data, aes(x="x_val", y="Fn_x"))
+  + geom_step(size=1, direction="hv", color="darkgreen") 
   + labs(x="Observations (x)", y="Fn(x) - Empirical CDF")
   + mytheme
 )
@@ -609,20 +678,20 @@ x_big = np.random.normal(size=200)
 
 x_combined = np.concatenate([x_small, x_middle, x_big])
 x_lbl = (
-    ['small_n (n=5)'] * 5 + 
-    ['medium_n (n=20)'] * 20 + 
-    ['large_n (n=200)'] * 200
+    ["small_n (n=5)"] * 5 + 
+    ["medium_n (n=20)"] * 20 + 
+    ["large_n (n=200)"] * 200
 )
 
 dt_ecdf = pd.DataFrame({
-    'sample_size': x_lbl, 
-    'x': x_combined
+    "sample_size": x_lbl, 
+    "x": x_combined
 })
 
 (
-    ggplot(dt_ecdf, aes(x='x', colour='sample_size'))
+    ggplot(dt_ecdf, aes(x="x", colour="sample_size"))
     + stat_ecdf(size=1.0, alpha=0.7)
-    + stat_function(fun=norm.cdf, color='black', size=1.5, linetype='dashed') 
+    + stat_function(fun=norm.cdf, color="black", size=1.5, linetype="dashed") 
     + labs(
         x="x", 
         y="Fn(x) - Cumulative Distribution", 
@@ -701,13 +770,13 @@ The following plot shows the entire distribution along with the observed value a
 ```{python}
 #| fig-align: center
 
-bootstrap_df = pd.DataFrame({'T_bootstrap': T_bootstrap})
+bootstrap_df = pd.DataFrame({"T_bootstrap": T_bootstrap})
 p_final_boot = (
-    ggplot(bootstrap_df, aes(x='T_bootstrap'))
-    + geom_histogram(bins=30, fill='lightgray', color='black', alpha=0.7) 
-    + geom_vline(xintercept=T_obs, color='red', size=1.2, linetype='solid')
-    + geom_vline(xintercept=conf_int[0], color='blue', size=0.8, linetype='dashed')
-    + geom_vline(xintercept=conf_int[1], color='blue', size=0.8, linetype='dashed')
+    ggplot(bootstrap_df, aes(x="T_bootstrap"))
+    + geom_histogram(bins=30, fill="lightgray", color="black", alpha=0.7) 
+    + geom_vline(xintercept=T_obs, color="red", size=1.2, linetype="solid")
+    + geom_vline(xintercept=conf_int[0], color="blue", size=0.8, linetype="dashed")
+    + geom_vline(xintercept=conf_int[1], color="blue", size=0.8, linetype="dashed")
     + labs(x="Estimated Difference of Median Growth Rates")
     + mytheme
 )
@@ -771,11 +840,11 @@ This creates a distribution of estimates. We build our $95\%$ case resampling bo
 # 95% C.I. is given by the 2.5% and the 97.5% quantile
 conf_int = np.quantile(sample_means, [0.025, 0.975])
 # Plot histogram 
-bootstrap_df = pd.DataFrame({'means': sample_means})
+bootstrap_df = pd.DataFrame({"means": sample_means})
 (
-    ggplot(bootstrap_df, aes(x='means')) 
-    + geom_histogram(bins=30, fill='lightgray', color='black')
-    + geom_vline(aes(xintercept=observed_mean), linetype='solid', color="blue")
+    ggplot(bootstrap_df, aes(x="means")) 
+    + geom_histogram(bins=30, fill="lightgray", color="black")
+    + geom_vline(aes(xintercept=observed_mean), linetype="solid", color="blue")
     + geom_vline(aes(xintercept=0), color="black")
     + geom_vline(aes(xintercept=conf_int[0]), linetype="dashed", color="red")
     + geom_vline(aes(xintercept=conf_int[1]), linetype="dashed", color="red")
@@ -813,23 +882,23 @@ rerun = np.array(rerun_list).T
 #| echo: true
 #| fig-align: center
 
-intervals = pd.DataFrame(rerun.T, columns=['2.5%', '97.5%'])
-intervals['idx'] = intervals.index + 1 # Experiment index 1 to 100
-intervals['mid'] = (intervals['97.5%'] + intervals['2.5%']) / 2
+intervals = pd.DataFrame(rerun.T, columns=["2.5%", "97.5%"])
+intervals["idx"] = intervals.index + 1 # Experiment index 1 to 100
+intervals["mid"] = (intervals["97.5%"] + intervals["2.5%"]) / 2
 # Check if the interval [2.5%, 97.5%] contains the true value (0)
-intervals['contains_true'] = (intervals['97.5%'] >= 0) & (intervals['2.5%'] <= 0)
+intervals["contains_true"] = (intervals["97.5%"] >= 0) & (intervals["2.5%"] <= 0)
 
 (
-  ggplot(intervals, aes(x='idx', y='mid', color='contains_true')) 
-  + geom_errorbar(aes(ymin='2.5%', ymax='97.5%'))  
-  + geom_hline(yintercept=0, color="black", linetype='solid')
+  ggplot(intervals, aes(x="idx", y="mid", color="contains_true")) 
+  + geom_errorbar(aes(ymin="2.5%", ymax="97.5%"))  
+  + geom_hline(yintercept=0, color="black", linetype="solid")
   + coord_flip()
   + labs(
       x="Estimated mean", 
       y="Experiment number", 
       color="Error bar contains true mean (µ=0)"
   )
-  + scale_color_manual(values={True: '#4DAF4A', False: '#E41A1C'})
+  + scale_color_manual(values={True: "#4DAF4A", False: "#E41A1C"})
   + mytheme
   + theme(figure_size=(7,7))
 )

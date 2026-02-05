@@ -21,11 +21,15 @@ import matplotlib.pyplot as plt
 from plotnine import *
 
 mysize = 9
-mytheme = (theme_bw() +
-           theme(axis_title=element_text(size=mysize),
-                 axis_text=element_text(size=mysize),
-                 legend_title=element_text(size=mysize),
-                 legend_text=element_text(size=mysize)))
+mytheme = (
+    theme_bw() +
+    theme(
+        axis_title=element_text(size=mysize),
+        axis_text=element_text(size=mysize),
+        legend_title=element_text(size=mysize),
+        legend_text=element_text(size=mysize)
+    )
+)
 
 np.random.seed(42)
 ```
@@ -58,10 +62,14 @@ As an example, we can consider the `diamonds` dataset which contains the prices 
 #| eval: true
 #| echo: false
 #| fig-align: "center"
-diamonds = sns.load_dataset('diamonds')
-(ggplot(diamonds, aes('carat')) + geom_histogram() + 
-  mytheme + theme(figure_size=(6, 4))
-  )
+diamonds = sns.load_dataset("diamonds")
+
+(
+    ggplot(diamonds, aes("carat"))
+    + geom_histogram()
+    + mytheme
+    + theme(figure_size=(6, 4))
+)
 ```
 
 ### Associative plots
@@ -82,8 +90,12 @@ Based on the same `diamonds` dataset, we can now construct an associative plot t
 #| fig-align: "center"
 #| fig-cap: "Price increases nearly linearly with carat"
 #| label: "fig-diamonds"
-(ggplot(diamonds, aes('carat', 'price')) + geom_point(alpha = 0.05) + 
-  mytheme + theme(figure_size=(4, 3)))
+(
+    ggplot(diamonds, aes("carat", "price"))
+    + geom_point(alpha = 0.05)
+    + mytheme
+    + theme(figure_size=(4, 3))
+)
 ```
 
 
@@ -111,7 +123,7 @@ Associations between variables that are not due to a causal relationship are som
 ### The association is not statistically supported
 Often, the observed association between variables arose by chance. Would the data collection be repeated, or performed for a longer period of time, the association would not show up any longer. There are two main reasons for this:
 
-1. The association is driven by few data points. Graphically showing all data points including outliers can help (See Anscombe's quartet ^[https://en.wikipedia.org/wiki/Anscombe%27s_quartet]). Hypothesis testing can be used to assess this possibility (See next Chapters). 
+1. The association is driven by few data points. Graphically showing all data points including outliers can help (See Anscombe's quartet ^[<https://en.wikipedia.org/wiki/Anscombe%27s_quartet>]). Hypothesis testing can be used to assess this possibility (See next Chapters). 
 
 2. The dataset includes so many variables that the chance to have one pair of variables associating is high. This is generally called data dredging, data fishing, data snooping, or cherry picking. An example of data dredging would be if we look through many results produced by a random process and pick the one that shows a relationship that supports a theory we want to defend. An example is given in @fig-missamerica-murder. 
 
@@ -124,7 +136,7 @@ In the statistical literature, this problem is called  "multiple testing". It wi
 
 We now assume the association did not arise by chance. Unlike causal relationships, statistical dependencies are symmetric (if A correlates with B, then B correlates with A). Hence, a typical mistake are claims where cause and effects are reversed. 
 
-A form of this claim actually made it into an op-ed in the New York Times titled Parental Involvement Is Overrated^[https://opinionator.blogs.nytimes.com/2014/04/12/parental-involvement-is-overrated]. Consider this quote from the article:
+A form of this claim actually made it into an op-ed in the New York Times titled Parental Involvement Is Overrated^[<https://opinionator.blogs.nytimes.com/2014/04/12/parental-involvement-is-overrated>]. Consider this quote from the article:
 
 >> When we examined whether regular help with homework had a positive impact on children’s academic performance, we were quite startled by what we found. Regardless of a family’s social class, racial or ethnic background, or a child’s grade level, consistent homework help almost never improved test scores or grades... Even more surprising to us was that when parents regularly helped with homework, kids usually performed worse.
 
@@ -207,31 +219,35 @@ y = norm.rvs(loc=2 * z, scale=1, size=n)
 
 # gather into a DataFrame
 # we make z a Categorical variable for convenience with plotting functions
-df_common_cause = pd.DataFrame({
-    'x': x,
-    'y': y,
-    'z': pd.Categorical(["z=" + str(val) for val in z])
-})
+df_common_cause = pd.DataFrame(
+    {
+        "x": x,
+        "y": y,
+        "z": pd.Categorical(["z=" + str(val) for val in z])
+    }
+)
 ```
 
 We check whether the simulations worked. First, $z$ distributes as expected with about 25% draws with 0 heads, 50% with one head, and 25% with 2 heads:
 
 ```{python}
-df_common_cause['z'].value_counts()
+df_common_cause["z"].value_counts()
 ```
 
 Second, $x$ and $y$ depend on $z$:
 ```{python}
 (
-    ggplot(df_common_cause, aes(x='z', y='x')) +
-    geom_boxplot() + theme(figure_size = (4, 4))
+    ggplot(df_common_cause, aes(x="z", y="x"))
+    + geom_boxplot()
+    + theme(figure_size = (4, 4))
 )
 ```
 
 ```{python}
 (
-    ggplot(df_common_cause, aes(x='z', y='y')) +
-    geom_boxplot() + theme(figure_size = (4, 4))
+    ggplot(df_common_cause, aes(x="z", y="y"))
+    + geom_boxplot()
+    + theme(figure_size = (4, 4))
 )
 ```
 
@@ -240,30 +256,32 @@ As a consequence, $x$ and $y$ correlate with each other:
 
 ```{python}
 (
-    ggplot(df_common_cause, aes(x='x', y='y')) +
-    geom_point(alpha=0.5) +
-    theme(figure_size = (4, 4))
+    ggplot(df_common_cause, aes(x="x", y="y"))
+    + geom_point(alpha=0.5)
+    + theme(figure_size = (4, 4))
 )
 ```
 
 ```{python}
-df_common_cause['x'].corr(df_common_cause['y'])
+df_common_cause["x"].corr(df_common_cause["y"])
 ```
 
 This correlation between $x$ and $y$ is due to the common cause $z$. To show evidence for this issue, one can plot stratified by the values of $z$. In each group, there is no association between $x$ and $y$. 
 ```{python}
 (
-    ggplot(df_common_cause, aes(x='x', y='y')) +
-    geom_point(alpha=0.5) +
-    facet_wrap('~z') +
-    theme(figure_size = (4, 4))
+    ggplot(df_common_cause, aes(x="x", y="y"))
+    + geom_point(alpha=0.5)
+    + facet_wrap("~z")
+    + theme(figure_size = (4, 4))
 )
 ```
 
 Moreover, one can compute the correlation also stratified by the value of $z$. We see that in each group the correlation is near 0.
 ```{python}
 #| warning: false
-df_common_cause.groupby('z').apply(lambda df: df['x'].corr(df['y'])).to_frame('correlation')
+df_common_cause.groupby("z").apply(
+    lambda df: df["x"].corr(df["y"])
+    ).to_frame("correlation")
 ```
 
 In our simulation, conditioning on a third variable has ruled out direct correlation and, therefore, causation. Statistically speaking, we can state that the two variables $x$ and $y$ *are* correlated, but their correlation is explained by $z$. Conditioned on $z$, their correlation is basically zero. This rules out a causal relationship from one to the other. Correlation never proves causation. However, conditioning can rule out causation.
@@ -292,9 +310,9 @@ z_indirect = binom.rvs(n=x_indirect + 1, p=0.5, size=n)
 y_indirect = norm.rvs(loc=z_indirect, scale=0.5, size=n)
 
 df_indirect = pd.DataFrame({
-    'x': pd.Categorical(["x=" + str(val) for val in x_indirect]),
-    'y': y_indirect,
-    'z': pd.Categorical(["z=" + str(val) for val in z_indirect])
+    "x": pd.Categorical(["x=" + str(val) for val in x_indirect]),
+    "y": y_indirect,
+    "z": pd.Categorical(["z=" + str(val) for val in z_indirect])
 })
 ```
 
@@ -302,9 +320,12 @@ We see that $y$ associates with $x$:
 
 ```{python}
 (
-    ggplot(df_indirect, aes(x='x', y='y')) +
-    geom_boxplot() + 
-    theme(figure_size = (4, 4))
+    ggplot(
+        df_indirect,
+        aes(x="x", y="y")
+    )
+    + geom_boxplot()
+    + theme(figure_size = (4, 4))
 )
 ```
 
@@ -313,10 +334,13 @@ However this association vanishes when we condition on $z$:
 ```{python}
 ## y does not associate with x given z
 (
-    ggplot(df_indirect, aes(x='x', y='y')) +
-    geom_boxplot() + 
-    facet_wrap('~z') +
-    theme(figure_size = (12, 4))
+    ggplot(
+        df_indirect,
+        aes(x="x", y="y")
+    )
+    + geom_boxplot()
+    + facet_wrap("~z")
+    + theme(figure_size = (12, 4))
 )
 ```
 
@@ -326,12 +350,23 @@ A concrete example of an indirect association is provided by Rafael Irizzary in 
 
 For this, we consider the admission data from six U.C. Berkeley majors on 1973. The data shows at first sight that more men were being admitted than women: 44% men were admitted compared to 30% women. We can load the data and compute the percent of men and women that were accepted like this:
 ```{python}
-df_admissions = pd.read_csv("../../extdata/UCBAdmissions.csv", index_col=0)
-df_admissions['is_admitted'] = np.where(df_admissions['Admit'] == 'Admitted', 1, 0)
+df_admissions = pd.read_csv(
+    "../../extdata/UCBAdmissions.csv",
+    index_col=0
+)
+
+df_admissions["is_admitted"] = np.where(
+    df_admissions["Admit"] == "Admitted",
+    1,
+    0
+)
+
 (
-    df_admissions.groupby('Gender')
-    .apply(lambda g: (g['is_admitted'] * g['Freq']).sum() / g['Freq'].sum())
-    .to_frame('Admission Rate')
+    df_admissions.groupby("Gender")
+    .apply(
+        lambda g: (g["is_admitted"] * g["Freq"]).sum() / g["Freq"].sum()
+    )
+    .to_frame("Admission Rate")
 )
 ```
 
@@ -340,10 +375,14 @@ Closer inspection shows a paradoxical result. Here are the percent admissions by
 
 ```{python}
 stats = (
-    df_admissions.groupby(['Dept', 'Gender'])
-    .apply(lambda g: (g['is_admitted'] * g['Freq']).sum() / g['Freq'].sum())
-    .unstack(level='Gender') # Pivot 'Gender' to columns (dcast equivalent)
-    .assign(women_minus_men=lambda x: x['Female'] - x['Male']) # Calculate difference
+    df_admissions.groupby(["Dept", "Gender"])
+    .apply(
+        lambda g: (g["is_admitted"] * g["Freq"]).sum() / g["Freq"].sum()
+    )
+    .unstack(level="Gender") # Pivot "Gender" to columns (dcast equivalent)
+    .assign(
+        women_minus_men=lambda x: x["Female"] - x["Male"]
+    ) # Calculate difference
 )
 stats
 ```
@@ -357,22 +396,33 @@ We define three variables: $X$ is 1 for men and 0 for women, $Y$ is 1 for those 
 One way to see this is to plot the total percent admitted to a major versus the percent of women that made up the applicants:
 
 ```{python}
-df_admissions['is_female'] = np.where(df_admissions['Gender'] == 'Female', 1, 0)
+df_admissions["is_female"] = np.where(
+    df_admissions["Gender"] == "Female",
+    1,
+    0
+)
 
 selectivity_versus_percentage_women = (
-    df_admissions.groupby('Dept')
+    df_admissions.groupby("Dept")
     .agg(
-        selectivity_rate=('Freq', 
-            lambda x: (df_admissions.loc[x.index, 'is_admitted'] * x).sum() / x.sum()
+        selectivity_rate=("Freq", 
+            lambda x: (df_admissions.loc[x.index, "is_admitted"] * x).sum() / x.sum()
         ),
-        percent_women_applicants=('Freq', 
-            lambda x: (df_admissions.loc[x.index, 'is_female'] * x).sum() / x.sum() * 100
+        percent_women_applicants=("Freq", 
+            lambda x: (df_admissions.loc[x.index, "is_female"] * x).sum() / x.sum() * 100
         )
     ).reset_index()
 )
-( ggplot(selectivity_versus_percentage_women, aes('selectivity_rate', 'percent_women_applicants', label = 'Dept')) +
-  geom_text() + labs(x='Major Selectivity', y='Percent Women Applicants')+
-    theme(figure_size = (6, 4)))
+
+(
+    ggplot(
+        selectivity_versus_percentage_women,
+        aes("selectivity_rate", "percent_women_applicants", label = "Dept"))
+        + geom_text()
+        + labs(x="Major Selectivity", y="Percent Women Applicants")
+        + theme(figure_size = (6, 4)
+    )
+)
 ```
 
 There seems to be association. The plot suggests that women were much more likely to apply to the two "hard" majors: gender and major's selectivity are confounded. Compare, for example, major B and major E. Major E is much harder to enter than major B and over 60% of applicants to major E were women, while less than 30% of the applicants of major B were women. 
@@ -381,11 +431,16 @@ There seems to be association. The plot suggests that women were much more likel
 The following plot shows the number of applicants that were admitted and those that were not by gender and major:
 
 ```{python}
-(ggplot(df_admissions, aes('Gender', 'Freq', fill = 'Admit')) +
-  geom_bar(stat = "identity", position = "dodge") +
-  facet_wrap('~Dept') +
-  labs(x = "Gender", y = 'Number of students')+
-    theme(figure_size = (6, 4)))
+(
+    ggplot(
+        df_admissions,
+        aes("Gender", "Freq", fill = "Admit")
+    )
+    + geom_bar(stat = "identity", position = "dodge")
+    + facet_wrap("~Dept")
+    + labs(x = "Gender", y = "Number of students")
+    + theme(figure_size = (6, 4))
+)
 ```
 
 The visualization breaks down the acceptances by major. This breakdown allows us to see that the majority of accepted men came from two majors: A and B. It also lets us see that few women applied to these majors. 
@@ -393,11 +448,16 @@ The visualization breaks down the acceptances by major. This breakdown allows us
 Changing the position to `"fill"` in `geom_bar()` returns the following plot:
  
 ```{python}
-(ggplot(df_admissions, aes('Gender', 'Freq', fill = 'Admit')) +
-  geom_bar(stat = "identity", position = "fill") +
-  facet_wrap('~Dept') +
-  labs(x = "Gender", y = 'Number of students')+
-    theme(figure_size = (6, 4)))
+(
+    ggplot(
+        df_admissions,
+        aes("Gender", "Freq", fill = "Admit")
+    )
+    + geom_bar(stat = "identity", position = "fill")
+    + facet_wrap("~Dept")
+    + labs(x = "Gender", y = "Number of students")
+    + theme(figure_size = (6, 4))
+)
 ```
 
 Setting `"fill"` as the position argument makes each set of stacked bars to have the same height. This makes it easier to compare proportions across groups. However, note that it can be hard to compare some groups with increasing number of stacked bars.
@@ -410,7 +470,7 @@ In this interpretation of this data, women are proportionally less admitted beca
 
 #### Common consequence
 The last elementary situation is the case where the third variable is a common consequence.
-One fun imaginary example is given by Judea Pearl in "The Book of Why" ^[http://bayes.cs.ucla.edu/WHY/] about talent and beauty among Hollywood stars. 
+One fun imaginary example is given by Judea Pearl in "The Book of Why" ^[<http://bayes.cs.ucla.edu/WHY/>] about talent and beauty among Hollywood stars. 
 
 We assume that:
 
@@ -436,9 +496,9 @@ y_conseq = norm.rvs(0, 1, n)
 z_conseq = (x_conseq + y_conseq) > 1
 
 df_conseq = pd.DataFrame({
-    'x': x_conseq,
-    'y': y_conseq,
-    'z': z_conseq
+    "x": x_conseq,
+    "y": y_conseq,
+    "z": z_conseq
 })
 ```
 
@@ -446,15 +506,15 @@ In our simulated population, beauty and talent for acting do not correlate:
 
 ```{python}
 (
-    ggplot(df_conseq, aes(x='x', y='y')) +
+    ggplot(df_conseq, aes(x="x", y="y")) +
     geom_point(alpha=0.5) + 
-    labs(x = 'Talent for acting', y = 'Beauty') + 
+    labs(x = "Talent for acting", y = "Beauty") + 
     theme(figure_size = (4, 4))
 )
 ```
 
 ```{python}
-df_conseq['x'].corr(df_conseq['y'])
+df_conseq["x"].corr(df_conseq["y"])
 ```
 
 The fun paradox comes when we restrict our analysis to the Hollywood stars: 
@@ -463,20 +523,20 @@ The fun paradox comes when we restrict our analysis to the Hollywood stars:
 ## x associates with y when z is TRUE
 df_conseq_filter = df_conseq[df_conseq.z == False]
 (
-    ggplot(df_conseq_filter, aes(x='x', y='y')) +
+    ggplot(df_conseq_filter, aes(x="x", y="y")) +
     geom_point(alpha=0.5) +
-    labs(x = 'Talent for acting', y = 'Beauty') +
+    labs(x = "Talent for acting", y = "Beauty") +
     theme(figure_size = (4, 4))
 )
 ```
 
 ```{python}
-df_conseq_filter['x'].corr(df_conseq_filter['y'])
+df_conseq_filter["x"].corr(df_conseq_filter["y"])
 ```
 
 Hence, beautiful Hollywood stars tend to act worse than than less beautiful stars.
 
-This paradox is known as Berkson's paradox ^[https://en.wikipedia.org/wiki/Berkson%27s_paradox]. Berkson originally reported the paradox on patient data collected in a hospital. As these patients are in the hospital because they are sick, risk factors for their diseases, which do not correlate in the general population, happen to negatively correlate among them. Studies based on hospital data only can suffer from such bias.
+This paradox is known as Berkson's paradox ^[<https://en.wikipedia.org/wiki/Berkson%27s_paradox>]. Berkson originally reported the paradox on patient data collected in a hospital. As these patients are in the hospital because they are sick, risk factors for their diseases, which do not correlate in the general population, happen to negatively correlate among them. Studies based on hospital data only can suffer from such bias.
 
 Altogether, the association arises once we condition on the third variable. This has two implications. First, conditioning should not be done systematically. Second, the data may already be conditioned and we are not aware of it! The data may have undergone some filtering during data analysis, or, less obviously, during data collection. Those possibilities should be considered when reporting associations between variables.
 
@@ -484,15 +544,17 @@ Altogether, the association arises once we condition on the third variable. This
 
 In 1951, Simpson demonstrated that a statistical relationship observed within a group of individuals could be reversed within all subgroups that make up that population. This phenomenon, where a variable X seems to relate to a second variable Y in a certain way, but flips direction when the stratifying for another variable Z, has since been referred to as Simpson’s paradox.
 
-
-
 ![Simpson's paradox. The sign (+ or -) designates positive or negative effects (causal diagram, left) or associations (right).](../../assets/img/lec06_simpson_paradox.png){fig-align="center" width="80%"}
 
 To illustrate the Simpson's paradox we simulate a dataset with three variables: X, Y, Z. 
 ```{python}
 #| echo: false
 #| eval: true
-def simulate_simpson_data(num_groups=4, n_per_group=100, group_slope=1.5, noise_sd=1.5):
+def simulate_simpson_data(
+    num_groups=4,
+    n_per_group=100,
+    group_slope=1.5,
+    noise_sd=1.5):
     """Generates data for Simpson's Paradox (Overall Negative, Within Positive)."""
     np.random.seed(42)
     data_list = []
@@ -503,33 +565,39 @@ def simulate_simpson_data(num_groups=4, n_per_group=100, group_slope=1.5, noise_
         group_label = f"G_{i+1}"
         x = np.random.normal(loc=x_shift_base[i], scale=0.85, size=n_per_group)
         y = y_intercept_shift[i] + group_slope * x + np.random.normal(0, noise_sd, n_per_group)
-        df_group = pd.DataFrame({'X': x, 'Y': y, 'Z': group_label})
+        df_group = pd.DataFrame({"X": x, "Y": y, "Z": group_label})
         data_list.append(df_group)
     return pd.concat(data_list, ignore_index=True)
 
 data = simulate_simpson_data()
-data['Z'] = pd.Categorical(data['Z'])
+data["Z"] = pd.Categorical(data["Z"])
 ```
 
 When visualizing the relationship between the variables `X` and `Y`, we observe a negative correlation between `X` and `Y`:
 
 ```{python}
 #| fig-align: "center"
-(ggplot(data, aes('X','Y')) + 
-  geom_point() + 
-  geom_smooth(method='lm', color = 'blue') + 
-  mytheme + theme(figure_size=(6, 4)))
+(
+    ggplot(data, aes("X","Y"))
+    + geom_point()
+    + geom_smooth(method="lm", color = "blue")
+    + mytheme + theme(figure_size=(6, 4))
+)
 ```
 
 
-However, when grouping by the variable Z, we observe a positive correlation which is the opposite direction as before:
+However, when grouping by the variable `Z`, we observe a positive correlation which is the opposite direction as before:
 
 ```{python, warning=F}
 #| fig-align: "center"
-(ggplot(data, aes(x = 'X', y = 'Y')) +
-  geom_point(aes(color = 'Z')) + geom_smooth(aes(color = 'Z'), method = "lm") +
-  geom_smooth(method = "lm", color = 'blue') + 
-  mytheme + theme(figure_size=(6, 4)))
+(
+    ggplot(data, aes(x = "X", y = "Y"))
+    + geom_point(aes(color = "Z"))
+    + geom_smooth(aes(color = "Z"), method = "lm")
+    + geom_smooth(method = "lm", color = "blue")
+    + mytheme
+    + theme(figure_size=(6, 4))
+)
 ```
 
 <!-- https://paulvanderlaken.com/2017/09/27/simpsons-paradox-two-hr-examples-with-r-code/ -->
@@ -604,7 +672,7 @@ We use qualitative palettes for categorical variables to separate items into dis
 ```{python}
 #| echo: true
 #| eval: false
-+ p9.scale_fill_brewer(type = 'qual', palette = {palette of choice}) 
++ p9.scale_fill_brewer(type = "qual", palette = {palette of choice}) 
 ```
 
 
@@ -612,17 +680,20 @@ We use qualitative palettes for categorical variables to separate items into dis
 #| echo: false
 #| eval: true
 num_colors = 9 
-df_swatch_cat = pd.DataFrame({
-    'category': [f'Cat {i}' for i in range(num_colors)],
-    'x': np.arange(num_colors),
-})
+df_swatch_cat = pd.DataFrame(
+    {
+        "category": [f"Cat {i}" for i in range(num_colors)],
+        "x": np.arange(num_colors),
+    }
+)
+
 (
-    ggplot(df_swatch_cat, aes(x='x', y=0, fill='category')) 
-    + geom_tile(color='gray', size=0.5) 
-    # Use scale_fill_brewer, specifying type='qual' and a qualitative palette name
-    + scale_fill_brewer(type='qual', palette='Set1') 
+    ggplot(df_swatch_cat, aes(x="x", y=0, fill="category")) 
+    + geom_tile(color="gray", size=0.5) 
+    # Use scale_fill_brewer, specifying type="qual" and a qualitative palette name
+    + scale_fill_brewer(type="qual", palette="Set1") 
     + theme_void()
-    + theme(legend_position='none', figure_size = (9, 1))
+    + theme(legend_position="none", figure_size = (9, 1))
 )
 ```
 
@@ -632,7 +703,7 @@ Generally, we use sequential palettes for continuous variables to show quantitat
 ```{python}
 #| echo: true
 #| eval: false
-+ p9.scale_fill_distiller(type = 'sequential', palette = {palette of choice})
++ p9.scale_fill_distiller(type = "sequential", palette = {palette of choice})
 ```
 
 
@@ -640,17 +711,17 @@ Generally, we use sequential palettes for continuous variables to show quantitat
 #| echo: false
 #| eval: true
 df_swatch = pd.DataFrame({
-    'x': np.arange(num_colors),
-    'value': np.arange(num_colors),
-    'value_centered': np.arange(- (num_colors // 2), (num_colors // 2) + 1) 
+    "x": np.arange(num_colors),
+    "value": np.arange(num_colors),
+    "value_centered": np.arange(- (num_colors // 2), (num_colors // 2) + 1) 
 })
 
 (
-    ggplot(df_swatch, aes(x='x', y=0, fill='value')) 
-    + geom_tile(color='gray', size=0.5)
-    + scale_fill_distiller(type='sequential', palette='Greens')
+    ggplot(df_swatch, aes(x="x", y=0, fill="value")) 
+    + geom_tile(color="gray", size=0.5)
+    + scale_fill_distiller(type="sequential", palette="Greens")
     + theme_void()
-    + theme(legend_position='none', figure_size = (9, 1))
+    + theme(legend_position="none", figure_size = (9, 1))
 )
 ```
 
@@ -661,18 +732,18 @@ We use diverging palettes for numeric variables that have a meaningful central v
 ```{python}
 #| echo: true
 #| eval: false
-+ p9.scale_fill_distiller(type = 'diverging', palette = {palette of choice})
++ p9.scale_fill_distiller(type = "diverging", palette = {palette of choice})
 ```
 
 ```{python}
 #| echo: false
 #| eval: true
 (
-    ggplot(df_swatch, aes(x='x', y=0, fill='value_centered'))
-    + geom_tile(color='gray', size=0.5)
-    + scale_fill_distiller(type='diverging', palette='RdBu')
+    ggplot(df_swatch, aes(x="x", y=0, fill="value_centered"))
+    + geom_tile(color="gray", size=0.5)
+    + scale_fill_distiller(type="diverging", palette="RdBu")
     + theme_void()
-    + theme(legend_position='none', figure_size = (9, 1))
+    + theme(legend_position="none", figure_size = (9, 1))
 )
 ```
 
@@ -698,13 +769,13 @@ If we want objects in a table or graph to be easily seen, we need to use a backg
 #| fig-align: center
 
 import seaborn as sns
-df = sns.load_dataset('anscombe')
-df = df[df.dataset == 'I']
+df = sns.load_dataset("anscombe")
+df = df[df.dataset == "I"]
 
 (
-    ggplot(df, aes(x='x', y='y', color='dataset'))
-    + geom_point(size=3, color = '#FFFFCC')
-    + geom_smooth(method = 'lm', se=False, color = 'black', size = 0.5)
+    ggplot(df, aes(x="x", y="y", color="dataset"))
+    + geom_point(size=3, color = "#FFFFCC")
+    + geom_smooth(method = "lm", se=False, color = "black", size = 0.5)
     + mytheme + theme(figure_size=(3, 2))
 )
 ```
@@ -720,22 +791,27 @@ In the following example, the added colors provide no additional information:
 #| eval: true
 #| fig-align: "center"
 df = pd.read_excel("../../extdata/pokemon.xlsx")
-df = df[['Type', 'HP']]
-df_for_plotting = df.groupby('Type').mean().reset_index().rename({'index': 'Type'}).sort_values('HP').head(10)
+df = df[["Type", "HP"]]
+df_for_plotting = df.groupby("Type").mean().reset_index().rename({"index": "Type"}).sort_values("HP").head(10)
 
-df_for_plotting['Type'] = pd.Categorical(
-    df_for_plotting['Type'],
-    categories=df_for_plotting['Type'],
+df_for_plotting["Type"] = pd.Categorical(
+    df_for_plotting["Type"],
+    categories=df_for_plotting["Type"],
     ordered=True
 )
-type_order = df_for_plotting['Type'].tolist()
+type_order = df_for_plotting["Type"].tolist()
 type_order = type_order[::-1]
 
 tab12_colors = sns.color_palette("tab20", n_colors=10).as_hex()
-(ggplot(df_for_plotting, aes('Type', 'HP')) + 
-  geom_bar(aes(fill = 'Type'), stat = 'identity') + 
-  scale_fill_manual(values=tab12_colors, limits = type_order) + 
-  coord_flip() + mytheme + theme(figure_size = (5, 5)))
+
+(
+    ggplot(df_for_plotting, aes("Type", "HP"))
+    + geom_bar(aes(fill = "Type"), stat = "identity")
+    + scale_fill_manual(values=tab12_colors, limits = type_order)
+    + coord_flip()
+    + mytheme
+    + theme(figure_size = (5, 5))
+)
 ```
 
 
@@ -763,13 +839,23 @@ Figure title (or slide tile) states the finding (what do we observe?) and not th
 #| echo: false
 #| eval: true
 #| fig-align: "center"
-flightsLAX = pd.read_csv('../../extdata/flightsLAX.csv')
-(ggplot(flightsLAX.head(2000), aes('DISTANCE', 'AIR_TIME')) +
-  geom_point(alpha=0.2) +
-  geom_smooth(method='lm', color= 'blue') +
-  labs(title = 'The further away an airport, the longer the flight',
-       x = 'Distance', y = 'Flight duration') + mytheme 
-       + theme(figure_size = (6, 4), legend_title = element_text(size=7)))
+flightsLAX = pd.read_csv("../../extdata/flightsLAX.csv")
+
+(
+    ggplot(
+        flightsLAX.head(2000),
+        aes("DISTANCE", "AIR_TIME")
+    )
+    + geom_point(alpha=0.2)
+    + geom_smooth(method="lm", color= "blue")
+    + labs(
+        title = "The further away an airport, the longer the flight",
+        x = "Distance",
+        y = "Flight duration"
+    )
+    + mytheme 
+    + theme(figure_size = (6, 4), legend_title = element_text(size=7))
+)
 ```
 
 **Always label the axes**
@@ -801,22 +887,31 @@ From the plot above, it appears that apprehensions have almost tripled, when in 
 #| eval: true
 #| fig-align: "center"
 
-df_small = pd.DataFrame({'Year': [2011, 2012, 2013], 'Southwest_Border_Apprehensions': [165244,170223,192298]})
-df_small['Year'] = pd.Categorical(
-    df_small['Year'],
-    categories=df_small['Year'],
+df_small = pd.DataFrame(
+    {
+        "Year": [2011, 2012, 2013],
+        "Southwest_Border_Apprehensions": [165244,170223,192298]
+    }
+)
+
+df_small["Year"] = pd.Categorical(
+    df_small["Year"],
+    categories=df_small["Year"],
     ordered=True
 )
+
 print("\n")
+
 (
-  ggplot(df_small, aes('Year', 'Southwest_Border_Apprehensions' )) +
-  geom_bar(stat = "identity", fill = "grey", width = 0.65) + mytheme +
-  labs( y = "Southwest Border Apprehensions") + 
-  theme(figure_size = (6, 4),  axis_text = element_text(size=7))
+  ggplot(df_small, aes("Year", "Southwest_Border_Apprehensions" ))
+  + geom_bar(stat = "identity", fill = "grey", width = 0.65)
+  + labs( y = "Southwest Border Apprehensions")
+  + mytheme
+  + theme(figure_size = (6, 4),  axis_text = element_text(size=7))
 )
 ```
 
-### Don'ts
+### Don"ts
 Good plotting style is like good writing style: say the most with the least. We can here quote Antoine de Saint-Exupery:
 
 *“Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away”.*
@@ -830,7 +925,7 @@ The concept of *data-ink ratio* is therefore useful to critically chose a visual
 * pictures within graphs
 * shading or pseudo 3D plots
 
-A good example of a transformation of a bad plot into a good plot can be obtained from: https://www.darkhorseanalytics.com/blog/data-looks-better-naked/
+A good example of a transformation of a bad plot into a good plot can be obtained from: <https://www.darkhorseanalytics.com/blog/data-looks-better-naked/>
 
 **Avoid pseudo three-dimensional plots**
 
@@ -839,7 +934,7 @@ The figure below, taken from the scientific literature ^[DNA Fingerprinting: A R
 
 ![](../../assets/img/lec06_3d_plot.png){fig-align="center" width="60%"}
 
-However, humans are not good at seeing in three dimensions (which explains why it is hard to parallel park) and our limitation is even worse with pseudo-three-dimensions. To see this, we can try to determine the values of the survival variable in the plot above. Probably, we cannot really tell when the purple ribbon intersects the red one.
+However, the plot is not genuinely 3D leading to confusion: We cannot really tell where the purple ribbon intersects the red one.
 
 Instead, we can easily use color to represent the categorical variable to avoid the pseudo 3 dimensional construction:
 
@@ -851,19 +946,19 @@ Instead, we can easily use color to represent the categorical variable to avoid 
 dat = pd.read_csv("../../extdata/Drug_survival.csv", index_col = 0)
 
 dat_long = dat.melt(
-    id_vars=['log dose'],
-    var_name='drug',
-    value_name='survival'
+    id_vars=["log dose"],
+    var_name="drug",
+    value_name="survival"
 )
-dat_long['drug'] = dat_long['drug'].str.replace('Drug.', '', regex=False)
+dat_long["drug"] = dat_long["drug"].str.replace("Drug.", "", regex=False)
 
 (
-    ggplot(dat_long, aes(x='log dose', y='survival', color='drug'))
+    ggplot(dat_long, aes(x="log dose", y="survival", color="drug"))
     + geom_line(size=1)
     + labs(
-        x='Log Dose',
-        y='Survival',
-        color='Drug Type'
+        x="Log Dose",
+        y="Survival",
+        color="Drug Type"
     )
     + mytheme
     + theme(figure_size = (6, 4))
@@ -897,15 +992,13 @@ By now, you should be able to:
 
 ## Resources
 
- * https://humansofdata.atlan.com/2019/02/dos-donts-data-visualization/
- * http://paldhous.github.io/ucb/2016/dataviz/week2.html
- * Fundamentals of Data Visualization, Claus O. Wilke, https://clauswilke.com/dataviz/telling-a-story.html
+ * <https://humansofdata.atlan.com/2019/02/dos-donts-data-visualization/>
 
- * Introduction to Data Science, Rafael A. Irizarry, https://rafalab.github.io/dsbook/index.html
+ * Fundamentals of Data Visualization, Claus O. Wilke, <https://clauswilke.com/dataviz/telling-a-story.html>
  
- Advanced (proofs of conditional dependencies for the 3-variable elementary causal diagrams):
+ * Advanced (proofs of conditional dependencies for the 3-variable elementary causal diagrams):
  
-C. Bishop, Pattern Recognition and Machine Learning. https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/
+C. Bishop, Pattern Recognition and Machine Learning. <https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/>
 
  
 

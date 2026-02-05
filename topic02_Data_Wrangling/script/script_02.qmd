@@ -48,11 +48,14 @@ To create a `DataFrame`, we can use a dictionary, where each key corresponds to 
 
 ```{python}
 # pip install pandas
-df = pd.DataFrame({
+df = pd.DataFrame(
+  {
     "name": ["Alice", "Bob", "Charlie"],
     "age": [25, 30, 35],
     "city": ["Berlin", "Paris", "London"]
-})
+  }
+)
+
 df
 ```
 
@@ -61,7 +64,7 @@ If we want to convert a numpy array or a list of lists or some other python obje
 
 ```{python}
 data = np.array([[100, 5], [80, 7]])
-df = pd.DataFrame(data, columns = ['Speed', 'Time'])
+df = pd.DataFrame(data, columns = ["Speed", "Time"])
 type(df)
 ```
 
@@ -69,20 +72,20 @@ Here you can see that the function `type()` informs us that `df` is a `pandas` D
 
 Alternatively, we can read files from disk and process them using `DataFrame`. The easiest way to do so is to use the functions 
 `pd.read_csv()` or `pd.read_excel()`. Here is an example using a subset of the Kaggle flight and airports dataset that is limited to 
-flights going in or to the Los Angeles airport. We refer to the description of the Kaggle flights and airports challenge for more details [https://www.kaggle.com/tylerx/flights-and-airports-data]. 
+flights going in or to the Los Angeles airport. We refer to the description of the Kaggle flights and airports challenge for more details <https://www.kaggle.com/tylerx/flights-and-airports-data>. 
 
-We provide the file `flightsLAX.csv` as part of our datasets (See Datasets). To run the following code, save the comma-separated value file `flightsLAX.csv` into a local folder of your choice and replace the string `"path_to_file"` with the actual path to your `flightsLAX.csv` file. For example `"path_to_file"` could be substituted with `"/Users/samantha/mydataviz_folder/extdata"`.
+We provide the file `flightsLAX.csv` as part of our datasets (See Datasets @sec-datasets). To run the following code, save the comma-separated value file `flightsLAX.csv` into a local folder of your choice and replace the string `"path_to_file"` with the actual path to your `flightsLAX.csv` file. For example `"path_to_file"` could be substituted with `"/Users/samantha/mydataviz_folder/extdata"`.
 
 
 ```{python}
 #| eval: false
-flights = pd.read_csv('path_to_file/flightsLAX.csv')
+flights = pd.read_csv("path_to_file/flightsLAX.csv")
 ```
 
 ```{python}
 #| echo: false
-flights = pd.read_csv(datadir + 'flightsLAX.csv', usecols = ['YEAR', 'MONTH', 'DAY', 'DAY_OF_WEEK', 'AIRLINE', 'FLIGHT_NUMBER',
-       'AIR_TIME', 'ORIGIN_AIRPORT', 'DESTINATION_AIRPORT', 'DEPARTURE_TIME','DISTANCE', 'ARRIVAL_TIME' ])
+flights = pd.read_csv(datadir + "flightsLAX.csv", usecols = ["YEAR", "MONTH", "DAY", "DAY_OF_WEEK", "AIRLINE", "FLIGHT_NUMBER",
+       "AIR_TIME", "ORIGIN_AIRPORT", "DESTINATION_AIRPORT", "DEPARTURE_TIME","DISTANCE", "ARRIVAL_TIME" ])
 ```
 
 Typing the name of the newly created `DataFrame` (`flights`) in a notebook cell displays its first and last rows. We observe that reading the file was successful.
@@ -93,7 +96,7 @@ flights
 A first step in any analysis should involve inspecting the data we just read in. This often starts by looking at the first and last 
 rows of the table as we did above. You can also use functions `.head()` and `.tail()` to return 5 first or 5 last rows of a `DataFrame`:
 ```{python}
-flights.head() # flights.tail()
+flights.head() # or flights.tail() for the tail
 ```
 
 ### Inspecting tables
@@ -122,17 +125,17 @@ flights.iloc[:, :6].describe()
 
 This provides us already a lot of information about our data. We can for example see that all data is from 2015 as all values in the YEAR column are 2015. 
 
-However, for categorical column basic statistics cannot be computed, so column `AIRLINE` is not in the output.To investigate categorical columns we can
+However, for categorical column basic statistics cannot be computed, so column `AIRLINE` is not in the output. To investigate categorical columns we can
 have a look at their unique elements using:
 
 ```{python}
-flights['AIRLINE'].unique()
+flights["AIRLINE"].unique()
 ```
 
 This command provided us the airline identifiers present in the dataset. Another valuable information for categorical variables is how often each category occurs. This can be obtained using the following commands:
 
 ```{python}
-flights['AIRLINE'].value_counts()
+flights["AIRLINE"].value_counts()
 ```
 
 ## Indices and row subsetting
@@ -150,30 +153,33 @@ flights.index
 * Column index: labels each column (the column names)
 
 ```{python}
-flights.columns # note, that this function returns "Index" object
+# this function returns an "Index" object
+flights.columns 
 ```
 
 Row index can be customized and any type: integers, strings, dates, tuples etc. Moreover, `pandas` will not control whether your index column contains only
 unique or ordered values, but unique, meaningful labels make data easier to work with. Index column can be used for row selection, row alignment when 
-joining/combining tables, sorting and grouping. 
+joining or combining tables, sorting and grouping. 
 
 The function `set_index()` lets us turn a column into the row index:
 
 ```{python}
-df = pd.DataFrame({
+df = pd.DataFrame(
+  {
     "name": ["Alice", "Bob", "Charlie", "Peter"],
     "age": [25, 30, 35, 36],
     "city": ["Berlin", "Paris", "London", "Munich"]
-})
+  }
+)
 
-df = df.set_index('name')
+df = df.set_index("name")
 df
 ```
 
 
 The function `reset_index()` moves the index back into a regular column and parameter `names` allows giving a custom name to the newly created column:
 ```{python}
-df.reset_index(names='name')
+df.reset_index(names="name")
 ```
 
 `pandas` allows flexibility in handling index column, which in practice can easily lead to errors. Therefore, in order to avoid mistakes in your code, we 
@@ -184,7 +190,7 @@ recommend keeping index default.
 If we want to see the second row of the table, we can us `.loc[]` (by label) or `.iloc[]` (by position)
 
 ```{python}
-df.loc['Bob']   # Access the row with index value 'Bob'
+df.loc["Bob"]   # Access the row with index value "Bob"
 ```
 
 ```{python}
@@ -218,38 +224,42 @@ df.loc[["Alice", "Charlie"]]
 
 Often, a more useful way to subset rows is using logical conditions, using a logical vector instead of a vector of indices
 
-- We can create such logical vectors using the following binary operators:
+- We can create such logical vectors using the `.isin()` function and the following binary operators:
 
   * `==`
   * `<`
   * `>`
   * `!=`
-  * `%in%`
 
 The syntax is following `table[condition]`.
 
 For example, entries of flights arriving to Miami International Airport can be extracted using `==`:
 
 ```{python}
-flights[flights['DESTINATION_AIRPORT'] == 'MIA'] 
+flights[flights["DESTINATION_AIRPORT"] == "MIA"] 
 ```
 
-Note, that `flights['DESTINATION_AIRPORT'] == 'MIA'` is a so-called **mask**, that has the same length as the data frame and consists of `True` and `False`:
+Note, that `flights["DESTINATION_AIRPORT"] == "MIA"` is a so-called **mask**, that has the same length as the data frame and consists of `True` and `False`:
 
 ```{python}
-flights['DESTINATION_AIRPORT']== 'MIA'
+flights["DESTINATION_AIRPORT"]== "MIA"
 ```
 
 If we are now interested in to get all flights that depart from New York area, we can use `isin([list])`:
 
 ```{python}
-flights[flights['ORIGIN_AIRPORT'].isin(['JFK', 'EWR'])]
+flights[flights["ORIGIN_AIRPORT"].isin(["JFK", "EWR"])]
 ```
 
 We can also concatenate multiple conditions using the logical OR `|` or the logical AND `&` operator. Always wrap conditions in **parentheses**!
 
 ```{python}
-flights[(flights['ORIGIN_AIRPORT'].isin(['JFK', 'EWR'])) | (flights['DESTINATION_AIRPORT'].isin(['JFK', 'EWR']))  ]
+flights[
+  (
+    flights["ORIGIN_AIRPORT"].isin(["JFK", "EWR"]))
+    | (flights["DESTINATION_AIRPORT"].isin(["JFK", "EWR"])
+  )
+]
 ```
 
 Using **`and`** or **`or`** operators instead of  will lead to error in this case. 
@@ -262,12 +272,12 @@ is missing, we cannot use equals-to (**`==`**) operator - instead one has to use
 to `np.nan`: 
 
 ```{python, include = FALSE}
-flights.loc[6, 'DISTANCE'] = np.nan
+flights.loc[6, "DISTANCE"] = np.nan
 ```
 
 
 ```{python}
-flights[flights['DISTANCE'].isna()]
+flights[flights["DISTANCE"].isna()]
 ```
 
 ## Column operations
@@ -276,7 +286,7 @@ flights[flights['DISTANCE'].isna()]
 
 Each column of a `DataFrame` is a `Series`:
 ```{python}
-destination = flights['DESTINATION_AIRPORT']
+destination = flights["DESTINATION_AIRPORT"]
 type(destination)
 ```
 
@@ -286,33 +296,33 @@ destination
 
 A `Series` is a **one-dimensional** labeled array. It has two components:
 
-* Values (`['PBI', 'MIA', 'CLT', ..., 'BOS']`)
+* Values (`["PBI", "MIA", "CLT", ..., "BOS"]`)
 
 * Index (`[0, 1, 2, ..., 389368]`)
 
-`Series` supports operations like .mean(), .sum(), etc, which are applied to values of the object.
+`Series` supports operations like `.mean()`, `.sum()`, etc, which are applied to values of the object.
 
 ### Accessing one or multiple columns
 
 Since a DataFrame is just a collection of Series side by side, selecting a single column returns the corresponding Series. That's how you can do it:
 
 ```{python}
-flights['DESTINATION_AIRPORT'] 
+flights["DESTINATION_AIRPORT"] 
 ```
 
 Attribute access (`df.col`) is convenient, but **does not work** if column names have spaces or conflict with methods (e.g. `flights.DESTINATION_AIRPORT`).
 
 Although feasible (using `.iloc[]`), it is not advisable to access a column by its number since the ordering or number of columns can easily change.
 Also, if you have a data set with a large number of columns (e.g. 50), how do you know which one is column 18? 
-Therefore, we recommend to **use the column names** to access columns for preventing bugs and  better readibility: `flights['DESTINATION_AIRPORT']` instead
+Therefore, we recommend to **use the column names** to access columns for preventing bugs and  better readibility: `flights["DESTINATION_AIRPORT"]` instead
 of `flights.iloc[, 8]`.
 
 To access multiple columns, you provide their names as a list:
 
 ```{python}
-airport_columns = ['ORIGIN_AIRPORT', 'DESTINATION_AIRPORT']
+airport_columns = ["ORIGIN_AIRPORT", "DESTINATION_AIRPORT"]
 flights[airport_columns]
-# or directly flights[['ORIGIN_AIRPORT', 'DESTINATION_AIRPORT']]
+# or flights[["ORIGIN_AIRPORT", "DESTINATION_AIRPORT"]]
 ```
 
 Note, that the returned object is a DataFrame.
@@ -320,14 +330,15 @@ Note, that the returned object is a DataFrame.
 For accessing a specific entry (i.e. specific column and specific row), we can use the following syntax:
 
 ```{python}
-flights.loc[5, 'DESTINATION_AIRPORT']  # Access a specific cell.
+# Access a specific cell
+flights.loc[5, "DESTINATION_AIRPORT"]  
 ```
 
 ## Groupby operation
 
 Often we want to compute summaries per category, for example: *average flight time per airline* or *number of flights per day*. 
 For this we can use `groupby()`, that splits the data into groups.
-Note, that `groupby()` only **defines** the groups – you must follow it with an aggregation such as .mean(), .sum(), .count(), or .agg(...) to compute
+Note, that `groupby()` only **defines** the groups – you must follow it with an aggregation such as `.mean()`, `.sum()`, `.count()`, or `.agg(...)` to compute
  results.
 
 ```{python}
@@ -339,15 +350,15 @@ The returned object is `Series` with unique `"AIRLINE"` values being in the inde
 We can also compute the number of rows in each group using `.size()` directly after `groupby()` (or `.count()` on any column):
 
 ```{python}
-flights.groupby('AIRLINE').size()
-# flights.groupby('AIRLINE')["AIR_TIME"].count() will give the same result
+flights.groupby("AIRLINE").size()
+# or flights.groupby("AIRLINE")["AIR_TIME"].count()
 ```
 
 
 Instead of selecting one column first, we can compute the mean of several **numeric** columns per group and the result will be a DataFrame:
 
 ```{python}
-flights.groupby('AIRLINE')[['AIR_TIME', 'DISTANCE']].mean()
+flights.groupby("AIRLINE")[["AIR_TIME", "DISTANCE"]].mean()
 ```
 
 Note, that applying `.mean()` to non-numeric columns will result in an error.
@@ -357,12 +368,15 @@ at once—per group.
 
 ```{python}
 (
-    flights.groupby('AIRLINE').agg(
-      {
-          'AIR_TIME':  ['mean', 'std'],
-          'DISTANCE':  ['min'],
-          'DESTINATION_AIRPORT': ['size', 'first', 'nunique']
-      })
+    flights
+    .groupby("AIRLINE")
+    .agg(
+        {
+          "AIR_TIME":  ["mean", "std"],
+          "DISTANCE":  ["min"],
+          "DESTINATION_AIRPORT": ["size", "first", "nunique"]
+        }
+    )
 )
 ```
 
@@ -374,13 +388,13 @@ at once—per group.
 Another common operation is sorting, that can be done using `.sort_values(col_name)` function:
 
 ```{python}
-flights.sort_values('DISTANCE')
+flights.sort_values("DISTANCE")
 ```
 
-By default `sort_values()` sorts the column in ascending order (from the smallest to the largest value), but we can specify order using `ascending=...`:
+By default `sort_values()` sorts the column in ascending order (from the smallest to the largest value), but we can specify order using the `ascending` parameter:
 
 ```{python}
-flights.sort_values('DISTANCE', ascending = False)
+flights.sort_values("DISTANCE", ascending = False)
 ```
 
 `sort_values()` function cannot be applied to index column, tehre we have to use `sort_index()`:
@@ -411,11 +425,11 @@ flights.head()
 To delete column, you can use `.drop()` function and provide column names as a list:
 
 ```{python}
-flights.drop(columns = ['DIST_MILES', 'SPEED_MPH'])
+flights.drop(columns = ["DIST_MILES", "SPEED_MPH"])
 ```
 
 This function return a new DataFrame by default. Use `inplace=True` to modify the DataFrame directly or assigned returned DataFrame to the same name: 
-`flights = flights.drop(columns = ['DIST_MILES', 'SPEED_MPH'])`.
+`flights = flights.drop(columns = ["DIST_MILES", "SPEED_MPH"])`.
 
 
 To create a copy of the table you can use `.copy()`:

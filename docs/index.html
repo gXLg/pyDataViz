@@ -2,14 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Chair of Computational Molecular Medicine Technical University of Munich">
-<meta name="description" content="This book introduces concepts and skills that can help you tackle real-world data analysis challenges. It covers concepts from probability, statistical inference, linear regression and machine learning and helps you develop skills such as Python programming, data wrangling with polars, data visualization with plotnine, file organization with UNIX/Linux shell, version control with GitHub, and reproducible document preparation with Jupyter.">
+<meta name="dcterms.date" content="2026-02-05">
+<meta name="description" content="This book introduces concepts and skills that can help you tackle real-world data analysis challenges. It covers concepts from probability, statistical inference, regression, and supervised learning and helps you develop skills such as Python programming, data wrangling, and data visualization.">
 
-<title>Data Analysis and Visualization in Python</title>
+<title>A Practical Introduction to Data Science</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -40,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e41caad1b6b9b62eb3087831f3b4c651.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-795e9e8eca1e12b12abcb09a27409631.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-356f3515cbdbd93376c9072705b253c0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -85,7 +86,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Data Analysis and Visualization in Python (IN2339)</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Overview</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -98,11 +99,9 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="./index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Data Analysis and Visualization in Python</a> 
+      <a href="./">A Practical Introduction to Data Science</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -115,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Data Analysis and Visualization in Python (IN2339)</span></a>
+ <span class="menu-text">Overview</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -240,13 +239,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appendix03_Plotting/script/appendix_03.html" class="sidebar-item-text sidebar-link">
+  <a href="./appendix01_Plotting/script/appendix_01.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Additional plotting tools</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appendix04_Probabilities/script/appendix_04.html" class="sidebar-item-text sidebar-link">
+  <a href="./appendix02_Probabilities/script/appendix_02.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Probabilities</span></span></a>
   </div>
 </li>
@@ -258,10 +257,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-analysis-and-visualization-in-python-in2339" id="toc-data-analysis-and-visualization-in-python-in2339" class="nav-link active" data-scroll-target="#data-analysis-and-visualization-in-python-in2339">Data Analysis and Visualization in Python (IN2339)</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
   <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
+  <li><a href="#sec-datasets" id="toc-sec-datasets" class="nav-link" data-scroll-target="#sec-datasets">Datasets</a></li>
   <li><a href="#feedback" id="toc-feedback" class="nav-link" data-scroll-target="#feedback">Feedback</a></li>
   </ul>
 </nav>
@@ -275,13 +274,13 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Data Analysis and Visualization in Python</h1>
-<p class="subtitle lead">A practical introduction to Data Science</p>
+<h1 class="title">A Practical Introduction to Data Science</h1>
+<p class="subtitle lead">Lecture notes of the module Data Analysis and Visualization (IN2339)</p>
 </div>
 
 <div>
   <div class="description">
-    This book introduces concepts and skills that can help you tackle real-world data analysis challenges. It covers concepts from probability, statistical inference, linear regression and machine learning and helps you develop skills such as Python programming, data wrangling with polars, data visualization with plotnine, file organization with UNIX/Linux shell, version control with GitHub, and reproducible document preparation with Jupyter.
+    This book introduces concepts and skills that can help you tackle real-world data analysis challenges. It covers concepts from probability, statistical inference, regression, and supervised learning and helps you develop skills such as Python programming, data wrangling, and data visualization.
   </div>
 </div>
 
@@ -298,7 +297,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Invalid Date</p>
+      <p class="date">February 5, 2026</p>
     </div>
   </div>
   
@@ -310,28 +309,27 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="data-analysis-and-visualization-in-python-in2339" class="level1 unnumbered">
-<h1 class="unnumbered">Data Analysis and Visualization in Python (IN2339)</h1>
-<p>This is the lecture script of the module Data Analysis and Visualization in Python (IN2339).</p>
-<div class="callout-box info">
-<p>
-<strong>Note — work in progress</strong><br> This book is an adaptation to the programming language <strong>Python</strong> of the original script <em><u><a href="https://gagneurlab.github.io/dataviz/">Data Analysis and Visualization in R</a></u></em> and is still under development. Chapters will be added in order. For any content not yet implemented, please refer to the original. Theoretical concepts are identical, only the programming language is changed.
-</p>
-</div>
+<section id="overview" class="level1 unnumbered">
+<h1 class="unnumbered">Overview</h1>
+<p>These are the lecture notes of the module the module Data Analysis and Visualization (IN2339).</p>
+It is an adaptation to the programming language <strong>Python</strong> of the original script <em><u><a href="https://gagneurlab.github.io/dataviz/">Data Analysis and Visualization in R</a></u></em>.
+<p></p>
+The theoretical concepts are identical, only the programming language is changed.
+<p></p>
 <p>This work is licensed under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a></p>
 </section>
 <section id="acknowledgments" class="level1 unnumbered">
 <h1 class="unnumbered">Acknowledgments</h1>
 <p>This script has been first put together in the winter semester 2020/2021 by Felix Brechtmann, Alexander Karollus, Daniela Klaproth-Andrade, Pedro Silva, and Julien Gagneur with help from Xueqi Cao, Laura Martens, Ines Scheller, Vangelis Theodorakis, and Vicente Yépez.</p>
 <p>We leveraged work from colleagues who helped creating lecture slides since 2017: Žiga Avsec, Ines Assum, Daniel Bader, Jun Cheng, Bašak Eraslan, Mathias Heinig, Jan Krumsieck, Christian Mertes, and Georg Stricker.</p>
-<p>The script has been adapted from R to Python in the winter semester 2025/2026 by Xavi Hernandez Alias, Eva Holtkamp, Shubhankar Londhe, Johann Promeuschel, Maria Ryabtseva and Anna Starovoit</p>
+<p>The script has been adapted from R to Python in the winter semester 2025/2026 by Xavi Hernandez Alias, Eva Holtkamp, Shubhankar Londhe, Johann Promeuschel, Maria Ryabtseva and Anna Starovoit.</p>
 </section>
 <section id="prerequisites" class="level1 unnumbered">
 <h1 class="unnumbered">Prerequisites</h1>
-<p>Basics in probabilities are required. Chapters 13-15 (“Introduction to Statistics with R”, “Probability” and “Random variables”) of the Book “Introduction to Data Science” https://rafalab.github.io/dsbook/ make a good refresher. Make sure all concepts are familiar to you. Check your knowledge by trying the exercises.</p>
+<p>Basics in probabilities are required. The Chapters “Summary Statistics”, and “Probability” of the Book “Introduction to Data Science Part II” <a href="https://rafalab.dfci.harvard.edu/dsbook-part-2/" class="uri">https://rafalab.dfci.harvard.edu/dsbook-part-2/</a> make a good refresher. Make sure all concepts are familiar to you. Check your knowledge by trying the exercises.</p>
 </section>
-<section id="datasets" class="level1 unnumbered">
-<h1 class="unnumbered">Datasets</h1>
+<section id="sec-datasets" class="level1">
+<h1>Datasets</h1>
 <p>Datasets used in this script are available to download as a compressed file <a href="http://shorturl.at/otwxO">here</a>.</p>
 </section>
 <section id="feedback" class="level1 unnumbered">

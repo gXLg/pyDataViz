@@ -2,14 +2,12 @@
 number-sections: false
 author: Chair of Computational Molecular Medicine Technical University of Munich
 
-subtitle: "A practical introduction to Data Science"
+subtitle: "Lecture notes of the module Data Analysis and Visualization (IN2339)"
 description:
   This book introduces concepts and skills that can help you tackle
   real-world data analysis challenges. It covers concepts from probability, statistical
-  inference, linear regression and machine learning and helps you develop skills such
-  as Python programming, data wrangling with polars, data visualization with plotnine, file
-  organization with UNIX/Linux shell, version control with GitHub, and reproducible
-  document preparation with Jupyter.
+  inference, regression, and supervised learning and helps you develop skills such
+  as Python programming, data wrangling, and data visualization.
 bibliography:
   - book.bib
   - packages.bib
@@ -18,22 +16,18 @@ bibliography:
 execute: 
   kernel: dataviz
 
-date: "`{python} print('hello')`"
+date: today
 
 
 ---
 
+# Overview {.unnumbered}
 
-# Data Analysis and Visualization in Python (IN2339) {.unnumbered}
+These are the lecture notes of the module the module Data Analysis and Visualization (IN2339).
 
-This is the lecture script of the module Data Analysis and Visualization in Python (IN2339).
+It is an adaptation to the programming language **Python** of the original script <em><u>[Data Analysis and Visualization in R](https://gagneurlab.github.io/dataviz/)</u></em>.</p>
 
-
-
-<div class="callout-box info">
-  <p><strong>Note — work in progress</strong><br>
-  This book is an adaptation to the programming language **Python** of the original script <em><u>[Data Analysis and Visualization in R](https://gagneurlab.github.io/dataviz/)</u></em> and is still under development. Chapters will be added in order. For any content not yet implemented, please refer to the original. Theoretical concepts are identical, only the programming language is changed.</p>
-</div>
+The theoretical concepts are identical, only the programming language is changed.</p>
 
 This work is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0)
 
@@ -43,13 +37,13 @@ This script has been first put together in the winter semester 2020/2021 by Feli
 
 We leveraged work from colleagues who helped creating lecture slides since 2017: Žiga Avsec, Ines Assum, Daniel Bader, Jun Cheng, Bašak Eraslan, Mathias Heinig, Jan Krumsieck, Christian Mertes, and Georg Stricker.
 
-The script has been adapted from R to Python in the winter semester 2025/2026 by Xavi Hernandez Alias, Eva Holtkamp, Shubhankar Londhe, Johann Promeuschel, Maria Ryabtseva and Anna Starovoit
+The script has been adapted from R to Python in the winter semester 2025/2026 by Xavi Hernandez Alias, Eva Holtkamp, Shubhankar Londhe, Johann Promeuschel, Maria Ryabtseva and Anna Starovoit.
 
 
 # Prerequisites {-}
-Basics in probabilities are required. Chapters 13-15 ("Introduction to Statistics with R", "Probability" and "Random variables") of the Book "Introduction to Data Science" https://rafalab.github.io/dsbook/ make a good refresher. Make sure all concepts are familiar to you. Check your knowledge by trying the exercises. 
+Basics in probabilities are required. The Chapters "Summary Statistics", and "Probability" of the Book "Introduction to Data Science Part II" <https://rafalab.dfci.harvard.edu/dsbook-part-2/> make a good refresher. Make sure all concepts are familiar to you. Check your knowledge by trying the exercises. 
 
-# Datasets {.unnumbered}
+# Datasets {#sec-datasets} 
 Datasets used in this script are available to download as a compressed file [here](http://shorturl.at/otwxO).
 
 # Feedback {-}

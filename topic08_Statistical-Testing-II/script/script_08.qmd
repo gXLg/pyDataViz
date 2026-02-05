@@ -34,20 +34,20 @@ np.random.seed(20)
 
 In the last chapter we discussed how trends in data can arise by chance, leading us to wrong conclusions. We saw that statistical hypothesis testing can help to guard us from being fooled by randomness in this way. We developed the permutation test as an empirical way to perform hypothesis tests.
 
-While permutation testing is very general and requires few assumptions, it has its limitations, as we will see shortly. In this chapter, we will therefore discuss a more analytical approach to testing. We will see several classical tests, such as the binomial test and the t-test. These tests often make stronger assumptions about the underlying data. Thus, it is important to understand when they can and cannot be used. We will discuss the quantile-quantile plot (Q-Q plot) as a method to check some of these assumptions.
+While permutation testing is very general and requires few assumptions, it has its limitations, as we will see shortly. In this chapter, we will therefore discuss a more analytical approach to testing. We will see several classical tests, such as the binomial test and the t-test. These tests often make stronger assumptions about the underlying data. Thus, it is important to understand when they can and cannot be used. 
 
 In the last chapter we also touched on the topic of confidence intervals, which help us quantify the uncertainty of our estimates, and also developed an empirical way to compute them. In this chapter, we will briefly describe how to compute them analytically. 
 
 
 ## Motivation: Hypothesis testing in large datasets
 
-We have already discussed how to test specific hypotheses, for instance considering the association between a genetic marker and growth rate in the yeast dataset (See Chapter @sec-resampling-chp). However, in the era of big data, we often do not restrict ourselves to testing just one single hypothesis. Molecular biologists can nowadays measure RNA abundance of all genes of a cell population. So what if we test the association of the RNA abundance of all ~8,000 yeast genes with every single genetic markers? For 1,000 genetic markers, this means we will have to do more than 8 million tests! 
+We have already discussed how to test specific hypotheses, for instance considering the association between a genetic marker and growth rate in the yeast dataset (See @sec-resampling-chp). However, in the era of big data, we often do not restrict ourselves to testing just one single hypothesis. Molecular biologists can nowadays measure RNA abundance of all genes of a cell population. So what if we test the association of the RNA abundance of all ~8,000 yeast genes with every single genetic markers? For 1,000 genetic markers, this means we will have to do more than 8 million tests! 
 
 Doing this many tests can lead to misleading results. Let us assume, for the sake of argument, that our null hypothesis is always true and there is never an association between RNA abundance and markers. If we reject this null hypothesis every time we observe $P\leq 0.05$, we will falsely reject the null hypothesis in roughly 5% of the tests we do. With 8 million tests, we will then falsely reject the null hypothesis 400,000 times.
 
 This issue is called **multiple testing** and strategies to deal with this problem will be discussed in detail in the next chapter. For now, it suffices to say that when we do many tests, we will usually require far lower $P$-values to reject the null hypothesis, to guard against the problem described above.
 
-With permutation testing, we estimated $P$-values using $P=\frac{r+1}{m+1}$, where $m$ is the number of permutations (Equation @eq-permut-p-val). It follows that, with this method, the $P$-values we can compute will never be smaller than $\frac{1}{m+1}$. If we now say that we will only reject the null hypothesis if, for example, $P\leq 0.001$, then we will need at least $m=1,000$ permutations, otherwise our test simply cannot reject the null hypothesis, regardless of the true associations in the data. Since we are doing 8 million tests, this means we will end up doing more than 8 billion permutations. Hence, permutation testing can become very costly in terms of computing power and time. We thus require more scalable ways to estimate $P$-values for large datasets. This Chapter provides methods for which $P$-values are computed from the observed test statistics directly.
+With permutation testing, we estimated $P$-values using $P=\frac{r+1}{m+1}$, where $m$ is the number of permutations (@eq-permut-p-val). It follows that, with this method, the $P$-values we can compute will never be smaller than $\frac{1}{m+1}$. If we now say that we will only reject the null hypothesis if, for example, $P\leq 0.001$, then we will need at least $m=1,000$ permutations, otherwise our test simply cannot reject the null hypothesis, regardless of the true associations in the data. Since we are doing 8 million tests, this means we will end up doing more than 8 billion permutations. Hence, permutation testing can become very costly in terms of computing power and time. We thus require more scalable ways to estimate $P$-values for large datasets. This Chapter provides methods for which $P$-values are computed from the observed test statistics directly.
 
 ## The Binomial Test: testing hypotheses for a single binary variable
 
@@ -127,7 +127,7 @@ The probability of observing $T$ heads after tossing a coin $n$ times is given b
 
 $$p(T|n, \mu) = \binom{n}{T}\mu^T(1-\mu)^{n-T}$$
 
-Hence, assuming the null distribution is true, we get that:
+Hence, assuming the null hypothesis is true, we get that:
 
 $$p(T|n, \mu=0.5) = \binom{n}{T}0.5^n$$
 
@@ -158,32 +158,31 @@ $$ {#eq-p-val-binom}
 ```{python}
 #| echo: false
 #| fig-align: center
-#| fig-cap: Two-sided $P$-value for the coin tossing example. The two-sided $P$-value equals to the sum of the probabilities (total red area) under the null hypothesis of the realizations equal or more extreme than the observed one (vertical line).
+#| fig-cap: Two-sided $P$-value for the coin tossing example. The two-sided $P$-value equals to twice the sum of the probabilities (twice the total red area) under the null hypothesis of the realizations equal or more extreme than the observed one (vertical line).
 #| label: "fig-binom-test"
 t_rnd = np.arange(n + 1)
 p_T_H0 = binom.pmf(t_rnd, n=n, p=0.5)
 
 df = pd.DataFrame({
-    't_rnd': t_rnd,
-    'p_T_H0': p_T_H0
+    "t_rnd": t_rnd,
+    "p_T_H0": p_T_H0
 })
-df['reject'] = np.where(df['t_rnd'] >= t, 'TRUE', 'FALSE')
+df["reject"] = np.where(df["t_rnd"] >= t, "TRUE", "FALSE")
 
 (
-    ggplot(df, aes(x='t_rnd', y='p_T_H0', fill='reject')) 
+    ggplot(df, aes(x="t_rnd", y="p_T_H0", fill="reject")) 
     + geom_bar(stat="identity") 
     + labs(
         x="T (Number of Successes)", 
-        y=r'$p(T \mid H_0)$' 
+        y=r"$p(T \mid H_0)$" 
     )
     + scale_x_continuous(breaks=t_rnd) 
     + scale_fill_manual(
         name="T >= T observed", 
-        values={'FALSE': 'darkgrey', 'TRUE': 'red'}
+        values={"FALSE": "darkgrey", "TRUE": "red"}
     )
-    + geom_vline(xintercept=t, linetype='dashed', size=1)
+    + geom_vline(xintercept=t, linetype="dashed", size=1)
     + mytheme
-    + theme(figure_size = (2*3, 2*2.3))
 )
 ```
 
@@ -207,14 +206,14 @@ In actual applications, we use the `scipy.stats.binomtest` function of Python. F
 
 ```{python}
 from scipy.stats import binomtest
-binomtest(t, n, p=0.5, alternative='two-sided')
+binomtest(t, n, p=0.5, alternative="two-sided")
 ```
 
 We see that the function has three parameters, which correspond to $T_{obs}$, $n$ and the $\mu$ under $H_0$ respectively (R calls the last one $p$). Additionally, we can specify whether we want a two-sided or one-sided test using the "alternative" option. The options are "two-sided", "greater" and "less".
 
 We also see that the function returns an object, which summarizes the test that was performed. If we want to just get the $P$-value, we do:
 ```{python}
-test = binomtest(t, n, p=0.5, alternative='two-sided')
+test = binomtest(t, n, p=0.5, alternative="two-sided")
 test.pvalue
 ```
 
@@ -227,12 +226,16 @@ Suppose we are trying to determine whether people who smoke are more likely to d
 
 Assume we receive the following table as a result:
 
-
 ```{python}
 #| echo: false
 cont_table = pd.DataFrame(
-    {'Severe': [10, 10], 'Mild': [20, 70]},
-        index = ['Smoker', 'Nonsmoker'])
+    {
+        "Severe": [10, 10],
+        "Mild": [20, 70]
+    },
+    index = ["Smoker", "Nonsmoker"]
+)
+
 cont_table
 ```
 
@@ -252,9 +255,9 @@ smoker = np.random.choice(["yes", "no"], size=n, replace=True)
 symptoms = np.random.choice(["severe", "mild"], size=n, replace=True)
 
 df_long = pd.DataFrame({
-    'Patient': patients,
-    'Smoker': smoker,
-    'Symptoms': symptoms
+    "Patient": patients,
+    "Smoker": smoker,
+    "Symptoms": symptoms
 })
 
 df_long.loc[n] = ["...", "...", "..."]
@@ -283,7 +286,7 @@ Note that any such permutation keeps the size of the dataset, the total number o
 
 Consequently, one cell in the 2x2 contingency table suffices to characterize the entire table because all other counts can then be derived using the margins. Therefore, we can use any cell in the table as test statistic, but we usually use $a$, i.e. the upper left corner.
 
-The good news is that the distribution of $a$ under the null hypothesis (i.e. its frequency among all possible distinct permutations) can be exactly computed. It is given by the hypergeometric distribution ^[More details at https://en.wikipedia.org/wiki/Hypergeometric_distribution]:
+The good news is that the distribution of $a$ under the null hypothesis (i.e. its frequency among all possible distinct permutations) can be exactly computed. It is given by the hypergeometric distribution ^[More details at <https://en.wikipedia.org/wiki/Hypergeometric_distribution>]:
 
 $$p(k=a|H_0) = \frac{(a+b)!(c+d)!(a+c)!(b+d)!}{a!b!c!d!n!}$$
 
@@ -302,20 +305,22 @@ There are alternatives to Fisher's exact test that do not need all margins fixed
 
 ### Fisher's exact test in Python
 
-In Python, we can perform Fisher's exact test using `fisher_exact` function from `scipy.stats`. This requires a contingency table as input. For our contingency table, we get:
+In Python, we can perform Fisher's exact test using `fisher_exact` function from `scipy.stats`. As for the binomial test, the $P$-value can be extracted with `.pvalue`. This requires a contingency table as input. For our contingency table, we get:
 ```{python}
 cont_table = pd.DataFrame(
-    {'Severe': [10, 10], 'Mild': [20, 70]},
-        index = ['Smoker', 'Nonsmoker'])
+    {
+        "Severe": [10, 10],
+        "Mild": [20, 70]
+    },
+    index = ["Smoker", "Nonsmoker"]
+)
 cont_table
 
 from scipy.stats import fisher_exact
-tst = fisher_exact(cont_table, alternative='greater')
-tst
+tst = fisher_exact(cont_table, alternative="greater")
+tst.pvalue
 ```
 The one-sided $P$-value is `{python} float(tst.pvalue)`. At the level $\alpha=0.05$, one would therefore reject the null hypothesis of independence of symptom severity and smoking status.
-
-As for the binomial test, the $P$-value can be extracted with `.pvalue`.
 
 
 ## Testing the association between one quantitative and one binary variable
@@ -327,17 +332,17 @@ We asked earlier on the yeast dataset (Section @sec-yeast-dataset) whether the g
 
 genotype = pd.read_csv("../../extdata/eqtl/genotype.txt", sep="\t")
 genotype = genotype.melt(
-    id_vars='strain', 
-    var_name='marker', 
-    value_name='genotype'
+    id_vars="strain", 
+    var_name="marker", 
+    value_name="genotype"
 )
-marker = pd.read_csv("../../extdata/eqtl/marker.txt", sep='\t')
-growth = pd.read_csv("../../extdata/eqtl/growth.txt", sep='\t')
+marker = pd.read_csv("../../extdata/eqtl/marker.txt", sep="\t")
+growth = pd.read_csv("../../extdata/eqtl/growth.txt", sep="\t")
 growth = pd.melt(
   growth,
-  id_vars='strain',
-  var_name='media',
-  value_name='growth_rate'
+  id_vars="strain",
+  var_name="media",
+  value_name="growth_rate"
 )
 ```
 
@@ -347,16 +352,23 @@ growth = pd.melt(
 #| echo: false 
 #| warning: false
 
-mk = marker.loc[(marker['chrom'] == "chr07") & (marker['start'] == 1069229)]['id'].item()
-growth_sub = growth[growth['media'] == 'YPMalt']
-genotype_sub = genotype[genotype['marker'] == mk][['strain', 'genotype']]
+mk = marker.loc[
+    (marker["chrom"] == "chr07") & (marker["start"] == 1069229),
+    "id"
+    ].item()
 
-dt = pd.merge(growth_sub, genotype_sub, on='strain')
+growth_sub = growth[growth["media"] == "YPMalt"]
+genotype_sub = genotype[genotype["marker"] == mk][["strain", "genotype"]]
+
+dt = pd.merge(growth_sub, genotype_sub, on="strain")
 
 p = (
-  ggplot(dt, aes(x='genotype', y='growth_rate'))
+  ggplot(dt, aes(x="genotype", y="growth_rate"))
   + geom_boxplot()
-  + labs(x=f"Genotype at {mk}", y="Growth rate in Maltose\n[Generations/day]")
+  + labs(
+    x=f"Genotype at {mk}",
+    y="Growth rate in Maltose\n[Generations/day]"
+    )
   + mytheme
 )
 
@@ -371,7 +383,7 @@ To develop a test, we again need a null hypothesis, a test statistic and a distr
 
 ### The t-test
 
-The first test statistic we will look at is Student's $t$, defined as:
+The first test statistic we will look at is Student"s $t$, defined as:
 $$
 \begin{aligned}
 t = c\frac{\bar x -\bar y}{s}
@@ -417,29 +429,28 @@ import plotnine as p9
 x = np.linspace(-5, 5, 200)
 nu_values = [1, 2, 5]
 pdf_data = {
-    f'ν = {nu}': t.pdf(x, df=nu) for nu in nu_values
+    f"ν = {nu}": t.pdf(x, df=nu) for nu in nu_values
 }
 # Add the standard normal distribution (ν = +∞)
-pdf_data['ν = +∞'] = norm.pdf(x)
-pdf_data['x'] = x # Add the x-axis values
+pdf_data["ν = +∞"] = norm.pdf(x)
+pdf_data["x"] = x # Add the x-axis values
 
 plot_df = pd.DataFrame(pdf_data).melt(
-    id_vars='x', 
-    var_name='ν', 
-    value_name='P(x)'
+    id_vars="x", 
+    var_name="ν", 
+    value_name="P(x)"
 )
 
 plot_student = (
-    ggplot(plot_df, aes(x='x', y='P(x)', color='ν'))
+    ggplot(plot_df, aes(x="x", y="P(x)", color="ν"))
     + geom_line(size=0.5)
-    + scale_color_manual(values=['orange', 'purple', 'skyblue', 'black'])
+    + scale_color_manual(values=["orange", "purple", "skyblue", "black"])
     + labs(
         x="x",
         y="P(x)",
         color="Degrees of\nFreedom"
     )
     + mytheme
-    + theme(figure_size = (2*4.6, 2*2.7))
 )
 plot_student
 ```
@@ -452,7 +463,7 @@ The degrees of freedom capture just this. They are equal to the number of data p
 
 Let's apply Student's t-test to yeast dataset `dt` containing growth rate for the marker of interest for both lan strain and wild isolate:
 ```{python}
-dt[['growth_rate', 'genotype']].head()
+dt[["growth_rate", "genotype"]].head()
 ```
 
 In Python we can perform a t-test using the function `ttest_ind` from `scipy.stats`, that requires two samples as an input. Function returns an object containing pvalue, test statistic and degree of freedom. 
@@ -461,14 +472,27 @@ In Python we can perform a t-test using the function `ttest_ind` from `scipy.sta
 from scipy.stats import ttest_ind
 
 test_res = ttest_ind(
-    a=dt[dt['genotype'] == 'Lab strain']['growth_rate'].values, 
-    b=dt[dt['genotype'] == 'Wild isolate']['growth_rate'].values, 
-    nan_policy = 'omit'
+    a=dt.loc[
+        dt["genotype"] == "Lab strain",
+        "growth_rate"
+        ].values, 
+    b=dt.loc[
+        dt["genotype"] == "Wild isolate",
+        "growth_rate"
+        ].values, 
+    nan_policy = "omit"
 )
-test_res
+
+## print relevant slots
+print(
+    f"Two-sample t-test\n"
+    f"t statistic = {test_res.statistic:.3f}\n"
+    f"p-value     = {test_res.pvalue:.3g}\n"
+    f"Degrees of freedom = {test_res.df:.1f}"
+)
 ```
 
-Note that the function reports the $t$-statistic and the degrees of freedom, in addition to the $p$-value. Moreover, our data contains `nan` values, so we need to tell `ttest_ind` fundtion to ignore them and not include into calculation (by setting flag `nan_policy = 'omit'`); otherwise returned values will be all `nan`s.
+Note that the function reports the $t$-statistic and the degrees of freedom, in addition to the $p$-value. Moreover, our data contains `nan` values, so we need to tell `ttest_ind` fundtion to ignore them and not include into calculation (by setting flag `nan_policy = "omit"`); otherwise returned values will be all `nan`s.
 
 ## Unequal variance (Welch's test) in Python
 
@@ -477,12 +501,19 @@ Note that the function reports the $t$-statistic and the degrees of freedom, in 
 * By defualt `ttest_ind` assumes equal variances and runs classiclat $t$-test. To run Welch's test in Python we can use `ttest_ind` with parameter `equal_var=False`: 
 ```{python}
 test_res = ttest_ind(
-    a=dt[dt['genotype'] == 'Lab strain']['growth_rate'].values, 
-    b=dt[dt['genotype'] == 'Wild isolate']['growth_rate'].values, 
+    a=dt[dt["genotype"] == "Lab strain"]["growth_rate"].values, 
+    b=dt[dt["genotype"] == "Wild isolate"]["growth_rate"].values, 
     equal_var=False, 
-    nan_policy = 'omit'
+    nan_policy = "omit"
 )
-test_res.pvalue
+
+## print relevant slots
+print(
+    f"Two-sample Welch's test\n"
+    f"t statistic = {test_res.statistic:.3f}\n"
+    f"p-value     = {test_res.pvalue:.3g}\n"
+    f"Degrees of freedom = {test_res.df:.1f}"
+)
 ```
 
 ### Wilcoxon rank-sum test: An alternative to the t-test for non-Gaussian data
@@ -524,7 +555,7 @@ The Mann-Whitney U statistic is defined as:
 
 $$U= \min\{U_x, U_y\}$$
 
-$P$-values are then based on the distribution of Mann-Whitney U statistic under the null hypothesis. It combines tabulated values for small sample sizes and Central Limit Theorem approximation for large sample sizes (exploiting that the expectation and the variance of $U$ under the null can be analytically derived ^[https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test].)
+$P$-values are then based on the distribution of Mann-Whitney U statistic under the null hypothesis. It combines tabulated values for small sample sizes and Central Limit Theorem approximation for large sample sizes (exploiting that the expectation and the variance of $U$ under the null can be analytically derived ^[<https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test>].)
 
 
 #### Wilcoxon rank-sum test in Python
@@ -532,16 +563,29 @@ $P$-values are then based on the distribution of Mann-Whitney U statistic under 
 In Python we can perform the Wilcoxon rank-sum test using the `mannwhitneyu` function from `scipy.stats` package, whose usage is analogous to the usage of `ttest_ind`:
 ```{python}
 from scipy.stats import mannwhitneyu
-mannwhitneyu(
-    x=dt[dt['genotype'] == 'Lab strain']['growth_rate'].values, 
-    y=dt[dt['genotype'] == 'Wild isolate']['growth_rate'].values, 
-    alternative='two-sided',
-    nan_policy = 'omit' 
-).pvalue
+
+test_res = mannwhitneyu(
+    x=dt.loc[
+        dt["genotype"] == "Lab strain",
+        "growth_rate"
+        ].values, 
+    y=dt.loc[
+        dt["genotype"] == "Wild isolate",
+        "growth_rate"
+        ].values, 
+    alternative="two-sided",
+    nan_policy = "omit" 
+)
+
+## print relevant slots
+print(
+    f"Wilcoxon's rank-sum test (a.k.a. Mann-Withney)\n"
+    f"p-value     = {test_res.pvalue:.3g}"
+)
+
 ```
 
 ### Why bother with the Wilcoxon rank-sum test?{#sec-why-bother-wilcox}
-<!-- New section! -->
 
 The Wilcoxon rank-sum test makes less assumptions than the $t$-test, specifically because it does not require that the data follows a Gaussian distribution. We will now see an example to illustrate this.
 
@@ -555,19 +599,24 @@ x2_base = np.random.normal(loc=5, scale=1, size=99)
 x2 = np.append(x2_base, 500)
 
 grp_tbl = pd.DataFrame({
-    'group': np.repeat(['group1', 'group2'], 100),
-    'x': np.concatenate([x1, x2])
+    "group": np.repeat(["group1", "group2"], 100),
+    "x": np.concatenate([x1, x2])
 })
 
+# Log transform the X-axis
+# to handle the wide range due to the outlier
+
 (
-    ggplot(grp_tbl, aes(x='group', y='x', color = 'group'))
+    ggplot(grp_tbl, aes(x="group", y="x", color="group"))
     + geom_boxplot()
     + coord_flip()
-    + scale_y_log10() # Log transform the X-axis to handle the wide range due to the outlier
+    + scale_y_log10(
+        breaks=10 ** np.arange(-1, 3, dtype=float)
+    )
     + mytheme
-    + theme(figure_size = (7, 4))
-    + labs(y="Group", x="Value (Log Scale)") # Add clear labels
+    + labs(y="Group", x="Value (log scale)")
 )
+
 ```
 
 In this example, the groups are sampled from normal distributions with a different mean. However, we add a non-normal outlier to the second group, which ensures that the overall mean looks the same.
@@ -581,7 +630,7 @@ ttest_ind(x1, x2, equal_var=False).pvalue
 But clearly, these groups are overall quite different, and their means only appear similar due to this one outlier. The null hypothesis of the Wilcoxon rank-sum test is not about the means. Instead, the Wilcoxon rank-sum test uses the rank distribution, and in our example most observations of the second group will rank above the observations of the first. The one outlier will not affect the ranking much. Thus, the Wilcoxon rank-sum test will reject here:
 
 ```{python}
-mannwhitneyu(x1, x2, alternative='two-sided').pvalue
+mannwhitneyu(x1, x2, alternative="two-sided").pvalue
 ```
 
 This is a rather synthetic example, but the underlying point is very general: if we are unsure whether the distributional assumption is met, a test like the Wilcoxon rank-sum test will generally be more robust than a test making distributional assumptions like the $t$-test. But do note that there is a flip side to this: if the data is indeed Gaussian, then the t-test will be more powerful (i.e. more sensitive in detecting violations of the null hypothesis) than the more generally applicable Wilcoxon rank-sum test.
@@ -590,17 +639,24 @@ This is a rather synthetic example, but the underlying point is very general: if
 
 The last scenario we will consider in this chapter concerns the dependence between two quantitative variables. That is, we assume we have quantitative data in the form of tuples $(X,Y)$ : $(x_1,y_1),...,(x_n,y_n)$ and we want to see if knowing one of the values in such a tuple gives us information about the other one.
 
-As a visual example, we consider a synthetic dataset, namely Anscombe's first dataset^[https://en.wikipedia.org/wiki/Anscombe%27s_quartet]: 
+As a visual example, we consider a synthetic dataset, namely Anscombe's first dataset^[<https://en.wikipedia.org/wiki/Anscombe%27s_quartet>]: 
 
 ```{python}
 #| echo: false
 #| fig-align: center
-anscombe_df = sns.load_dataset('anscombe')
-anscombe_df = anscombe_df[anscombe_df.dataset == 'I']
-(ggplot(anscombe_df, aes('x', 'y')) + 
-geom_point(size=3) + theme(text=element_text()) + 
-labs(x= "X", y="Y") +
-  mytheme+ theme(figure_size = (7, 4)))
+anscombe_df = sns.load_dataset("anscombe")
+anscombe_df = anscombe_df[anscombe_df.dataset == "I"]
+
+(
+    ggplot(
+        anscombe_df,
+        aes("x", "y")
+    )
+    + geom_point(size=3)
+    + labs(x= "X", y="Y")
+    + mytheme
+    + theme(text=element_text())
+)
 ```
 
 Looking at the plot above, it sure seems that there is a positive relationship between $X$ and $Y$ in this data. Specifically, if we know that $x_i$ is relatively high, it seems that we can usually assume that $y_i$ will be high too (and vice-versa). But once again, we need a test to prevent us from being fooled by randomness.
@@ -611,7 +667,7 @@ We will consider two different tests which are based on different notions of the
 
 ### The Pearson correlation test
 
-An important property is that when two variables (X,Y) form a bivariate Gaussian distribution ^[https://en.wikipedia.org/wiki/Multivariate_normal_distribution], their independence is equivalent to their population Pearson correlation coefficient $\rho_{X,Y}$ equals 0 (See  @sec-appendix-probabilities). This motivates for a Hypothesis test, called the Pearson correlation coefficient test.
+An important property is that when two variables (X,Y) form a bivariate Gaussian distribution ^[<https://en.wikipedia.org/wiki/Multivariate_normal_distribution>], their independence is equivalent to their population Pearson correlation coefficient $\rho_{X,Y}$ equals 0 (See  @sec-appendix-probabilities). This motivates for a Hypothesis test, called the Pearson correlation coefficient test.
 
 #### Pearson's correlation coefficient {#pearson-cor}
 The Pearson correlation coefficient test is based on the sample estimate of the population Pearson correlation coefficient, defined as:
@@ -651,7 +707,7 @@ In Python one can run Pearson test using `pearsonr` function from `scipy.stats` 
 
 ```{python}
 from scipy.stats import pearsonr
-pearsonr(anscombe_df['x'], anscombe_df['y'])
+pearsonr(anscombe_df["x"], anscombe_df["y"])
 ```
 
 ### The Spearman rank correlation test
@@ -664,16 +720,20 @@ Pearson's correlation captures linear relationship between variables, which is q
 #| fig-align: center
 x_vec = np.arange(-1.55, 1.55 + 0.05, 0.05)
 tan_x = np.tan(x_vec)
-dt_tan = pd.DataFrame({'x': x_vec, 'tan_x': tan_x})
+dt_tan = pd.DataFrame({"x": x_vec, "tan_x": tan_x})
 
-(ggplot(dt_tan, aes(x='x', y='tan_x')) + geom_point() + mytheme + theme(figure_size = (7, 4)))
+(
+    ggplot(dt_tan, aes(x="x", y="tan_x"))
+    + geom_point()
+    + mytheme
+)
 ```
 
 
-These two constructed variables relate exactly to each other by a monotonic relationship (the tangent function) ^[In some cases, we may also be interested in non-monotonic data (e.g. a U-shaped relationship). In this case, both Pearson and Spearman correlations will fail and we have to use more complex measures, such as the distance correlation (https://en.wikipedia.org/wiki/Distance_correlation) or an information-theoretic measure such as mutual information.]. However their Pearson correlation is modest:
+These two constructed variables relate exactly to each other by a monotonic relationship (the tangent function) ^[In some cases, we may also be interested in non-monotonic data (e.g. a U-shaped relationship). In this case, both Pearson and Spearman correlations will fail and we have to use more complex measures, such as the distance correlation (<https://en.wikipedia.org/wiki/Distance_correlation>) or an information-theoretic measure such as mutual information.]. However their Pearson correlation is modest:
 
 ```{python}
-pearsonr(dt_tan['x'], dt_tan['tan_x']).statistic
+pearsonr(dt_tan["x"], dt_tan["tan_x"]).statistic
 ```
 
 Conversely Pearson' correlation can be excessively large in presence of outliers. Anscombe's quartet provides an example:
@@ -681,17 +741,20 @@ Conversely Pearson' correlation can be excessively large in presence of outliers
 ```{python}
 #| echo: false
 #| fig-align: center
-anscombe_df = sns.load_dataset('anscombe')
-anscombe_df4 = anscombe_df[anscombe_df.dataset == 'IV']
+anscombe_df = sns.load_dataset("anscombe")
+anscombe_df4 = anscombe_df[anscombe_df.dataset == "IV"]
 
-(ggplot(anscombe_df4, aes('x', 'y')) + 
-geom_point(size=3) + theme(text=element_text()) + 
-labs(x= "X", y="Y") +
-  mytheme+ theme(figure_size = (7, 4)))
+(
+    ggplot(anscombe_df4, aes("x", "y"))
+    + geom_point(size=3)
+    + labs(x= "X", y="Y")
+    + mytheme
+    + theme(text=element_text())
+)
 ```
 
 ```{python}
-pearsonr(anscombe_df4['x'], anscombe_df4['y']).pvalue
+pearsonr(anscombe_df4["x"], anscombe_df4["y"]).pvalue
 ```
 
 We see there is a high Pearson correlation between $X$ and $Y$. Furthermore, if we use a significance level $\alpha = 0.05$, we reject the null hypothesis that $H_0:r=0$ and conclude there is a statistically significant association between $X$ and $Y$. The plot however tells us this is driven by a single outlier ^[always give a plot along with your stats!]. The data is probably not Gaussian.
@@ -720,14 +783,14 @@ In Python we can compute it using:
 
 ```{python}
 #| echo: true
-anscombe_df['x'].rank().corr(anscombe_df['y'].rank(), method='pearson')
+anscombe_df["x"].rank().corr(anscombe_df["y"].rank(), method="pearson")
 ```
 
 Or more directly, by specifying method="spearman".
 
 ```{python}
 #| echo: true
-anscombe_df['x'].corr(anscombe_df['y'], method='spearman')
+anscombe_df["x"].corr(anscombe_df["y"], method="spearman")
 ```
 
 
@@ -744,7 +807,7 @@ In Python you can use function `spearmanr` (analogous to `pearsonr`). Applied to
 
 ```{python}
 from scipy.stats import spearmanr
-spearmanr(dt_tan['x'], dt_tan['tan_x'])
+spearmanr(dt_tan["x"], dt_tan["tan_x"])
 ```
 
 We see that the Spearman test would not reject, which makes sense, as the rank is less likely to be mislead by the outlier data point. ^[This being said, the test rightfully warns of the large number of ties, so in this case the Spearman $P$-value may not be the last word on the matter either. With data like this, we should always take a step back and think carefully whether it can really answer the questions we are trying to ask of it.] Generally, the Spearman test is less powerful than Pearson when the data is actually Gaussian, but it is more robust to outliers and captures monotonic, yet non-linear, relationships. In practice, the Spearman test is often used.
@@ -815,7 +878,7 @@ The Central Limit Theorem implies that the sample mean distributes for large $N$
 $$
 p( \bar X ) = N (\mu, \operatorname{Var}(X)/N)
 $$
-It is known that $\operatorname{Var}(X_i) = \mu(1-\mu)$ (this is because the underlying data is bernoulli).
+It is known that $\operatorname{Var}(X_i) = \mu(1-\mu)$ (this is because the underlying data is Bernoulli).
 
 Hence,
 $$
@@ -849,7 +912,7 @@ z = norm.ppf(0.995)
 z
 ```
 
-will achieve this because by definition `cdf(ppf(0.995))` is 0.995 and by symmetry `ppf(1-cdf(0.995))` is 1 - 0.995.  As a consequence, we have that:
+will achieve this because by definition `cdf(ppf(0.995))` is 0.995 and by symmetry of the normal distibution `cdf(-ppf(0.995))` is 1 - 0.995.  As a consequence, we have that:
 
 
 ```{python}
@@ -956,4 +1019,4 @@ In applications, always report:
 The Testing Chapter of Modern Statistics for Modern Biology, by Holmes and Huber.
 
 An online version is available at:
-https://www.huber.embl.de/msmb/
+<https://www.huber.embl.de/msmb/>

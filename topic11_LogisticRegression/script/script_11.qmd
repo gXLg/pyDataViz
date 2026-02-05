@@ -79,17 +79,30 @@ lm_fit0 = smf.ols("y ~ height", data=heights).fit()
 Looking at the figure, we realize that linear regression is not appropriate for this classification task. While $y$ is only defined for the two classes 0 and 1, the regression line does not make that assumption.
 
 We need to step back and consider a different modeling approach for categorical responses.
-Instead of modeling the response category directly, we could model the proportion of males per height. The following code does exactly this using 2-cm bins to stratify height:
+Instead of modeling the response category directly, we could model the proportion of males per height. The following code does exactly fdfdfthis using 2-cm bins to stratify height:
 
 ```{python}
-bin_edges = np.arange(heights["height"].min() - 1, heights["height"].max() + 2, 2)
+bin_edges = np.arange(
+  heights["height"].min() - 1,
+  heights["height"].max() + 2,
+  2
+)
+
 heights["height_bins"] = pd.cut(
     heights["height"],
     bins=bin_edges,
     include_lowest=True,
 )
-heights["mean_height_bins"] = heights.groupby("height_bins")["height"].transform("mean")
-heights["prop"] = heights.groupby("height_bins")["y"].transform("mean")
+heights["mean_height_bins"] = (
+  heights
+  .groupby("height_bins")["height"]
+  .transform("mean")
+)
+heights["prop"] = (
+  heights
+  .groupby("height_bins")["y"]
+  .transform("mean")
+)
 
 props = (
     heights[["height_bins", "mean_height_bins", "prop"]]
@@ -97,7 +110,9 @@ props = (
     .sort_values("mean_height_bins")
 )
 
-lm_fit = smf.ols("prop ~ mean_height_bins", data=props).fit()
+lm_fit = smf.ols(
+  "prop ~ mean_height_bins",
+  data=props).fit()
 
 (
   ggplot(props, aes("mean_height_bins", "prop"))
@@ -149,7 +164,11 @@ odds_by_bin = (
   .reset_index()
 )
 
-props = props.merge(odds_by_bin, on="height_bins", how="left")
+props = props.merge(
+  odds_by_bin,
+  on="height_bins",
+  how="left"
+)
 ```
 
 Plotting the odds in logarithmic scale suggests a linear relationship with height (@fig-odds-vs-height). 
@@ -159,18 +178,28 @@ Note that the odds are poorly estimated for high and low values of height, as th
 ```{python}
 #| label: fig-odds-vs-height
 #| fig-cap: "Odds male:female versus height (logarithmic y-scale). The grey halved dots indicate censored bins which have either 0 males or 0 females leading to infinite log-odds estimates."
-props["valid_odds"] = ~((props["odds"] == 0) |\
-  np.isinf(props["odds"]) | props["odds"].isna())
+props["valid_odds"] = (
+  ~(
+    (props["odds"] == 0)
+    | np.isinf(props["odds"])
+    | props["odds"].isna()
+  )
+)
 props_valid = props[props["valid_odds"]].copy()
 
-# Major and minor breaks on log10 scale, restricted to the plotted range [0.1, 10]
-exponents = np.arange(-1, 2, dtype=float)  # -1, 0, 1 -> 0.1, 1, 10
+# Major and minor breaks on log10 scale,
+# restricted to the plotted range [0.1, 10]
+# -1, 0, 1 -> 0.1, 1, 10
+exponents = np.arange(-1, 2, dtype=float)  
 breaks = 10.0 ** exponents
 minor_raw = (
     np.tile(np.arange(1.0, 10.0), len(exponents))
     * np.repeat(10.0 ** exponents, 9)
 )
-minor_breaks = minor_raw[(minor_raw >= 0.1) & (minor_raw <= 10)]
+minor_breaks = minor_raw[
+  (minor_raw >= 0.1)
+  & (minor_raw <= 10)
+]
 
 p_log_odds = (
   ggplot(
@@ -178,16 +207,28 @@ p_log_odds = (
       aes(
           "mean_height_bins",
           "odds",
-          color=~(~((props["odds"] == 0) | np.isinf(props["odds"]) | props["odds"].isna())),
+          color = ~(
+            ~(
+              (props["odds"] == 0)
+              | np.isinf(props["odds"])
+              | props["odds"].isna()
+              )
+          ),
       ),
   )
   + geom_point()
   + xlab("Height (cm)")
   + ylab("Male:Female")
-  + scale_y_log10(breaks=breaks, minor_breaks=minor_breaks, limits=(0.1, 10))
+  + scale_y_log10(
+    breaks=breaks,
+    minor_breaks=minor_breaks,
+    limits=(0.1, 10)
+  )
   + annotation_logticks(sides="l")
-    + scale_color_manual(values={False: "#000000", True: "#999999"})
-  + theme(legend_position="none")
+  + scale_color_manual(
+    values={False: "#000000", True: "#999999"}
+  )
+  + theme(legend_position="none", figure_size=(4, 3))
 )
 
 p_log_odds
@@ -223,6 +264,7 @@ df_sigmoid["y"] = 1 / (1 + np.exp(-df_sigmoid["z"]))
   + geom_line()
   + xlab("z")
   + ylab(r"$\sigma(z)$")
+  + theme(figure_size=(4,3))
 )
 ```
 
@@ -273,16 +315,28 @@ As for linear regression, we estimate the parameters of the model using the maxi
 
 $$
 \begin{aligned}
-\arg \max_{\boldsymbol{\beta}} \prod_i p(y_i \mid x_i, \boldsymbol{\beta}) &= \arg \max_{\boldsymbol{\beta}} \sum_i \log\bigl(B(y_i \mid 1, \mu_i(x_i, \boldsymbol{\beta}))\bigr) \\
-&= \arg \min_{\boldsymbol{\beta}} \left[ - \sum_i \left( y_i \log\bigl( \mu_i(x_i, \boldsymbol{\beta})\bigr) + (1-y_i)\log\bigl(1- \mu_i(x_i, \boldsymbol{\beta})\bigr) \right) \right]
+\ell(\boldsymbol{\beta})
+  &= \sum_i \log p(y_i \mid x_i, \boldsymbol{\beta}) \\[0.5em]
+  &= \sum_i \Bigl[
+        y_i \log \mu_i(x_i, \boldsymbol{\beta})
+        + (1 - y_i)\log\!\bigl(1 - \mu_i(x_i, \boldsymbol{\beta})\bigr)
+     \Bigr]
 \end{aligned}
 $$
 
 The term:
 $$
-- \sum_i \left( y_i \log(\mu_i) + (1-y_i)\log(1- \mu_i) \right)
+\operatorname{H}(\mathbf{y}, \boldsymbol{\mu}) = - \sum_i \left( y_i \log(\mu_i) + (1-y_i)\log(1- \mu_i) \right)
 $$
+
 is called the _cross-entropy_ between the model predictions (the predicted probabilities $\mu_i$) and the observations $y_i$.
+
+Our estimate of $\boldsymbol{\beta}$ shall maximize the likelihood, or equivalently,  minimize the cross-entropy:
+$$
+\hat{\boldsymbol{\beta}}
+  = \arg \max_{\boldsymbol{\beta}} \, \ell(\boldsymbol{\beta})
+  = \arg \min_{\boldsymbol{\beta}} \, \operatorname{H}(\mathbf{y}, \boldsymbol{\mu}(\boldsymbol{\beta}))
+$$
 
 Hence, maximum likelihood leads to a different minimization objective for classification than for linear regression. For classification, we are not minimizing the squared errors but the cross-entropy.
 
@@ -315,7 +369,11 @@ Other popular examples of GLMs include Poisson regression ^[Used for instance to
 To fit a logistic regression to our data we can use the function `glm` from `statsmodels`, which stands for generalized linear model, with a binomial family. The fitted model can be applied to data (seen or unseen) using `predict`. By default it returns the predicted probabilities on the natural scale.
 
 ```{python}
-logistic_fit = smf.glm("y ~ height", data=heights, family=sm.families.Binomial()).fit()
+logistic_fit = smf.glm(
+  "y ~ height",
+  data=heights,
+  family=sm.families.Binomial()
+).fit()
 
 heights["mu_hat"] = logistic_fit.predict(heights)
 heights.head()
@@ -352,7 +410,7 @@ We finish this section, for didactic purposes, with an overview plot (@fig-sex-f
 #| label: fig-sex-from-height-overview
 #| fig-width: 8
 #| fig-height: 14
-#| fig-cap: "Overview of predicting sex from height. From top to bottom: distribution of heights for i) males and ii) females, iii) Male to female ratio in log-scale, and iv) proportion of males (dots) along with logistic regression fit (red curve). Note that while 2-cm bins are used throughout the plot for visualization purposes, the logistic regression fit in contrast is performed on the raw data, i.e. sex (0/1) versus height."
+#| fig-cap: "Overview of predicting sex from height. From top to bottom: distribution of heights for i) males and ii) females, iii) Male to female ratio in log-scale, and iv) proportion of males (dots) along with logistic regression fit (red curve). Note that while 2-cm bins are used throughout the plot for visualization purposes, the logistic regression fit is performed on the raw data, i.e. sex (0/1) versus height across all data points without binning."
 p_hist_male = (
   ggplot(heights[heights["sex"] == "M"], aes("height"))
   + geom_histogram(bins=30)
@@ -379,12 +437,15 @@ p_fit_male = (
   + scale_x_continuous(limits=(150, 200))
 )
 
-p_log_odds_plot = p_log_odds + scale_x_continuous(limits=(150, 200))
+p_log_odds_plot = (
+  p_log_odds
+  + scale_x_continuous(limits=(150, 200))
+)
 
 overview = (
   p_hist_male / p_hist_female / p_log_odds_plot / p_fit_male
 ).draw(show=False)
-overview.set_size_inches(8, 10)
+overview.set_size_inches(5, 10)
 overview
 ```
 
@@ -466,14 +527,20 @@ height_p05
 An increase in 5 cm leads us to a probability of:
 
 ```{python}
-prob_5 = logistic_fit.predict(pd.DataFrame({"height": [height_p05 + 5]}))[0]
+prob_5 = logistic_fit.predict(
+  pd.DataFrame({"height": [height_p05 + 5]})
+)[0]
+
 prob_5
 ```
 
 If we increase 5 cm again, then we will have a predicted probability for male of:
 
 ```{python}
-prob_10 = logistic_fit.predict(pd.DataFrame({"height": [height_p05 + 10]}))[0]
+prob_10 = logistic_fit.predict(
+  pd.DataFrame({"height": [height_p05 + 10]})
+)[0]
+
 prob_10
 ```
 
@@ -482,27 +549,46 @@ An increase in height from `{python} f"{height_p05:.1f}"` cm to `{python} f"{hei
 
 ```{python}
 #| label: fig-log-increase
+#| echo: false
 #| fig-cap: "Estimated probability given the same 5 cm increase in height on different points of the logistic curve."
 transitions_df = pd.DataFrame(
-    {
-    "height": [height_p05, height_p05 + 5, height_p05 + 10],
-        "prob": [0.5, prob_5, prob_10],
-    }
+  {
+    "height": [
+      height_p05,
+      height_p05 + 5,
+      height_p05 + 10
+    ],
+    "prob": [0.5, prob_5, prob_10],
+  }
 )
 
 segments_df = pd.DataFrame(
-    {
-    "x": [height_p05, height_p05 + 5, height_p05 + 5, height_p05 + 10],
+  {
+    "x": [
+      height_p05,
+      height_p05 + 5,
+      height_p05 + 5,
+      height_p05 + 10
+    ],
     "y": [0.5, 0.5, prob_5, prob_5],
-    "xend": [height_p05 + 5, height_p05 + 5, height_p05 + 10, height_p05 + 10],
-        "yend": [0.5, prob_5, prob_5, prob_10],
-    }
+    "xend": [
+      height_p05 + 5,
+      height_p05 + 5,
+      height_p05 + 10,
+      height_p05 + 10
+    ],
+    "yend": [0.5, prob_5, prob_5, prob_10],
+  }
 )
 
 (
   ggplot(heights, aes("height", "mu_hat"))
   + geom_line(color="darkred")
-  + geom_point(data=transitions_df, mapping=aes("height", "prob"), color="blue")
+  + geom_point(
+    data=transitions_df,
+    mapping=aes("height", "prob"),
+    color="blue"
+  )
   + geom_segment(
       data=segments_df,
       mapping=aes(x="x", y="y", xend="xend", yend="yend"),
@@ -511,6 +597,7 @@ segments_df = pd.DataFrame(
   )
   + xlab("Height (cm)")
   + ylab("Estimated probability for male")
+  + theme(figure_size=(4,3))
 )
 ```
 
@@ -526,42 +613,60 @@ male_df = heights[heights["sex"] == "M"]
 female_df = heights[heights["sex"] == "F"]
 
 target_males = max(1, int(0.25 * len(female_df)))
-male_sample = male_df.sample(n=target_males, random_state=123)
+male_sample = male_df.sample(
+  n=target_males,
+  random_state=123
+)
 
-imbalanced_heights = pd.concat([female_df, male_sample], ignore_index=True)
+imbalanced_heights = pd.concat(
+  [female_df, male_sample],
+  ignore_index=True
+)
 imbalanced_heights["sex"].value_counts()
 ```
 
 Now let's fit a logistic regression as done previously:
 ```{python}
 logistic_fit_imbalanced = smf.glm(
-  "y ~ height", data=imbalanced_heights, family=sm.families.Binomial()
+  "y ~ height",
+  data=imbalanced_heights,
+  family=sm.families.Binomial()
 ).fit()
-print("\nCoefficients:\n", logistic_fit_imbalanced.params.round(4).to_string())
+print(
+  "\nCoefficients:\n",
+  logistic_fit_imbalanced.params.round(4).to_string()
+)
 ```
 
 Now we can plot our logistic fit to the imbalanced dataset and compare it to our previous logistic fit obtained in the balanced dataset.
 
 ```{python}
-imbalanced_heights["mu_hat"] = logistic_fit_imbalanced.predict(imbalanced_heights)
+imbalanced_heights["mu_hat"] = (
+  logistic_fit_imbalanced.predict(imbalanced_heights)
+)
+
 imbalanced_heights["dataset"] = "imbalanced"
 
 heights_balanced = heights.copy()
 heights_balanced["dataset"] = "balanced"
 
 curve_df = pd.concat(
-    [
-        heights_balanced[["height", "mu_hat", "dataset"]],
-        imbalanced_heights[["height", "mu_hat", "dataset"]],
-    ],
-    ignore_index=True,
+  [
+    heights_balanced[["height", "mu_hat", "dataset"]],
+    imbalanced_heights[["height", "mu_hat", "dataset"]],
+  ],
+  ignore_index=True,
 ).sort_values(["dataset", "height"])
 
 (
-  ggplot(curve_df, aes("height", "mu_hat", color="dataset"))
+  ggplot(
+    curve_df,
+    aes("height", "mu_hat", color="dataset")
+  )
   + geom_line()
   + xlab("Height (cm)")
   + ylab("Predicted probability")
+  + theme(figure_size=(4,3))
 )
 ```
 
@@ -569,27 +674,31 @@ The logistic fit on the imbalanced dataset looks different. In particular, the c
 Let's look at the logit of the predicted response and compare it to the previous balanced dataset.
 
 ```{python}
-heights_balanced["logistic_logit"] = logistic_fit.predict(
-  heights_balanced, linear=True
+heights_balanced["logistic_logit"] = (
+  logistic_fit.predict(heights_balanced, linear=True)
 )
 
-imbalanced_heights["logistic_logit"] = logistic_fit_imbalanced.predict(
-  imbalanced_heights, linear=True
+imbalanced_heights["logistic_logit"] = (
+  logistic_fit_imbalanced.predict(imbalanced_heights, linear=True)
 )
 
 logit_df = pd.concat(
-    [
-        heights_balanced[["height", "logistic_logit", "dataset"]],
-        imbalanced_heights[["height", "logistic_logit", "dataset"]],
-    ],
-    ignore_index=True,
+  [
+    heights_balanced[["height", "logistic_logit", "dataset"]],
+    imbalanced_heights[["height", "logistic_logit", "dataset"]],
+  ],
+  ignore_index=True,
 ).sort_values(["dataset", "height"])
 
 (
-  ggplot(logit_df, aes("height", "logistic_logit", color="dataset"))
+  ggplot(
+    logit_df,
+    aes("height", "logistic_logit", color="dataset")
+  )
   + geom_line()
   + xlab("Height (cm)")
   + ylab("Predicted log odds (logit)")
+  + theme(figure_size=(4,3))
 )
 ```
 
@@ -641,10 +750,15 @@ We can use multiple logistic regression to predict the student's sex given the h
 
 ```{python}
 multi_logistic_fit = smf.glm(
-  "y ~ height + mother + father", data=heights, family=sm.families.Binomial()
+  "y ~ height + mother + father",
+  data=heights,
+  family=sm.families.Binomial()
 ).fit()
 
-print("\nCoefficients:\n", multi_logistic_fit.params.round(4).to_string())
+print(
+  "\nCoefficients:\n",
+  multi_logistic_fit.params.round(4).to_string()
+)
 ```
 
 Similarly to the previous univariate logistic fit, an increase in the student's height increases the odds for male. Furthermore, this model gives negative coefficients to the height of the mother and of the father. This makes sense: the taller either parent, the taller the children. It is therefore more likely that a tall person is a female, if the parents are tall.  
@@ -663,7 +777,10 @@ If $\mu>0.5$ (or equivalently $\eta>0$), predict class 1, else predict class 0.
 Let's follow this rule for the previous multiple logistic regression and inspect the predictions of the classes male (0) and female (1) by computing a contingency table between the predicted and true classes:
 
 ```{python}
-heights["y_multi_pred"] = (multi_logistic_fit.predict(heights) >= 0.5).astype(int)
+heights["y_multi_pred"] = (
+  (multi_logistic_fit.predict(heights) >= 0.5).astype(int)
+)
+
 pd.crosstab(heights["y"], heights["y_multi_pred"])
 ```
 
@@ -758,7 +875,9 @@ for label, scores in [
   ("Random", heights["random_scores"])]:
     fpr, tpr, _ = roc_curve(heights["y"], scores)
     roc_rows.append(
-        pd.DataFrame({"fpr": fpr, "tpr": tpr, "model": label})
+        pd.DataFrame(
+          {"fpr": fpr, "tpr": tpr, "model": label}
+        )
     )
 
 roc_df = pd.concat(roc_rows, ignore_index=True)
@@ -767,7 +886,10 @@ ggroc = (
   ggplot(roc_df, aes("fpr", "tpr", color="model"))
   + geom_line()
   + geom_abline(intercept=0, slope=1, linetype="dashed")
-  + labs(x="False positive rate", y="True positive rate")
+  + labs(
+    x="False positive rate",
+    y="True positive rate"
+  )
   + theme(figure_size=(5, 3.5))
 )
 ggroc
@@ -778,16 +900,23 @@ A random classifier has a ROC curve which always approximates a diagonal, such c
 Now let's compare the ROC curve on the univariate logistic regression against the one on the multiple logistic regression:
 
 ```{python}
-heights["multi_logistic_mu_hat"] = multi_logistic_fit.predict(heights)
-
+heights["multi_logistic_mu_hat"] = (
+  multi_logistic_fit.predict(heights)
+)
 roc_rows = []
 for label, scores in [
   ("Univariate", heights["mu_hat"]),
   ("Multivariate", heights["multi_logistic_mu_hat"]),
 ]:
-  # Drop any rows with missing scores to avoid NaNs in ROC computation
+  # Drop rows with missing scores
+  # to avoid NaNs in ROC computation
+  # this is due to some individuals w/o
+  # parent height values 
   mask = scores.notna()
-  fpr, tpr, _ = roc_curve(heights.loc[mask, "y"], scores[mask])
+  fpr, tpr, _ = roc_curve(
+    heights.loc[mask, "y"],
+    scores[mask]
+  )
   roc_rows.append(
     pd.DataFrame({"fpr": fpr, "tpr": tpr, "model": label})
   )
@@ -795,7 +924,10 @@ for label, scores in [
 roc_df_multi = pd.concat(roc_rows, ignore_index=True)
 
 ggroc = (
-  ggplot(roc_df_multi, aes("fpr", "tpr", color="model"))
+  ggplot(
+    roc_df_multi,
+    aes("fpr", "tpr", color="model")
+  )
   + geom_line()
   + geom_abline(intercept=0, slope=1, linetype="dashed")
   + labs(x="False positive rate", y="True positive rate")
@@ -810,9 +942,12 @@ Classification performance can also be measured by the AUC (area under the ROC c
 ```{python}
 auc_uni = roc_auc_score(heights["y"], heights["mu_hat"])
 mask_multi = heights["multi_logistic_mu_hat"].notna()
+
 auc_multi = roc_auc_score(
-  heights.loc[mask_multi, "y"], heights.loc[mask_multi, "multi_logistic_mu_hat"]
+  heights.loc[mask_multi, "y"],
+  heights.loc[mask_multi, "multi_logistic_mu_hat"]
 )
+
 auc_uni, auc_multi
 ```
 
@@ -823,16 +958,32 @@ The AUC for the multiple logistic regression is ~`{python} f"{auc_multi:.3f}"`, 
 
 Let's compute the ROC curve and its AUC on the logistic regression on the imbalanced dataset.
 ```{python}
-imbalanced_heights["mu_hat"] = logistic_fit_imbalanced.predict(imbalanced_heights)
-fpr_imb, tpr_imb, _ = roc_curve(imbalanced_heights["y"], imbalanced_heights["mu_hat"])
-auc_imb = roc_auc_score(imbalanced_heights["y"], imbalanced_heights["mu_hat"])
+imbalanced_heights["mu_hat"] = (
+  logistic_fit_imbalanced.predict(imbalanced_heights)
+)
 
-roc_imb_df = pd.DataFrame({"fpr": fpr_imb, "tpr": tpr_imb})
+fpr_imb, tpr_imb, _ = roc_curve(
+  imbalanced_heights["y"],
+  imbalanced_heights["mu_hat"]
+)
+auc_imb = roc_auc_score(
+  imbalanced_heights["y"],
+  imbalanced_heights["mu_hat"]
+)
+
+roc_imb_df = pd.DataFrame(
+  {"fpr": fpr_imb, "tpr": tpr_imb}
+)
 
 (
   ggplot(roc_imb_df, aes("fpr", "tpr"))
   + geom_line(color="darkred")
-  + geom_abline(intercept=0, slope=1, linetype="dashed", color="grey")
+  + geom_abline(
+    intercept=0,
+    slope=1,
+    linetype="dashed",
+    color="grey"
+  )
   + labs(
       x="False positive rate",
       y="True positive rate",
@@ -845,11 +996,16 @@ From its AUC value, the performance of this model seems similar to the model on 
 Let's inspect such performances using a Precision Recall curve, which, for different cutoffs plots the precision ($\frac{T P}{T P+F P}$) against the recall ($\frac{T P}{P}$). To plot a precision recall curve we can use functions from `sklearn.metrics`.
 
 ```{python}
-precision_imb, recall_imb, _ = precision_recall_curve(
-    imbalanced_heights["y"], imbalanced_heights["mu_hat"]
+precision_imb, recall_imb, _ = (
+  precision_recall_curve(
+    imbalanced_heights["y"],
+    imbalanced_heights["mu_hat"]
+  )
 )
 
-pr_imb_df = pd.DataFrame({"precision": precision_imb, "recall": recall_imb})
+pr_imb_df = pd.DataFrame(
+  {"precision": precision_imb, "recall": recall_imb}
+)
 
 (
   ggplot(pr_imb_df, aes("recall", "precision"))
@@ -861,9 +1017,15 @@ pr_imb_df = pd.DataFrame({"precision": precision_imb, "recall": recall_imb})
 
 Now let's plot the precision recall curve of the logistic regression model on the balanced dataset:
 ```{python}
-precision_bal, recall_bal, _ = precision_recall_curve(heights["y"], heights["mu_hat"])
+precision_bal, recall_bal, _ = (
+  precision_recall_curve(heights["y"],
+  heights["mu_hat"]
+  )
+)
 
-pr_bal_df = pd.DataFrame({"precision": precision_bal, "recall": recall_bal})
+pr_bal_df = pd.DataFrame(
+  {"precision": precision_bal, "recall": recall_bal}
+)
 
 (
   ggplot(pr_bal_df, aes("recall", "precision"))
@@ -899,9 +1061,16 @@ If the model is perfectly calibrated, these points lie on the diagonal line $y=x
 In principle, calibration should be assessed on held-out data (otherwise there is a risk of overfitting, i.e., the model may look better calibrated than it really is on unseen data). We will introduce train/test splitting and out-of-sample evaluation in the next Chapter. For now, we illustrate the idea on the same data used for fitting.
 
 ```{python}
-calib_df = heights.dropna(subset=["y", "height", "mother", "father"]).copy()
+calib_df = (
+  heights
+  .dropna(
+    subset=["y", "height", "mother", "father"]
+  )
+  .copy()
+)
 
-# Fit a multivariate logistic regression (same model as above)
+# Fit a multivariate logistic regression
+#  (same model as above)
 calib_fit = smf.glm(
   "y ~ height + mother + father",
   data=calib_df,
@@ -912,7 +1081,8 @@ calib_df["p_hat"] = calib_fit.predict(calib_df)
 calib_df = calib_df.dropna(subset=["p_hat"])  # safety
 calib_df["p_hat"] = calib_df["p_hat"].clip(0.0, 1.0)
 
-# Compute calibration curve (quantile bins = similar counts per bin)
+# Compute calibration curve
+# (quantile-based bins => similar counts per bin)
 frac_pos, mean_pred = calibration_curve(
   calib_df["y"],
   calib_df["p_hat"],
@@ -920,15 +1090,29 @@ frac_pos, mean_pred = calibration_curve(
   strategy="quantile",
 )
 
-calib_curve_df = pd.DataFrame({"mean_pred": mean_pred, "frac_pos": frac_pos})
-calib_curve_df = calib_curve_df.dropna().sort_values("mean_pred")
+calib_curve_df = pd.DataFrame(
+  {"mean_pred": mean_pred, "frac_pos": frac_pos}
+)
+
+calib_curve_df = (
+  calib_curve_df.dropna()
+  .sort_values("mean_pred")
+)
 
 diag_df = pd.DataFrame({"x": [0, 1], "y": [0, 1]})
 
 p_calib = (
-  ggplot(calib_curve_df, aes("mean_pred", "frac_pos"))
+  ggplot(
+    calib_curve_df,
+    aes("mean_pred", "frac_pos")
+  )
   + geom_point(color="#1f77b4")
-  + geom_line(diag_df, aes("x", "y"), linetype="dashed", color="grey")
+  + geom_line(
+    diag_df,
+    aes("x", "y"),
+    linetype="dashed",
+    color="grey"
+  )
   + labs(
       x="Mean predicted probability",
       y="Observed fraction of positives",

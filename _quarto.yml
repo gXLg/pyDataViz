@@ -70,30 +70,30 @@ format:
 
 
 book:
-  title: "Data Analysis and Visualization in Python"
+  title: "A Practical Introduction to Data Science"
+  subtitle: "Lecture notes and worked examples in Python" 
   chapters:
     - index.qmd
     - topic00_Introduction/script/script_00.qmd
     - part: "I Get"
       chapters:
-       - topic01_Python_Basics/script/script_01.qmd
-       - topic02_Data_Wrangling/script/script_02.qmd
-       - topic03_Tidy_Data/script/script_03.qmd
+      - topic01_Python_Basics/script/script_01.qmd
+      - topic02_Data_Wrangling/script/script_02.qmd
+      - topic03_Tidy_Data/script/script_03.qmd
     - part: "II Look"
       chapters:
-       - topic04_Plotting-I/script/script_04.qmd
-       - topic05_Plotting-II/script/script_05.qmd
-       - topic06_Plotting-III/script/script_06.qmd
+      - topic04_Plotting-I/script/script_04.qmd
+      - topic05_Plotting-II/script/script_05.qmd
+      - topic06_Plotting-III/script/script_06.qmd
     - part: "III Conclude"
       chapters:
-        - topic07_Statistical-Testing-I/script/script_07.qmd
-        - topic08_Statistical-Testing-II/script/script_08.qmd
-        - topic09_Statistical-Testing-III/script/script_09.qmd
-        - topic10_LinearRegression/script/script_10.qmd
-        - topic11_LogisticRegression/script/script_11.qmd
-        - topic12_SupervisedLearning/script/script_12.qmd
+      - topic07_Statistical-Testing-I/script/script_07.qmd
+      - topic08_Statistical-Testing-II/script/script_08.qmd
+      - topic09_Statistical-Testing-III/script/script_09.qmd
+      - topic10_LinearRegression/script/script_10.qmd
+      - topic11_LogisticRegression/script/script_11.qmd
+      - topic12_SupervisedLearning/script/script_12.qmd
 
   appendices:
-    - appendix03_Plotting/script/appendix_03.qmd
-    - appendix04_Probabilities/script/appendix_04.qmd
-
+    - appendix01_Plotting/script/appendix_01.qmd
+    - appendix02_Probabilities/script/appendix_02.qmd

@@ -23,7 +23,7 @@ execute:
 
 Up to this point, we have focused on testing associations between pairs of variables. However, in data science applications, it is very common to study three or more variables jointly. 
 
-For pairs of variables, say $x$ and $y$, one variable may be considered as the explanatory variable (let us take $x$) and the other the response variable ($y$). Asking whether $y$ depends on $x$ amounts to ask whether the conditional distribution of $y$ given $x$ varies when $x$ varies. For instance, one may state that body height depends on sex by showing that the distribution of body heights is not same among males than among females. In general statistical terms, testing for independence can be expressed as the null hypothesis: 
+For pairs of variables, say $x$ and $y$, one variable may be considered as the explanatory variable (let us take $x$) and the other the response variable ($y$). Asking whether $y$ depends on $x$ amounts to ask whether the conditional distribution of $y$ given $x$ varies when $x$ varies. For instance, one may state that body height depends on sex by showing that the distribution of body heights is not the same among males than among females. In general statistical terms, testing for independence can be expressed as the null hypothesis: 
 
 $$
 H_0: p(y \mid x) = p(y)
@@ -105,9 +105,9 @@ This Chapter explains first univariate linear regression using a historical data
 
 ### Galton's height dataset
 We start with linear regression against a single variable, or univariate regression. We use the dataset from which regression was born. Francis Galton^[See the Wikipedia article on
-[Francis Galton](https://en.wikipedia.org/wiki/Francis_Galton).] studied the variation and heredity of human traits. Among many other traits, Galton collected and studied height data from families to try to understand heredity^[Galton made important contributions to statistics and genetics, but he was also one of the first proponents of eugenics, a scientifically flawed philosophical movement favored by many biologists of Galton's time but with horrific historical consequences. You can read more about it here: [https://pged.org/history-eugenics-and-genetics](https://pged.org/history-eugenics-and-genetics).]. While doing this, he developed the concepts of correlation and regression, as well as a connection to pairs of data that follow a normal distribution. A central question Galton explored was the relationship between parents’ heights and the heights of their children.
+[Francis Galton](<https://en.wikipedia.org/wiki/Francis_Galton>).] studied the variation and heredity of human traits. Among many other traits, Galton collected and studied height data from families to try to understand heredity^[Galton made important contributions to statistics and genetics, but he was also one of the first proponents of eugenics, a scientifically flawed philosophical movement favored by many biologists of Galton's time but with horrific historical consequences. You can read more about it here: [https://pged.org/history-eugenics-and-genetics](<https://pged.org/history-eugenics-and-genetics>).]. While doing this, he developed the concepts of correlation and regression, as well as a connection to pairs of data that follow a normal distribution. A central question Galton explored was the relationship between parents’ heights and the heights of their children.
 
-We have access to Galton's family height data through the __HistData__ R [dataset](https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/csv/HistData/GaltonFamilies.csv), that can be downloaded and imported to python. This data records height in inches from several dozen families: mothers, fathers, daughters, and sons.  To explain linear regression, we extract a subset of the data consisting of the heights of fathers and a randomly selected son of each family: 
+We have access to Galton's family height data through the __HistData__ R [dataset](<https://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/csv/HistData/GaltonFamilies.csv>), that can be downloaded and imported to python. This data records height in inches from several dozen families: mothers, fathers, daughters, and sons.  To explain linear regression, we extract a subset of the data consisting of the heights of fathers and a randomly selected son of each family: 
 
 
 ```{python}
@@ -117,8 +117,11 @@ import statsmodels.formula.api as smf
 import statsmodels.api as sm
 np.random.seed(1983)
 
-galton = pd.read_csv('assets/GaltonFamilies.csv', index_col=0)
-galton_male = galton[galton['gender'] == 'male']
+galton = pd.read_csv(
+  "assets/GaltonFamilies.csv",
+  index_col=0
+)
+galton_male = galton[galton["gender"] == "male"]
 
 # Randomly select one son per family
 galton_heights = (
@@ -138,7 +141,7 @@ Plotting clearly shows that the taller the father, the taller the son.
 #| fig-height: 4
 from plotnine import *
 (
-  ggplot(galton_heights, aes('father', 'son'))
+  ggplot(galton_heights, aes("father", "son"))
   + geom_point(alpha=0.5)
   + theme(figure_size=(4, 4))
 )
@@ -156,9 +159,12 @@ galton_heights["father_strata"] = (
     .astype(int)
 )
 (
-  ggplot(galton_heights, aes('factor(father_strata)', 'son'))
+  ggplot(
+    galton_heights,
+    aes("factor(father_strata)", "son")
+  )
   + geom_boxplot()
-  + geom_jitter(color='black', alpha=0.5, width=0.1)
+  + geom_jitter(color="black", alpha=0.5, width=0.1)
   + theme(figure_size=(4, 4))
 )
 ```
@@ -186,13 +192,16 @@ Furthermore, these centers appear to follow a linear relationship. Below we plot
 #| label: fig-mean-son-vs-father
 #| fig-cap: Average son heights by strata of the father heights
 means = galton_heights.copy()
-means['father'] = means['father'].round()
+means["father"] = means["father"].round()
 son_conditional_avg = means.groupby(
-  'father', as_index=False)['son'].mean()
+  "father",
+  as_index=False
+)["son"].mean()
+
 (
-  ggplot(son_conditional_avg, aes('father', 'son'))
+  ggplot(son_conditional_avg, aes("father", "son"))
   + geom_point()
-  + labs(x='father', y='son_conditional_avg')
+  + labs(x="father", y="son_conditional_avg")
   + theme(figure_size=(3, 3))
 )
 ```
@@ -304,7 +313,12 @@ for xi, yt, yi in zip(x, y_true, y):
   )
 
 ax.text(x[2], y[2], r"$(x_i, y_i)$", ha="right", va="top")
-ax.text(x[2] - 1.1, y_true[2] + 0.2, r"$(x_i, E(y_i))$", color=expectation_color)
+ax.text(
+  x[2] - 1.1,
+  y_true[2] + 0.2,
+  r"$(x_i, E(y_i))$",
+  color=expectation_color
+)
 ax.text(3.2, (y[2] + y_true[2]) / 2, r"$\epsilon_i$", color=expectation_color)
 
 ax.text(
@@ -370,8 +384,17 @@ Minimizing the squared errors for a linear model can be solved analytically, see
  (see Appendix \@ref(appendix-lin-reg)) -->
 
 $$
-\hat y= \hat \beta_0 + \hat \beta_1x \mbox{ with slope } \hat \beta_1 = \rho \frac{\sigma_y}{\sigma_x} \mbox{ and intercept } \hat \beta_0=\mu_y - \hat \beta_1 \mu_x
-$$ {#eq-coef-univariate}
+\begin{aligned}
+\hat y
+  &= \hat \beta_0 + \hat \beta_1 x, \\[0.5em]
+\text{with}\quad
+\text{intercept: }\hat \beta_0
+  &= \mu_y - \hat \beta_1 \mu_x \\
+\text{slope: }\hat \beta_1
+  &= \rho \frac{\sigma_y}{\sigma_x},
+\end{aligned}
+$$
+{#eq-coef-univariate}
 
   
 where:
@@ -390,7 +413,7 @@ If there is perfect correlation, the regression line predicts an increase in the
 In Python, we can obtain the least squares estimates using the `smf.ols` function:
 
 ```{python}
-model = smf.ols('son ~ father', data=galton_heights).fit()
+model = smf.ols("son ~ father", data=galton_heights).fit()
 model.params
 ```
 
@@ -400,9 +423,9 @@ Here we add the regression line using `geom_smooth(method="lm")`, which in Pytho
   
 ```{python}
 (
-  ggplot(galton_heights, aes('father', 'son'))
+  ggplot(galton_heights, aes("father", "son"))
   + geom_point(alpha=0.5)
-  + geom_smooth(method='lm')
+  + geom_smooth(method="lm")
   + theme(figure_size=(3, 3))
 )
 ```
@@ -411,10 +434,10 @@ In our example, the correlation between sons' and fathers' heights is about 0.5.
 Our predicted value for the son's height
 $y =$ `{python} f"{conditional_avg:.2f}"`
 for a 72-inch father was only
-`{python} f"{(conditional_avg - galton_heights['son'].mean()) / galton_heights['son'].std():.2f}"`
+`{python} f"{(conditional_avg - galton_heights["son"].mean()) / galton_heights["son"].std():.2f}"`
 standard deviations larger than the average son, in contrast to the father's height,
 which was
-`{python} f"{(72 - galton_heights['father'].mean()) / galton_heights['father'].std():.2f}"`
+`{python} f"{(72 - galton_heights["father"].mean()) / galton_heights["father"].std():.2f}"`
 standard deviations above average.
 
 This is why we call it _regression_: the son regresses to the average height.
@@ -425,7 +448,7 @@ _Regression toward mediocrity in hereditary stature_.
 It is a fact that children of extremely tall parents are taller than average, yet typically shorter than their parents. You can appreciate it on @fig-mean-son-vs-father. Extremely tall parents have an extreme combinations of alleles, and have also benefited from environmental factors by chance, which may not repeat in the next generation. The same phenomenon, called _regression toward the mean_, happens in sport. Athletes who perform extremely well one year are certainly good (high expectation) but have also probably been lucky (a positive error) so they are more likely to perform relatively worse the next year, etc. This phenomenon is ubiquitous and can lead to fallacies.^[
 See the bestseller *Thinking, Fast and Slow* by Nobel prize–winning psychologist
 Daniel Kahneman (thank you, Lisa!), or the Wikipedia article on
-[regression toward the mean](https://en.wikipedia.org/wiki/Regression_toward_the_mean).
+[regression toward the mean](<https://en.wikipedia.org/wiki/Regression_toward_the_mean>).
 ]
 
 
@@ -441,19 +464,20 @@ Keep in mind that the prediction $\hat{y}$ is also a random variable. The standa
 
 ```{python}
 (
-  ggplot(galton_heights, aes('son', 'father'))
+  ggplot(galton_heights, aes("son", "father"))
   + geom_point()
-  + geom_smooth(method='lm')
+  + geom_smooth(method="lm")
   + theme(figure_size=(3, 3))
 )
 ```
 
-The Python method `get_prediction` of an `smf.ols` object takes the data as input and returns the prediction. If requested, the standard errors and other information from which we can construct confidence intervals are provided:
-
+The Python method `get_prediction` of an `smf.ols` object takes the data as input and returns the prediction. The `summary_frame()` allows extracting the predictions $\hat{y}$ (column `mean`), their standard errors as `mean_se`, and the lower and upper bounds of their 95% confidence intervals as  `mean_ci_lower` and  `mean_ci_upper`:
 
 ```{python}
 y_hat = model.get_prediction(galton_heights)
-y_hat.summary_frame().columns
+y_hat.summary_frame()[
+  ["mean", "mean_se", "mean_ci_lower", "mean_ci_upper"]
+].round(2)
 ```
 
 
@@ -492,24 +516,24 @@ The $R^2$ is usually best combined with a scatter plot of $y$ against $\hat{y}$.
 
 
 ```{python}
-model = smf.ols('son ~ father', data=galton_heights).fit()
+model = smf.ols("son ~ father", data=galton_heights).fit()
 pred = model.predict(galton_heights)
 r2 = model.rsquared
 
 df_pred = galton_heights.copy()
-df_pred['pred'] = pred
+df_pred["pred"] = pred
 
 (
-  ggplot(df_pred, aes('pred', 'son'))
+  ggplot(df_pred, aes("pred", "son"))
   + geom_point()
   + geom_abline(intercept=0, slope=1)
   + annotate(
-      'text',
+      "text",
       x=67,
       y=77,
-      label=rf'$R^2 = {r2:.2f}$'
+      label=rf"$R^2 = {r2:.2f}$"
     )
-  + labs(x='Predicted height', y='height')
+  + labs(x="Predicted height", y="height")
   + theme(figure_size=(4, 4))
 )
 ```
@@ -548,25 +572,21 @@ How do we do this in Python? The `summary2().tables[1].` function helps us here.
 model.summary2().tables[1]
 ```
 
-
-
-
-
-
-
-
-
 ## Multivariate regression
 
 ```{python}
 #| include: false
 
 mysize = 9
-mytheme = (theme_bw() +
-           theme(axis_title=element_text(size=mysize),
-                 axis_text=element_text(size=mysize),
-                 legend_title=element_text(size=mysize),
-                 legend_text=element_text(size=mysize)))
+mytheme = (
+  theme_bw()
+  + theme(
+    axis_title=element_text(size=mysize),
+    axis_text=element_text(size=mysize),
+    legend_title=element_text(size=mysize),
+    legend_text=element_text(size=mysize)
+  )
+)
 
 np.random.seed(20)
 ```
@@ -591,7 +611,7 @@ When the batter hits the ball, the batter wants to pass as many _bases_ as possi
 
 ![](../../assets/img/Baseball_Diamond1.png){width=800px}
 
-(Courtesy of Cburnett^[https://en.wikipedia.org/wiki/User:Cburnett]. CC BY-SA 3.0 license^[https://creativecommons.org/licenses/by-sa/3.0/deed.en].)
+(Courtesy of Cburnett^[<https://en.wikipedia.org/wiki/User:Cburnett>]. CC BY-SA 3.0 license^[<https://creativecommons.org/licenses/by-sa/3.0/deed.en>].)
 <!--Source: [Wikipedia Commons](https://commons.wikimedia.org/wiki/File:Baseball_diamond_simplified.svg))-->
 
 A batter who stops at one of the intermediate three bases can resume running along the base cycle when next batters hit the ball. A batter who goes around the bases and arrives home (directly or indirectly with stops at intermediate bases), scores a **run**. 
@@ -600,7 +620,7 @@ We want to understand what makes a team score well on average. Hence, the averag
 
 #### Home runs
 
-A **home run** happens when the batter who hits the ball goes all the way home (see [this video](https://youtu.be/AJ7kLlwKDJI?t=35)). This happens when the ball is hit very far, giving time for the batter to perform the full run. It is very good for the score because not only the batter scores a run, but the other players of the same team who are already on the pitch standing at intermediate bases typically finish their runs too.  
+A **home run** happens when the batter who hits the ball goes all the way home (see [this video](<https://youtu.be/AJ7kLlwKDJI?t=35>)). This happens when the ball is hit very far, giving time for the batter to perform the full run. It is very good for the score because not only the batter scores a run, but the other players of the same team who are already on the pitch standing at intermediate bases typically finish their runs too.  
 
 Not surprisingly, average home runs positively correlate with average runs:
 
@@ -608,20 +628,31 @@ Not surprisingly, average home runs positively correlate with average runs:
 #| fig-align: center
 teams = sm.datasets.get_rdataset("Teams", "Lahman").data
 teams_filtered = teams[teams.yearID.isin(range(1961, 2001))]
-teams_filtered['HR_per_game'] = teams_filtered['HR'] / teams_filtered['G']
-teams_filtered['R_per_game'] = teams_filtered['R'] / teams_filtered['G']
-(ggplot(teams_filtered, aes('HR_per_game', 'R_per_game'))
-+ geom_point(alpha = 0.4)
-+ geom_smooth(method = 'lm', color = 'blue')
-+ mytheme
-+ theme(figure_size = (3.6, 2.6))
+teams_filtered["HR_per_game"] = ( 
+    teams_filtered["HR"] / teams_filtered["G"]
+)
+
+teams_filtered["R_per_game"] = (
+    teams_filtered["R"] / teams_filtered["G"]
+)
+
+(
+  ggplot(
+    teams_filtered,
+    aes("HR_per_game", "R_per_game")
+  ) + geom_point(alpha = 0.4)
+    + geom_smooth(method = "lm", color = "blue")
+    + mytheme
+    + theme(figure_size = (3.6, 2.6))
 )
 ```
 
 A univariate linear regression gives the following parameter estimates:
 
 ```{python}
-fitted_model = smf.ols('R_per_game ~ HR_per_game', data=teams_filtered).fit()
+fitted_model = smf.ols(
+  "R_per_game ~ HR_per_game",
+  data=teams_filtered).fit()
 print(fitted_model.params)
 ```
 So this tells us that teams that hit 1 more HR per game than the average team, score `{python} float(round(fitted_model.params[1], 3))` more runs per game than the average team. Given that the most common final score is a difference of a run, this can certainly lead to a large increase in wins. Not surprisingly, HR hitters are very expensive. Because we are working on a budget, we will need to find some other way to increase wins. So, in the next section, we move our attention to another possible predictive variable of runs.
@@ -634,12 +665,16 @@ A base on ball is not as great as a home run but it makes the batter progress by
 
 ```{python}
 #| fig-align: center
-teams_filtered['BB_per_game'] = teams_filtered['BB'] / teams_filtered['G']
-(ggplot(teams_filtered, aes('BB_per_game', 'R_per_game'))
-+ geom_point(alpha = 0.4)
-+ geom_smooth(method = 'lm', color = 'blue')
-+ mytheme
-+ theme(figure_size = (3.6, 2.6))
+teams_filtered["BB_per_game"] = (
+  teams_filtered["BB"] / teams_filtered["G"]
+)
+
+(
+  ggplot(teams_filtered, aes("BB_per_game", "R_per_game"))
+  + geom_point(alpha = 0.4)
+  + geom_smooth(method = "lm", color = "blue")
+  + mytheme
+  + theme(figure_size = (3.6, 2.6))
 )
 ```
 
@@ -648,7 +683,11 @@ Here, again we see a clear association. If we find the regression line for predi
 ```{python}
 def get_slope(x, y):
     return x.corr(y) * (y.std() / x.std())
-bb_slope = get_slope(teams_filtered['BB_per_game'], teams_filtered['R_per_game'])
+
+bb_slope = get_slope(
+  teams_filtered["BB_per_game"],
+  teams_filtered["R_per_game"]
+)
 bb_slope
 ```
 
@@ -658,11 +697,14 @@ In fact, it looks like BBs and HRs are also associated:
 
 ```{python}
 #| fig-align: center
-(ggplot(teams_filtered, aes('HR_per_game', 'BB_per_game'))
-+ geom_point(alpha = 0.4)
-+ geom_smooth(method = 'lm', color = 'blue')
-+ mytheme
-+ theme(figure_size = (3.6, 2.6))
+(
+  ggplot(
+    teams_filtered,
+    aes("HR_per_game", "BB_per_game")
+  ) + geom_point(alpha = 0.4)
+    + geom_smooth(method = "lm", color = "blue")
+    + mytheme
+    + theme(figure_size = (3.6, 2.6))
 )
 ```
 
@@ -677,20 +719,26 @@ A first approach is to keep HRs fixed at a certain value and then examine the re
 
 ```{python}
 #| echo: false
-teams_filtered['HR_strata'] = (teams_filtered['HR'] / teams_filtered['G']).round(1)
-dat = teams_filtered[(teams_filtered['HR_strata'] >= 0.4) & (teams_filtered['HR_strata'] <= 1.2)].copy()
+teams_filtered["HR_strata"] = (teams_filtered["HR"] / teams_filtered["G"]).round(1)
+dat = teams_filtered[
+  (teams_filtered["HR_strata"] >= 0.4) & (teams_filtered["HR_strata"] <= 1.2)
+  ].copy()
 ```
 
 and then make a scatterplot for each strata:
 
 ```{python}
 #| fig-align: center
-(ggplot(dat, aes('BB_per_game', 'R_per_game'))
-+ geom_point(alpha = 0.4)
-+ geom_smooth(method = 'lm', color = 'blue')
-+ facet_wrap('HR_strata')
-+ mytheme
-+ theme(figure_size = (4.8, 3.4))
+(
+  ggplot(
+    dat,
+    aes("BB_per_game", "R_per_game")
+  )
+  + geom_point(alpha = 0.4)
+  + geom_smooth(method = "lm", color = "blue")
+  + facet_wrap("HR_strata")
+  + mytheme
+  + theme(figure_size = (4.8, 3.4))
 )
 ```
 
@@ -698,9 +746,9 @@ Remember that the regression slope for predicting runs with BB was `{python} flo
 
 ```{python}
 (
-    dat.groupby('HR_strata')
-    .apply(lambda g: get_slope(g['BB_per_game'], g['R_per_game']))
-    .reset_index(name='slope')
+    dat.groupby("HR_strata")
+    .apply(lambda g: get_slope(g["BB_per_game"], g["R_per_game"]))
+    .reset_index(name="slope")
 )
 ```
 
@@ -711,25 +759,31 @@ Although our understanding of the application tells us that HR cause BB but not 
 ```{python}
 #| fig-align: center
 
-teams_filtered['BB_strata'] = (teams_filtered['BB'] / teams_filtered['G']).round(1)
-dat = teams_filtered[(teams_filtered['BB_strata'] >= 2.8) & (teams_filtered['BB_strata'] <= 3.9)].copy()
+teams_filtered["BB_strata"] = (
+  teams_filtered["BB"] / teams_filtered["G"]
+).round(1)
 
-( ggplot(dat, aes('HR_per_game', 'R_per_game')) +  
-  geom_point(alpha = 0.4) +
-  geom_smooth(method = "lm", color = 'blue') +
-  facet_wrap('BB_strata') 
+dat = teams_filtered[
+  (teams_filtered["BB_strata"] >= 2.8) & (teams_filtered["BB_strata"] <= 3.9)
+].copy()
+
+( 
+  ggplot(dat, aes("HR_per_game", "R_per_game"))
+  + geom_point(alpha = 0.4)
+  + geom_smooth(method = "lm", color = "blue")
+  + facet_wrap("BB_strata") 
   + mytheme
   + theme(figure_size = (4.8, 3.4))
-  )
+)
 ```
 
 In this case, the slopes are reduced a bit, which is consistent with the fact that BB do in fact cause some runs:
 
 ```{python}
 (
-    dat.groupby('BB_strata')
-    .apply(lambda g: get_slope(g['HR_per_game'], g['R_per_game']))
-    .reset_index(name='slope')
+    dat.groupby("BB_strata")
+    .apply(lambda g: get_slope(g["HR_per_game"], g["R_per_game"]))
+    .reset_index(name="slope")
 )
 ```
 
@@ -737,7 +791,10 @@ Compared to the original:
 
 
 ```{python}
-hr_slope = get_slope(teams_filtered['HR_per_game'], teams_filtered['R_per_game'])
+hr_slope = get_slope(
+  teams_filtered["HR_per_game"],
+  teams_filtered["R_per_game"]
+  )
 hr_slope
 ```
 
@@ -789,7 +846,10 @@ Remarkably, this holds true even if the explanatory variables are correlated (un
 To fit a multiple linear regression model in Python, we can use the same `smf.ols` function as for the simple linear regression, we only need to adapt the formula to include all predictor variables. Here is the application to fitting the average runs against the home runs and the bases on balls:
 
 ```{python}
-fitted_model = smf.ols('R_per_game ~ HR_per_game + BB_per_game', data=teams_filtered).fit()
+fitted_model = smf.ols(
+  "R_per_game ~ HR_per_game + BB_per_game",
+  data=teams_filtered).fit()
+
 print(fitted_model.params)
 ```
 
@@ -815,7 +875,7 @@ Consider the following example model: $y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 +
 
 For testing whether the coefficients of two explanatory variables $x_1$ and $x_2$ should be 0, one would consider:
 
-- Full model: all $\beta$'s can take any value.
+- Full model: all $\beta$"s can take any value.
 - Reduced model: $\beta_1 = \beta_2 = 0$ (only the mean $\beta_0$ and the third parameter $\beta_3$ can take any value).
 
 #### F-test and ANOVA
@@ -835,13 +895,14 @@ As an example let us consider testing whether fuel consumption of cars depends o
 #| fig-align: center
 import seaborn as sns
 cars = sns.load_dataset("mpg").dropna()
-cars['cylinders'] = cars['cylinders'].astype('category')
+cars["cylinders"] = cars["cylinders"].astype("category")
 cars = cars[cars.cylinders.isin([3, 6, 8])]
-(ggplot(cars, aes('cylinders', 'mpg'))
-+ geom_boxplot()
-+ labs(x='Cylinders', y='Miles per Gallon')
-+ mytheme
-+ theme(figure_size = (3.6, 2.6))
+(
+  ggplot(cars, aes("cylinders", "mpg"))
+  + geom_boxplot()
+  + labs(x="Cylinders", y="Miles per Gallon")
+  + mytheme
+  + theme(figure_size = (3.6, 2.6))
 )
 ```
 
@@ -878,9 +939,6 @@ print(anova_results)
 From the result, we can see that the full model models the data significantly better than the reduced model containing only the intercept. Therefore, we can conclude that there is a difference in the means of the 3 groups.
 
 
-
-
-
 ## Diagnostic plots {#sec-lin-reg-diagnostic}
 
 The assumptions of a mathematical model never hold exactly in practice. The questions for the practitioners are threefold:  1) How badly are the assumptions violated on the dataset at hand? 2) What are the implications for the claimed conclusions? 3) How can the issue be addressed?
@@ -896,11 +954,7 @@ We will see that two diagnostic plots will be helpful: the residual plot and the
 ### Assessing non-linearity with residual plots
 **Diagnostic plot**
 
-Non-linearity is typically revealed by noticing that the average of the residual depends on the predicted values. A smooth fit (`geom_smooth` default) on the residual plot can help spotting systematic non-linear dependencies (See Figure @fig-non-linear-qc).
-
-```{python}
-# `geom_smooth()` using method = 'loess'
-```
+Non-linearity is typically revealed by noticing that the average of the residual depends on the predicted values. A smooth fit (`geom_smooth` default) on the residual plot can help spotting systematic non-linear dependencies (See Figure @fig-non-linear-qc for a simulated example).
 
 ```{python}
 #| label: fig-non-linear-qc
@@ -955,7 +1009,7 @@ The implications of non-linearity depends on the application purposes:
 * Conditional dependencies can be affected. To see the latter assume a model in which two variables $x$ and $y$ depend on a common cause $z$ in a non-linear fashion (eg. $y=z^2 + \epsilon$ and $x=z^2+\epsilon'$). These two variables $x$ and $y$ are independent conditioned on their common cause $z$. However, a linear regression of $y$ on $x$ and $z$ would fail to discard the contribution of $x$.  
 
 **What to do?**
-If non-linearity is revealed in the fit, one can either transform the explanatory variables or the response (eg log-transformation, powers, etc). Note that the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. The `I` in Python implements a few convenience functions to build such non-linear transformation on the fly while calling `smf.ols()`. For instance, the call: `smf.ols('y ~ x + I(x**2) + I(x**3)', data=df)` fits a polynomial of degree 3.
+If non-linearity is revealed in the fit, one can either transform the explanatory variables or the response (eg log-transformation, powers, etc). Note that the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. The `I` in Python implements a few convenience functions to build such non-linear transformation on the fly while calling `smf.ols()`. For instance, the call: `smf.ols("y ~ x + I(x**2) + I(x**3)", data=df)` fits a polynomial of degree 3.
 
 ### When error variance is not constant: Heteroscedasticity
 It happens not so rarely that the variance of the residuals is not constant across all data points. This property is called **heteroscedasticity**. Heteroscedasticity violates the i.i.d assumption of the errors.
@@ -988,10 +1042,10 @@ As the residuals are not i.i.d., the statistical tests are flawed.
 **What to do?**
 
 In case of heteroscedasticity, one can try to transform the response variable $y$, such as: log-transformation, square root, or variance stabilizing transformation ^[See the Wikipedia article on
-[variance-stabilizing transformations](https://en.wikipedia.org/wiki/Variance-stabilizing_transformation).]. 
+[variance-stabilizing transformations](<https://en.wikipedia.org/wiki/Variance-stabilizing_transformation>).]. 
 
 However, as before, the appropriate transformation is difficult to know in practice and finding it likely requires trying out several options. Alternatively, one can use methods with a different noise model. One possibility is to consider weighted least squares, when there is the possibility to estimate beforehand the relative error variances on the data. This is sometimes the case, for instance, if one has access to experimental uncertainties. Another direction is to use generalized linear models ^[See the Wikipedia article on
-[Generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model).]
+[Generalized linear model](<https://en.wikipedia.org/wiki/Generalized_linear_model>).]
 
 ### Gaussianity: Q-Q-plot of the residuals
 The Gaussian assumption of the errors is key to all statistical tests. An implication that the errors follow a Gaussian distribution is that the residuals also follow a Gaussian distribution.
@@ -1006,11 +1060,15 @@ To check this visually in a robust way, `stat_qq_line()` draws the line passing 
 
 ```{python}
 np.random.seed(0)
+
 df = pd.DataFrame({
   "x": np.arange(1, 101),
-  "y":  np.random.normal(loc=5 * x, scale=10)})
+  "y":  np.random.normal(loc=5 * x, scale=10)
+})
+
 m = smf.ols("y ~ x", data=df).fit()
 df_resid = pd.DataFrame({"resid": m.resid})
+
 (
     ggplot(df_resid, aes(sample="resid"))
     + stat_qq()
@@ -1027,7 +1085,9 @@ df = pd.DataFrame({
   "x":  np.arange(1, 101),
   "y": np.random.standard_t(df=1, size=100)})
 m = smf.ols("y ~ x", data=df).fit()
+
 df_resid = pd.DataFrame({"resid": m.resid})
+
 (
     ggplot(df_resid, aes(sample="resid"))
     + stat_qq()

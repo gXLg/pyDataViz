@@ -31,7 +31,7 @@ This chapter is partially adopted from "Introduction to Data Science" by Rafael 
 
 ### Datasets used in this chapter
 
-The following code chunks load libraries and tables used throughout this chapter.
+The following code chunks load libraries and tables used throughout this chapter. See @sec-datasets for downloading the dataset.
 
 ```{python}
 #| echo: true
@@ -47,24 +47,31 @@ import glob
 #| echo: true
 #| warning: false
 
-DATADIR = Path('../../extdata')
-election_results = pd.read_csv(DATADIR / 'US-pres16results.csv')
+DATADIR = Path("../../extdata")
+
+election_results = pd.read_csv(
+    DATADIR / "US-pres16results.csv"
+)
+
 election_results = (
     election_results
     .loc[
-        election_results["county"].isna() & (election_results["st"] != "US"),
-        ["cand", "st", "votes", "total_votes"]
+        election_results["county"].isna()
+        & (election_results["st"] != "US"),
+        [
+            "cand",
+            "st",
+            "votes",
+            "total_votes"
+        ]
     ]
 )
-table1 = pd.read_csv(DATADIR / 'table1_alternate.csv')
 
-table2 = pd.read_csv(DATADIR / 'table2_alternate.csv')
-
-table3 = pd.read_csv(DATADIR / 'table3_alternate.csv')
-
-table4 = pd.read_csv(DATADIR / 'table4_alternate.csv')
-
-table5 = pd.read_csv(DATADIR / 'table5_alternate.csv')
+table1 = pd.read_csv(DATADIR / "table1_alternate.csv")
+table2 = pd.read_csv(DATADIR / "table2_alternate.csv")
+table3 = pd.read_csv(DATADIR / "table3_alternate.csv")
+table4 = pd.read_csv(DATADIR / "table4_alternate.csv")
+table5 = pd.read_csv(DATADIR / "table5_alternate.csv")
 ```
 
 ## Tidy and untidy data
@@ -161,11 +168,13 @@ table4
 Melting the previous table can be achieved by using the __pandas__ method `melt()`:
 
 ```{python}
-pd.melt(table4, 
-        id_vars = "candidate", 
-        value_vars = ['CA', 'FL'],
-        var_name = "state", 
-        value_name = "votes")
+pd.melt(
+    table4, 
+    id_vars = "candidate", 
+    value_vars = ["CA", "FL"],
+    var_name = "state", 
+    value_name = "votes"
+)
 ```
 
 <!-- TODO maybe drop this?  -->
@@ -196,8 +205,11 @@ Pandas **pivot** transforms a long table into a wide table and is achieved with 
 
 ```{python}
 #| eval: false
-wide = data.pivot(index='<id>', columns='<pivot_variable>', 
-values='<value>').reset_index()
+wide = data.pivot(
+    index="<id>",
+    columns="<pivot_variable>", 
+    values="<value>"
+).reset_index()
 ```
 
 The `.pivot()` method requires specifying three key arguments: `index`, `columns`, and `values`.
@@ -235,8 +247,12 @@ The number of votes per candidate is displayed in the numerator of the `proporti
 We split up the `proportion` column into two columns, one containing the votes and the other one containing the total votes with the method `str.split`:
 Since the resulting split columns inherit the initial `object` dtype (string), we explicitly cast them to integer type to enable downstream computations. 
 ```{python}
-table3[["votes", "total_votes"]] = table3["proportion"] \
-  .str.split("/", expand=True).astype(int)
+table3[["votes", "total_votes"]] = (
+    table3["proportion"]
+  .str.split("/", expand=True)
+  .astype(int)
+)
+
 table3
 ```
 
@@ -266,8 +282,17 @@ table5["candidate"] = table5["name"] + " " + table5["surname"]
 Kaggle, a machine learning platform, conducts a yearly survey among its users. Below are a few columns of the answers from the 2017 survey. In those columns, we observe another type of untidy data. In this survey, multiple choice questions were asked from which multiple answers could be selected. For each individual the selected answers are concatenated into a string.
 
 ```{python}
-survey = pd.read_csv(DATADIR / 'kaggle-survey-2017/multipleChoiceResponses.csv', encoding='latin-1')
-survey[['LanguageRecommendationSelect', 'LearningPlatformSelect', 'PastJobTitlesSelect']].head()
+survey = pd.read_csv(
+    DATADIR/"kaggle-survey-2017/multipleChoiceResponses.csv",
+    encoding="latin-1"
+    )
+
+survey[
+    [
+        "LanguageRecommendationSelect",
+        "LearningPlatformSelect",
+        "PastJobTitlesSelect"]
+].head()
 ```
 
 
@@ -275,14 +300,20 @@ survey[['LanguageRecommendationSelect', 'LearningPlatformSelect', 'PastJobTitles
 Below is one solution of how the `LearningPlatformSelect` column could be transformed into a tidy format.
 
 ```{python}
-platform_splits = survey['LearningPlatformSelect'].str.split(',', expand=True)
-platform_splits['individual'] = survey.index
+platform_splits = (
+    survey["LearningPlatformSelect"]
+    .str.split(',', expand=True)
+)
+
+platform_splits["individual"] = survey.index
+
 LearningPlatformMelt = platform_splits.melt(
-    id_vars='individual', 
-    value_name='Platform', 
+    id_vars="individual", 
+    value_name="Platform", 
     var_name=None           
 )
-LearningPlatformMelt.sort_values(by='individual').head(n=5)
+
+LearningPlatformMelt.sort_values(by="individual").head(n=5)
 ```
 
 
@@ -325,9 +356,13 @@ df_concat.head()
 Alternatively, we can achieve the same result in a single line using a Python list comprehension.
 
 ```{python}
-df_concat = (pd.concat([pd.read_csv(f).assign(filename=Path(f).name) 
-              for f in files], ignore_index=True)
-            )
+df_concat = pd.concat(
+        [
+            pd.read_csv(f).assign(filename=Path(f).name)
+            for f in files
+        ],
+        ignore_index=True
+)
 df_concat.head()
 ```
 
@@ -338,10 +373,13 @@ Merging two data tables into one by common column(s) is frequently needed. This 
 ```{python}
 #| eval: false
 
-df.merge(y, # tables to merge
-        how = 'left', # type of merge
-        on=None, left_on=None, right_on=None # by which columns
-        )
+df.merge(
+    y, # tables to merge
+    how="left", # type of merge
+    on=None,
+    left_on=None,
+    right_on=None # by which columns
+)
 ```
 
 The four types of merges (also commonly called joins) are:
@@ -354,18 +392,27 @@ The four types of merges (also commonly called joins) are:
 
 * **Right (all.y)**: consider all rows from `y`, even if they have no matching row in `x`.
 
-We now provide examples of each type using the following made up tables: 
+We now provide examples of each type using the following made-up tables: 
 
 ```{python}
-df1 = pd.DataFrame({
-    'p_id': ['G008', 'F027', 'L051'],
-    'value': np.random.normal(size=3)
-})
-display(df1.head())
-df2 = pd.DataFrame({
-    'p_id': ['G008', 'F027', 'U093'],
-    'country': ['Germany', 'France', 'USA']
-})
+df1 = pd.DataFrame(
+    {
+        "p_id": ["G008", "F027", "L051"],
+        "value": np.random.normal(size=3)
+    }
+)
+
+df1.head()
+```
+
+```{python}
+df2 = pd.DataFrame(
+    {
+        "p_id": ["G008", "F027", "U093"],
+        "country": ["Germany", "France", "USA"]
+    }
+)
+
 df2.head()
 ```
 
@@ -374,7 +421,7 @@ df2.head()
 An inner merge returns only rows with matching values in the `on` columns and discards all other rows:
 ```{python}
 # Inner merge, default one
-m = df1.merge(df2, on='p_id', how='inner')
+m = df1.merge(df2, on="p_id", how="inner")
 m
 ```
 
@@ -384,7 +431,7 @@ An outer merge returns all rows and columns from `x` and `y`. If there are no ma
 
 ```{python}
 # Outer (full) merge
-m = df1.merge(df2, on='p_id', how='outer')
+m = df1.merge(df2, on="p_id", how="outer")
 m
 ```
 
@@ -392,7 +439,7 @@ m
 Returns all rows from `x`, even if they have no matching row in `y`. Rows from `x` with no matching `p_id` in `y` lead to missing values (`NaN`).
 ```{python}
 # Left merge 
-m = df1.merge(df2, on='p_id', how='left')
+m = df1.merge(df2, on="p_id", how="left")
 m
 ```
 
@@ -401,38 +448,44 @@ m
 Returns all rows from `y`, even if they have no matching row in `x`. Rows from `y` with no matching `p_id` in `x` lead to missing values (`NaN`).
 ```{python}
 # Right merge
-m = df1.merge(df2, on='p_id', how='right')
+m = df1.merge(df2, on="p_id", how="right")
 m
 ```
 
 ### Merging by several columns
-Merging can also be done using more than two columns. Here are two made up tables to illustrate this use case:
+Merging can also be done using more than two columns. Here are two made-up tables to illustrate this use case:
 
 ```{python}
-df1 = pd.DataFrame({
-    'firstname': ['Alice', 'Alice', 'Bob'],
-    'lastname':  ['Coop',  'Smith', 'Smith'],
-    'x': [1, 2, 3]
-})
-display(df1.head())
+df1 = pd.DataFrame(
+    {
+        "firstname": ["Alice", "Alice", "Bob"],
+        "lastname":  ["Coop",  "Smith", "Smith"],
+        "x": [1, 2, 3]
+    }
+)
+df1.head()
+```
 
-df2 = pd.DataFrame({
-    'firstname': ['Alice', 'Bob',   'Bob'],
-    'lastname':  ['Coop',  'Marley','Smith'],
-    'y': list('ABC')
-})
+```{python}
+df2 = pd.DataFrame(
+    {
+        "firstname": ["Alice", "Bob",   "Bob"],
+        "lastname":  ["Coop",  "Marley","Smith"],
+        "y": list("ABC")
+    }
+)
 df2.head()
 ```
 
 We now merge `df1` and `df2` by first name and last name:
 ```{python}
-df1.merge(df2, on=['firstname', 'lastname'])
+df1.merge(df2, on=["firstname", "lastname"])
 ```
 
 Note that merging by first name only gives a different result (as expected):
 
 ```{python}
-df1.merge(df2, on='firstname')
+df1.merge(df2, on="firstname")
 ```
 
 
@@ -445,7 +498,7 @@ While untidy data should be avoided, there can be multiple tidy representations 
 There can be alternative tidy representations for a same table.
 Here is an example based on Fisher's Iris dataset. This classic dataset contains measurements of 4 different attributes for 150 iris flowers from 3 different species. See <https://en.wikipedia.org/wiki/Iris_flower_data_set>.
 
-<!-- ```{python echo=F, fig.show = "hold", out.width = "40%", fig.align = "center", fig.pos='H'}
+<!-- ```{python echo=F, fig.show = "hold", out.width = "40%", fig.align = "center", fig.pos="H"}
 knitr::include_graphics("../../assets/img/lec03_iris.png")
 ``` -->
 
@@ -456,15 +509,28 @@ knitr::include_graphics("../../assets/img/lec03_iris.png")
 from sklearn import datasets
 
 iris = datasets.load_iris(as_frame=True)
-iris_df = iris.frame.rename(columns={'target': 'Species'})
-iris_df['Species'] = iris_df['Species'].map(dict(enumerate(iris.target_names)))
-iris_df.insert(0, 'Flower', [f"F_{i+1}" for i in range(len(iris_df))])
+
+iris_df = iris.frame.rename(columns={"target": "Species"})
+iris_df["Species"] = iris_df["Species"].map(
+    dict(enumerate(iris.target_names))
+)
+
+iris_df.insert(
+    0,
+    "Flower",
+    [f"F_{i+1}" for i in range(len(iris_df))]
+)
 
 iris_melt = pd.melt(
     iris_df,
-    id_vars=['Flower', 'Species'],
-    var_name='Attribute',
-    value_vars=['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
+    id_vars=["Flower", "Species"],
+    var_name="Attribute",
+    value_vars=[
+    "sepal length (cm)",
+    "sepal width (cm)",
+    "petal length (cm)",
+    "petal width (cm)"
+    ]
 )
 ```
 
@@ -489,35 +555,49 @@ Another important remark for handling tidy data in practice relates to the last 
 
 Consider the following table which combines product and customer data:  
 ```{python, echo = F, results = T}
-prod_df = pd.DataFrame({
-    "productCode": ["p018", "p030", "p018"],
-    "productName": ["dryer", "phone", "dryer"],
-    "customerNumber": ["c001", "c001", "c002"],
-    "customerName": ["Smith", "Smith", "Lewis"],
-    "priceEach": [450, 600, 450],
-    "state": ["CA", "CA", "AZ"],
-    "quantOrdered": [1, 2, 1]
-})
+prod_df = pd.DataFrame(
+    {
+        "productCode": ["p018", "p030", "p018"],
+        "productName": ["dryer", "phone", "dryer"],
+        "customerNumber": ["c001", "c001", "c002"],
+        "customerName": ["Smith", "Smith", "Lewis"],
+        "priceEach": [450, 600, 450],
+        "state": ["CA", "CA", "AZ"],
+        "quantOrdered": [1, 2, 1]
+    }
+)
 
-prod_df[["productCode", "quantOrdered", "priceEach",
-         "customerNumber", "customerName", "state"]]
+prod_df[
+    [
+        "productCode",
+        "quantOrdered",
+        "priceEach",
+        "customerNumber",
+        "customerName",
+        "state"
+    ]
+]
 ```
 
 This table is tidy. Each row corresponds to an order. The columns are variables. However, it contains repetitive information: the product code, product name and its price on the one hand, the customer number, name and state on the other hand. The information could be stored in separate tables without data repetitions, namely:
 
 * a consumer table:
 ```{python, echo = F, results = T}
-prod_df[['customerNumber', 'customerName', 'state']].drop_duplicates()
+prod_df[
+    ["customerNumber", "customerName", "state"]
+].drop_duplicates()
 ```
 
 * a product table:
 ```{python, echo = F, results = T}
-prod_df[['productCode', 'priceEach']].drop_duplicates()
+prod_df[["productCode", "priceEach"]].drop_duplicates()
 ```
 
 * an order table:
 ```{python, echo = F, results = T}
-prod_df[['productCode', 'customerNumber', 'quantOrdered']].drop_duplicates()
+prod_df[
+    ["productCode", "customerNumber", "quantOrdered"]
+].drop_duplicates()
 ```
 
 The three-table representation, where each table has unique entries is called a normalized representation. Normalized representations ensure that no multiple types of observational units are stored in the same table. It is a good habit to have normalized representations for database back-ends because it facilitates maintenance of the data consistency by reducing redundancy. One should not enter all customer details at each order but do it one central place and link the information with a customer number.
@@ -525,10 +605,14 @@ The three-table representation, where each table has unique entries is called a 
 However, on the data analysis side  (front-end), we are not interested in maintaining a database (back-end), rather in having the desired data in a ready-to-use format which depends on our needs. To this end, the merge table is very handy and can be the common denominator of multiple analyses like:
 ```{python}
 # vectorized operations e.g. total price of each order
-prod_df["totalPrice"] = prod_df["quantOrdered"] * prod_df["priceEach"]
+prod_df["totalPrice"] = (
+    prod_df["quantOrdered"] * prod_df["priceEach"]
+)
 
 # group by operations, e.g. number of products per states 
-prod_df["N_prod"] = prod_df.groupby("state")["productCode"].count()
+prod_df["N_prod"] = (
+    prod_df.groupby("state")["productCode"].count()
+)
 ```
 
 Hence, the choice of the representation (normalized or not) depends on the context: back-end or front-end.
