@@ -11,7 +11,7 @@ extdata/
 .ipynb_checkpoints/
 
 # Rendered output (do NOT ignore if we  decide to publish from docs/)
-docs/
+# docs/
 
 # RStudio / R
 .Rproj.user
