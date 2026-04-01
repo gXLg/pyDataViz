@@ -27,7 +27,7 @@ Other courses offered by the faculty of Informatics cover data science back-end 
 
 Python is a versatile high-level programming language used that is widely used by the machine learning and scientifc programming community. Due to the increase use of machine leaning in data science, this course is taught in python.
 
-An alternative language for Data Science is R. As of 2026, R typically offers more legible, compact and elegant code than python for front-end data science. Also many statistical methods have been natively developped in R with typically better default behaviour. Until 2025, this course used to be taught in R. The script is available at:
+An alternative language for Data Science is R. As of 2026, R typically offers more legible, compact and elegant code than python for front-end data science. Also many statistical methods have been natively developed in R with typically better default behaviour. Until 2025, this course used to be taught in R. The script is available at:
 <https://gagneurlab.github.io/dataviz/>
 
 ## Course overview {-}
