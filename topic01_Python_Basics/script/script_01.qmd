@@ -74,6 +74,7 @@ You should see `a`, `b`, and `c`. If you try to access a variable that hasn't be
 
 Now that our variables are defined, we can use the quadratic formula to find the solutions:
 We have to import numpy module to use the `sqrt` function from it.
+
 ```{python}
 import numpy as np
 
@@ -136,7 +137,6 @@ solution_1 = (-b + np.sqrt(b**2 - 4*a*c)) / (2*a)
 solution_2 = (-b - np.sqrt(b**2 - 4*a*c)) / (2*a)
 ```
 
-
 For more advice, we highly recommend studying PEP8 style guide^[https://peps.python.org/pep-0008/].
 
 ### Reproducible Analysis
@@ -183,8 +183,7 @@ solution_2 = (-b - np.sqrt(b**2 - 4*a*c)) / (2*a)
 print(solution_1, solution_2)
 ```
 
-By creating and saving a script with the code above, we would not need to retype everything each time and, instead, simply change the variable names. Try writing the script above into an editor and notice how easy it is to change the variables and receive an answer.
-
+By creating and saving a script with the code above, we would not need to retype everything each time and, instead, simply change the variable values. Try writing the script above into an editor and notice how easy it is to change the variables and receive an answer.
 
 ### Commenting Your Code
 
@@ -204,11 +203,11 @@ solution_1 = (-b + np.sqrt(b**2 - 4*a*c)) / (2*a)
 solution_2 = (-b - np.sqrt(b**2 - 4*a*c)) / (2*a)
 ```
 
-Longer comments, e.g., documentation, can be wrapped with triple quotes (""" or ''').
+Longer comments, e.g., documentation, can be wrapped with triple quotes (`"""` or `'''`).
 
 ## Data Types
 
-Variables in Python can be of different types. For example, we need to distinguish numbers from character strings and tables from simple lists of numbers. The type() function helps determine an object's type.
+Variables in Python can be of different types. For example, we need to distinguish numbers from character strings and tables from simple lists of numbers. The `type()` function helps determine an object's type.
 
 ```{python}
 a = 2
@@ -217,10 +216,9 @@ type(a)
 
 To work efficiently, it's important to understand Python's basic data types.
 
-
 ### Numbers
 
-Python can handle integers (int) and floating-point numbers (float):
+Python can handle **integers** (`int`) and **floating-point numbers** (`float`):
 
 ```{python}
 x = 7
@@ -229,15 +227,13 @@ print(type(x))
 print(type(y))
 ```
 
-
 ### Strings
-Text is represented as strings (str), written in quotes:
+Text is represented as **strings** (`str`), written in quotes:
 
 ```{python}
 name = "Python"
 print(type(name))
 ```
-
 
 You can combine strings with the + operator:
 
@@ -248,7 +244,7 @@ print(greeting)
 
 ### Lists
 
-A **list** is an ordered, mutable collection of items, which can be of different types. You access elements using their zero-based index.
+A **list** (`list`) is an ordered, mutable collection of items, which can be of different types. You access elements using their zero-based index.
 
 ```python
 record2 = ["John Doe", 1234]
@@ -280,9 +276,10 @@ You access elements in a dictionary using their keys in square brackets:
 ```python
 record["student_id"]
 ```
+
 ### Boolean
 
-Another important data type is a boolean (bool), which can only be True or False. Relational operators like <, >, ==, <=, >= produce booleans.
+Another important data type is a **boolean** (`bool`), which can only be `True` or `False`. Relational operators like `<`, `>`, `==`, `<=`, `>=` produce booleans.
 
 ```{python}
 z = 3 == 2
@@ -290,14 +287,11 @@ print(z)
 print(type(z))
 ```
 
-
-Here the == is a relational operator asking if 3 is equal to 2. In Python, if you just use one =, you actually assign a variable, but if you use two == you test for equality.
-
-
+Here the `==` is a relational operator asking if 3 is equal to 2. In Python, if you just use one `=`, you actually assign a variable, but if you use two `==` you test for equality.
 
 ### DataFrames
 
-The most common way to store a tabular dataset in Python is in a DataFrame, which is the primary data structure in the pandas library.
+The most common way to store a tabular dataset in Python is in a **DataFrame**, which is the primary data structure in the **pandas** library.
 A DataFrame is a two-dimensional table where rows represent observations and columns represent variables.
 
 As an example, let's use the `tips` dataset, which records restaurant bills and tips, along with information about the server, day, and time.
@@ -312,7 +306,6 @@ tips = sns.load_dataset("tips")
 ```
 
 We can check the object’s type to confirm that it’s a DataFrame:
-
 
 ```{python}
 type(tips)
@@ -427,20 +420,19 @@ mat[:, 2]
 ```
 
 You can access more than one column or more than one row if you like. This will give you a new matrix.
-Note, that the limits are specified as *interval* and the third colun won't be included.
+Note, that the limits are specified as *intervals* and the third column won't be included.
 
 ```{python}
 mat[:, 1:3]
 ```
+
 You can subset both rows and columns:
 
 ```{python}
 mat[1:3, 2:4]
 ```
 
-
 Indices in python are "wrapped" around the end of the array, so you can use negative indices. For example, a handy way to get the last row would be:
-You can subset both rows and columns:
 
 ```{python}
 mat[-1]
@@ -452,16 +444,16 @@ In general, the access operator `arr[i:j:k]` accepts 3 arguments. This means tak
 arr = np.arange(10)
 arr[1:-1:2]
 ```
+
 We can convert a NumPy array into a pandas DataFrame:
 
 ```{python}
 pd.DataFrame(mat, columns=["A", "B", "C"])
 ```
 
-### List And Arrays: References And Copies
+### Lists And Arrays: References And Copies
 
-
-List and arrays variables are just references. Always copy lists and arrays when reassigning! Compare:
+List and array variables are just references. Always copy lists and arrays when reassigning! Compare:
 
 ```{python}
 a = [1, 2, 3]
@@ -469,6 +461,7 @@ b = a
 b[1] = 5
 print(a)
 ```
+
 ```{python}
 a = [1, 2, 3]
 b = a[:]
@@ -507,9 +500,9 @@ np.int64(1) / np.int64(0)
 
 NumPy uses a highly optimized underlying implementation, so the types there look more complicated, for example `int64` instead of just `int` in native Python. This just means that this type uses 64 bits, whereas in native Python the `int` type is not restricted.
 
-## Numpy operation
+## NumPy operation
 
-Numpy library comes with a handful set of operation that help working with data. Let's load a murders dataset. This dataset includes gun murder data for US states in 2010.
+NumPy library comes with a handful set of operation that help working with data. Let's load a murders dataset. This dataset includes gun murder data for US states in 2010.
 
 ```{python}
 import pandas as pd
@@ -606,6 +599,7 @@ murder_rate = (
     murders["population"].values * 100_000
 )
 ```
+
 Note that the number 100000 in Python is written with an underscore to improve readability; Python supports both options.
 
 Now we can add this rate as a new column to our DataFrame and sort by it to get a more meaningful ranking of state safety.
@@ -616,7 +610,6 @@ idx_max_rate = murder_rate.argmax()
 murders["state"].values[idx_max_rate]
 ```
 
-
 ### Boolean Indexing
 
 We can use a logical condition to create a boolean arrays (`True`/`False` values). For example, let's find states with a murder rate less than 0.71.
@@ -626,7 +619,7 @@ ind = murders["rate"].values < 0.71
 ind.dtype
 ```
 
-We can then use this boolean array inside square brackets `[]` to filter any other array of the same size, or even the whole dataframem keeping only the rows where the condition is `True`.
+We can then use this boolean array inside square brackets `[]` to filter any other array of the same size, or even the whole dataframe, keeping only the rows where the condition is `True`.
 
 ```{python}
 murders["state"][ind]
@@ -697,6 +690,7 @@ for i, eq in enumerate(equations):
 This loop demonstrates how we can process multiple datasets or perform repetitive calculations efficiently, rather than copying and pasting the same code multiple times.
 
 Create your own functions using `def`. You can plot simple graphs using plotnine package.
+
 ```{python}
 import pandas as pd
 
