@@ -397,7 +397,7 @@ By default `sort_values()` sorts the column in ascending order (from the smalles
 flights.sort_values("DISTANCE", ascending = False)
 ```
 
-`sort_values()` function cannot be applied to index column, tehre we have to use `sort_index()`:
+`sort_values()` function cannot be applied to index column, therefore we have to use `sort_index()`:
 
 ```{python}
 flights.set_index("FLIGHT_NUMBER").sort_index()
